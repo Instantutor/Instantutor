@@ -255,12 +255,14 @@ router.put('/expertise', [auth,
 
         const {
             area,
+            degree,
             relatedCourses,
             description
         } = req.body;
 
         const newExp = {
             area,
+            degree,
             description
         }
         newExp.relatedCourses = (relatedCourses + '').split(',').map(relatedCourses => relatedCourses.trim());

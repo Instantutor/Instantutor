@@ -8,6 +8,7 @@ const Expertise = ({ expertise, deleteExpertise }) => {
     const expertises = expertise.map((exp) => (
         <tr key={exp._id}>
             <td>{exp.area}</td>
+            <td className="hide-sm">{exp.degree}</td>
             <td className="hide-sm">{exp.relatedCourses.map((course) => (
                 course + '; '
             ))}</td>
@@ -32,6 +33,7 @@ const Expertise = ({ expertise, deleteExpertise }) => {
                     <thead>
                         <tr>
                             <th>Area</th>
+                            <th className="hide-sm">Degree</th>
                             <th className="hide-sm">Courses</th>
                             <th>Desc</th>
                             <th />

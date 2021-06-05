@@ -25,7 +25,7 @@ To run the backending directly, tpying
 	node server.js
 
 //----------------------------------------------------------------------------------------------------
-Frontending:
+Frontending (Folder 'client'):
 
 Before run code, need to install:
 Create a react app to a folder 'client'
