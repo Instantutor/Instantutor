@@ -10,7 +10,7 @@ const StudentReq = require('../../models/StudentRequest');
 const User = require('../../models/User');
 
 
-router.post('/', [auth],
+router.post('/', auth,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -27,8 +27,9 @@ router.post('/', [auth],
                 name: user.name
             });
 
-            const req = await newReq.save();
-            res.json(req);
+            await newReq.save();
+
+            res.json({ msg: "Request published.", request: newReq });
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
@@ -39,9 +40,11 @@ router.post('/', [auth],
 router.get('/', auth, async (req, res) => {
     try {
         const reqs = await StudentReq.find().sort({ date: -1 });
-        res.json(posts);
+        res.json(reqs);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
 });
+
+module.exports = router;

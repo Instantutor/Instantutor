@@ -17,4 +17,4 @@ const StudentRequestSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('studentrequest', StudentRequestSchema);
+module.exports = mongoose.model('request', StudentRequestSchema);
