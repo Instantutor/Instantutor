@@ -7,7 +7,7 @@ import DashboardActions from './DashboardActions';
 import DashboardActionsStudent from './DashboardActionsStudent';
 import Spinner from '../layout/Spinner';
 
-import Searchbar from '../Search';
+import Searchbar from '../Request';
 import { render } from 'react-dom';
 import Expertise from './Expertise';
 

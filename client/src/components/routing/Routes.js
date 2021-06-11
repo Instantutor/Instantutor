@@ -14,9 +14,11 @@ import PrivateRoute from '../routing/PrivateRoute';
 //did not found page
 import NotFound from '../layout/NotFound';
 
+//Request page
+import Request from '../Request';
 
-//search
-import Search from '../Search';
+// Search page
+import Search from '../search/Search'
 
 class SearchContainer extends Component {
     state = {
@@ -35,7 +37,8 @@ const Routes = () => {
                 <Route exact path="/register" component={Register}></Route>
                 <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute path="/Search" component={Search} />
+                <PrivateRoute exact path="/request" component={Request} />
+                <PrivateRoute exact path="/search" component={Search} />
                 <PrivateRoute exact path="/create-profile" component={ProfileForm} />
                 <PrivateRoute exact path="/edit-profile" component={ProfileForm} />
                 <PrivateRoute exact path="/add-expertise" component={AddExpertise} />

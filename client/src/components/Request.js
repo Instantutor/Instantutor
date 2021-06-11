@@ -5,10 +5,23 @@ import { connect } from 'react-redux';
 import Source from './Source'
 import formData from './profile-forms/ProfileForm'
 import SearchContainer from '../App';
-import { createRequest } from '../actions/search';
+import { createRequest } from '../actions/request';
+
+/*
+Actual Search Bar code
+            <div className="searchbar">
+                <input
+                    type="text"
+                    placeholder="What do you need help with?"
+                    name="request"
+                    value={request}
+                    onChange={onChange} />
+                {(<Source name={img} />}
+            </div>
+*/
 
 
-const Search = (props) => {
+const Request = (props) => {
     //const [img, setImg] = useState("");
     const [requestData, setRequestData] = useState({
         request: '',
@@ -34,18 +47,10 @@ const Search = (props) => {
     */
     return (
         <>
-            {(formData.role=='Student'||'Both') && (
+            {(formData.role==='Student'||'Both') && (
             <Fragment>
 
-            <h1 class="large text-primary">Open a Request!</h1>
-            <div className="searchbar">
-                <input
-                    type="text"
-                    placeholder="What do you need help with?"
-                    value={request}
-                    onChange={onChange} />
-                {/*(<Source name={img} />*/}
-            </div>
+            <h1 className="large text-primary">Open a Request!</h1>
             <form className="form" onSubmit={e => onSubmit(e)}>
                 <div className="form-group">
                     <input
@@ -74,6 +79,14 @@ const Search = (props) => {
                         onChange={e => onChange(e)}
                     />
                 </div>
+                <div className="form-group">
+                <input
+                    type="text"
+                    placeholder="What do you need help with?"
+                    name="request"
+                    value={request}
+                    onChange={e => onChange(e)} />
+                </div>
                 <input type="submit" className="btn btn-primary my-1" />
                 <Link className="btn btn-light my-1" to="/dashboard">
                     Go Back
@@ -91,5 +104,5 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, {createRequest })(Search);
+export default connect(mapStateToProps, {createRequest })(Request);
 //export default Search;

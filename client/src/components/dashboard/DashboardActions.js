@@ -8,8 +8,11 @@ const DashboardActions = () => {
 
         <div className="dash-buttons">
             
-            <Link to="/Search" className="btn btn-light"
+            <Link to="/search" className="btn btn-light"
             ><i className="fas fa-search text-primary"></i> Search bar </Link>
+
+            <Link to="/request" className="btn btn-light"
+            ><i className="fas fa-share-square text-primary"></i> Make Request </Link>
             
             <Link to="/edit-profile" className="btn btn-light"
             ><i className="fas fa-user-circle text-primary"></i> Edit Profile</Link>

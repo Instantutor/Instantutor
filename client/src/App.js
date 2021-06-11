@@ -4,7 +4,7 @@ import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
 import Routes from './components/routing/Routes';
 import { LOGOUT } from './actions/types';
-import Search from './components/Search';
+import Request from './components/Request';
 
 // Redux
 import { Provider } from 'react-redux';

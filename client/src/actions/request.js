@@ -6,7 +6,8 @@ import {
     REQUEST_ERROR
 } from './types';
 
-export const createRequest = (requestData) => async (dispatch) => {
+export const createRequest = (requestData) => {console.log(requestData); return async (dispatch) => {
+    console.log('step 4');
     try {
         console.log("Create Request")
         const config = {
@@ -27,4 +28,4 @@ export const createRequest = (requestData) => async (dispatch) => {
             payload: { msg: err.response.statusText, status: err.response.status }
         });
     }
-};
+}};
