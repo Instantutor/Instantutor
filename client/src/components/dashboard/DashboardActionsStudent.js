@@ -6,13 +6,13 @@ import formData from '../profile-forms/ProfileForm'
 const DashboardActionsStudent = () => {
     return (
 
-        <div class="dash-buttons">
+        <div className="dash-buttons">
             
-            <Link to="/Search" class="btn btn-light"
-            ><i class="fas fa-search text-primary"></i> Search bar </Link>
+            <Link to="/Search" className="btn btn-light"
+            ><i className="fas fa-search text-primary"></i> Search bar </Link>
             
-            <Link to="/edit-profile" class="btn btn-light"
-            ><i class="fas fa-user-circle text-primary"></i> Edit Profile</Link>
+            <Link to="/edit-profile" className="btn btn-light"
+            ><i className="fas fa-user-circle text-primary"></i> Edit Profile</Link>
 
         </div>
     )
