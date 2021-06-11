@@ -6,7 +6,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator/check');
 
-const StudentReq = require('../../models/StudentRequest');
+const Request = require('../../models/Request');
 const User = require('../../models/User');
 
 
@@ -18,18 +18,18 @@ router.post('/', auth,
         }
         try {
             const user = await User.findById(req.user.id).select('-password');
-            const newReq = new StudentReq({
+            const newRequest = new Request({
+                user: req.user.id,
+                name: user.name,
                 request: req.body.request,
                 course: req.body.course,
                 grade: req.body.grade,
-                topic: req.body.topic,
-                user: req.user.id,
-                name: user.name
+                topic: req.body.topic
             });
 
-            await newReq.save();
+            await newRequest.save();
 
-            res.json({ msg: "Request published.", request: newReq });
+            res.json({ msg: "Request published.", request: newRequest });
         } catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
