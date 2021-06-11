@@ -128,6 +128,31 @@ router.get('/', async (req, res) => {
     }
 })
 
+// @route: GET api/profile/search?param1=text&param2=t
+// @desc:  Get profile and filters by any number of params (all optional)
+// @access Public
+// Eg:     http://127.0.0.1:5000/api/profile/search?name=test
+router.get('/search', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar', 'email']);
+
+        // Filtering the profiles array
+        const filtered = profiles.filter( (profile) => {
+            if (req.query.name && profile.user.name !== req.query.name)
+                return false;
+            if (req.query.role && profile.role !== req.query.role)
+                return false;
+            return true;
+        });
+
+        res.json(filtered);
+    }
+    catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error');
+    }
+})
+
 // @route: GET api/profile/user/user_id
 // @desc:  Get profile by user ID
 // @access Public
