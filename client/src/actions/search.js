@@ -1,6 +1,13 @@
 import axios from 'axios'
+//import { setAlert } from './alert';
 
-export const obtainResults = async (searchData) => {
+import {
+    GET_SEARCH,
+    SEARCH_ERROR,
+} from './types';
+
+
+export const obtainResults = searchData => async(dispatch) => {
     try {
         console.log('Success');
 
@@ -12,8 +19,24 @@ export const obtainResults = async (searchData) => {
 
         const res = await axios.get('/api/profile/search', { params: searchData }, config);
         
+        
+
+        dispatch({
+            type: GET_SEARCH,
+            payload: res.data.map((result) => result.user)
+        });
         console.log(res.data.map((result) => result.user));
+        
+
+        
     } catch (err) {
         console.log(err);
+        
+        dispatch({
+            type: SEARCH_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+        
     }
+    return;
 };
