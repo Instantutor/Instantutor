@@ -1,8 +1,10 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { obtainResults } from '../../actions/search'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import store from '../../store';
+import SearchResultItem from './SearchResultItem';
 
 const Search = ({obtainResults}) => {
     const [searchData, setSearchData] = useState({
@@ -12,9 +14,16 @@ const Search = ({obtainResults}) => {
 
     const onChange = e => setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
+    
+    const [resultData, setResultData] = useState({
+        profiles: []
+    });
+
     const onSubmit = async e => {
         e.preventDefault();
-        obtainResults(searchData);
+        await obtainResults(searchData);
+        setResultData({profiles: store.getState().search.result});
+        console.log(resultData.profiles);
     };
 
     const { name, role } = searchData;
@@ -37,6 +46,11 @@ const Search = ({obtainResults}) => {
             Go Back
             </Link>
         </form>
+
+        <h1 className="large text-primary">{resultData.profiles.map(profile => (
+            <SearchResultItem profile={profile} />
+        ))}</h1>
+
         </Fragment>
     )
 }
@@ -47,5 +61,3 @@ Search.propTypes = {
 export default connect(null, {obtainResults})(Search);
 
 //export default Search
-
-
