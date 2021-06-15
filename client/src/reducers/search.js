@@ -1,7 +1,7 @@
-import {GET_SEARCH,SEARCH_ERROR } from '../actions/types';
+import {GET_SEARCH,SEARCH_ERROR, SEARCH_CLEAR } from '../actions/types';
 
 const initialState = {
-    result: null,
+    result: [],
     loading: true,
     error: {}
 };
@@ -20,6 +20,13 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 error: payload,
+                loading: false
+            };
+
+        case SEARCH_CLEAR:
+            return {
+                ...state,
+                result: [],
                 loading: false
             };
 

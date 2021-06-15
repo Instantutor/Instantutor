@@ -6,58 +6,84 @@ import PropTypes from 'prop-types';
 import store from '../../store';
 import SearchResultItem from './SearchResultItem';
 
-const Search = ({obtainResults}) => {
+const Search = ({obtainResults, result_profiles = []}) => {
     const [searchData, setSearchData] = useState({
         name: '',
         role: 'Both'
     });
 
     const onChange = e => setSearchData({ ...searchData, [e.target.name]: e.target.value });
+    const [resultData, setResultData] = useState([]);
 
-    
-    const [resultData, setResultData] = useState({
-        profiles: []
-    });
+
 
     const onSubmit = async e => {
         e.preventDefault();
+        console.log("on submit...'")
         await obtainResults(searchData);
-        setResultData({profiles: store.getState().search.result});
-        console.log(resultData.profiles);
     };
-
+    
     const { name, role } = searchData;
 
     return (
         <Fragment>
-        <form className="form" onSubmit={onSubmit}>
-            <div className="searchbar">
-                <input
-                    type="text"
-                    placeholder="Who do you want to search"
-                    name="name"
-                    value={name}
-                    onChange={onChange} />
-            </div>
+            <h1 className='large text-primary'>Search a user</h1>
+
+            <form className="form" onSubmit={onSubmit}>
+                <div className="searchbar">
+                    <input
+                        type="text"
+                        placeholder="Who do you want to search"
+                        name="name"
+                        value={name}
+                        onChange={onChange} 
+                    />
+                    <div>
+                        <select name="role" value={role} onChange={onChange}>
+                            <option value="Student">Student</option>
+                            <option value="Tutor">Tutor</option>
+                            <option value="">Either</option>
+                        </select>
+
+                        <small className="form-text">
+                            You want to search a Tutor or a Student?
+                        </small>
+                    </div>
+                </div>
+                    
+                <input type="submit" className="btn btn-primary my-1" />
+
+                <Link className="btn btn-light my-1" to="/dashboard">
+                Go Back
+                </Link>
+            </form>
+            <div className='profiles'>
+                {result_profiles && result_profiles.length > 0 ? (
+                    
+                    result_profiles.map(profile => (
+                        <SearchResultItem key={profile._id} profile={profile} />
+                    ))
+                ) : (
+                    <h4>No profiles found...</h4>
+                )}
                 
-            <input type="submit" className="btn btn-primary my-1" />
-
-            <Link className="btn btn-light my-1" to="/dashboard">
-            Go Back
-            </Link>
-        </form>
-
-        <h1 className="large text-primary">{resultData.profiles.map(profile => (
-            <SearchResultItem profile={profile} />
-        ))}</h1>
-
+            </div>
+            
         </Fragment>
     )
 }
+/*
 
+ */
 Search.propTypes = {
-    obtainResults: PropTypes.func.isRequired
+    obtainResults: PropTypes.func.isRequired,
+    result_profiles: PropTypes.array.isRequired
 }
-export default connect(null, {obtainResults})(Search);
+
+const mapStateToProps = state => ({
+    result_profiles: state.search.result
+});
+
+export default connect(mapStateToProps, {obtainResults})(Search);
 
 //export default Search

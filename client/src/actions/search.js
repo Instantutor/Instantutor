@@ -1,16 +1,19 @@
 import axios from 'axios'
+import { setAlert } from './alert';
+
 import React, { Fragment, useEffect } from 'react';
 //import { setAlert } from './alert';
 
 import {
     GET_SEARCH,
+    SEARCH_CLEAR,
     SEARCH_ERROR,
 } from './types';
 
 
 export const obtainResults = searchData => async(dispatch) => {
     try {
-        console.log('Success');
+        dispatch((setAlert("Searching...", "", 1000)));
 
         const config = {
             headers: {
@@ -20,14 +23,13 @@ export const obtainResults = searchData => async(dispatch) => {
 
         const res = await axios.get('/api/profile/search', { params: searchData }, config);
         
-        
         dispatch({
             type: GET_SEARCH,
-            payload: res.data.map((result) => result.user)
+            payload: res.data
         });
 
-        //console.log(res.data.map((result) => result.user));
-        
+        dispatch((setAlert("Search completed", "success")));
+          
     } catch (err) {
         console.log(err);
         
@@ -37,5 +39,4 @@ export const obtainResults = searchData => async(dispatch) => {
         });
         
     }
-    return;
 };

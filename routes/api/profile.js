@@ -134,24 +134,23 @@ router.get('/', async (req, res) => {
 // Eg:     http://127.0.0.1:5000/api/profile/search?name=test
 router.get('/search', async (req, res) => {
     try {
-        const profiles = await Profile.find().populate('user', ['name', 'avatar', 'email']);
-
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
         // Filtering the profiles array
         const filtered = profiles.filter( (profile) => {
             if (req.query.name && profile.user.name !== req.query.name)
                 return false;
+            
             if (req.query.role && profile.role !== req.query.role)
                 return false;
             return true;
         });
-
         res.json(filtered);
     }
     catch (err) {
         console.log(err.message);
         res.status(500).send('Server Error');
     }
-})
+});
 
 // @route: GET api/profile/user/user_id
 // @desc:  Get profile by user ID
