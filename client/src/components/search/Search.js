@@ -13,21 +13,21 @@ const Search = ({obtainResults, result_profiles = []}) => {
     });
 
     const onChange = e => setSearchData({ ...searchData, [e.target.name]: e.target.value });
-    const [resultData, setResultData] = useState([]);
-
-
 
     const onSubmit = async e => {
         e.preventDefault();
         console.log("on submit...'")
         await obtainResults(searchData);
+        console.log(result_profiles);
     };
     
     const { name, role } = searchData;
 
     return (
         <Fragment>
-            <h1 className='large text-primary'>Search a user</h1>
+             <h1 className='large text-primary'> 
+                <i class="fas fa-search"></i>   Search a user
+            </h1>
 
             <form className="form" onSubmit={onSubmit}>
                 <div className="searchbar">
