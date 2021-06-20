@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
-//import formData from '../auth/Register';
+import formData from '../auth/Register';
 
 const initialState = {
   degree: '',
