@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { setAlert } from './alert';
 
-import React, { Fragment, useEffect } from 'react';
-//import { setAlert } from './alert';
+//import React, { Fragment, useEffect } from 'react';
 
 import {
     GET_SEARCH,
@@ -37,6 +36,6 @@ export const obtainResults = searchData => async(dispatch) => {
             type: SEARCH_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
         });
-        
+        dispatch((setAlert("ERROR", "danger")));
     }
 };
