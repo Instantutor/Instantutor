@@ -15,11 +15,12 @@ import PrivateRoute from '../routing/PrivateRoute';
 import NotFound from '../layout/NotFound';
 
 //Request page
-import Request from '../Request';
+import Request from '../request/Request';
 
 // Search page
 import Search from '../search/Search'
 
+/*
 class SearchContainer extends Component {
     state = {
         major: [],
@@ -28,6 +29,7 @@ class SearchContainer extends Component {
         inputvalue: ''
     }
 }
+*/
 
 const Routes = () => {
     return (

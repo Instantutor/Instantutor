@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { obtainResults } from '../../actions/search'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import store from '../../store';
 import SearchResultItem from './SearchResultItem';
+//import store from '../../store';
 
 const Search = ({obtainResults, result_profiles = []}) => {
     const [searchData, setSearchData] = useState({

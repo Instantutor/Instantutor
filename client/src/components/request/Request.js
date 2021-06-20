@@ -2,27 +2,10 @@ import React, { useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Source from './Source'
-import formData from './profile-forms/ProfileForm'
-import SearchContainer from '../App';
-import { createRequest } from '../actions/request';
+import formData from '../profile-forms/ProfileForm'
+import { createRequest } from '../../actions/request';
 
-/*
-Actual Search Bar code
-            <div className="searchbar">
-                <input
-                    type="text"
-                    placeholder="What do you need help with?"
-                    name="request"
-                    value={request}
-                    onChange={onChange} />
-                {(<Source name={img} />}
-            </div>
-*/
-
-
-const Request = (props) => {
-    //const [img, setImg] = useState("");
+const Request = ({createRequest}) => {
     const [requestData, setRequestData] = useState({
         request: '',
         course: '',
@@ -35,58 +18,57 @@ const Request = (props) => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        createRequest(requestData);
+        await createRequest(requestData);
+    };
 
-    };
-    /*
-    const InputEvent = (event) => {
-        const data = event.target.value;
-        console.log(data);
-        setImg(data);
-    };
-    */
     return (
         <>
             {(formData.role==='Student'||'Both') && (
             <Fragment>
 
             <h1 className="large text-primary">Open a Request!</h1>
-            <form className="form" onSubmit={e => onSubmit(e)}>
+            <small>* = required field</small>
+
+            <form className="form" onSubmit={onSubmit}>
+                <div className="form-group">
+                <input
+                    type="text"
+                    placeholder="* What do you need help with?"
+                    name="request"
+                    value={request}
+                    onChange={onChange} />
+                </div>
+
                 <div className="form-group">
                     <input
                         type="text"
-                        placeholder="Course"
+                        placeholder="Subject"
                         name="course"
                         value={course}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                     />
                 </div>
                 <div className="form-group">
-                    <input
-                        type="text"
-                        placeholder="Grade"
-                        name="grade"
-                        value={grade}
-                        onChange={e => onChange(e)}
-                    />
+                    <select name="grade" value={grade} onChange={onChange}>
+                    <option>What is the level of this problem?</option>
+                    <option value="None">Don't know</option>
+                    <option value="K-12">K-12</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Postgraduate">Postgraduate</option>
+                    <option value="PHD">PHD</option>
+                    </select>
                 </div>
+
                 <div className="form-group">
                     <input
                         type="text"
                         placeholder="Topic"
                         name="topic"
                         value={topic}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                     />
                 </div>
-                <div className="form-group">
-                <input
-                    type="text"
-                    placeholder="What do you need help with?"
-                    name="request"
-                    value={request}
-                    onChange={e => onChange(e)} />
-                </div>
+                
                 <input type="submit" className="btn btn-primary my-1" />
                 <Link className="btn btn-light my-1" to="/dashboard">
                     Go Back
@@ -100,9 +82,15 @@ const Request = (props) => {
     )
 };
 
+/*
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
-
 export default connect(mapStateToProps, {createRequest })(Request);
-//export default Search;
+*/
+
+Request.propTypes = {
+    createRequest: PropTypes.func.isRequired
+}
+
+export default connect(null, {createRequest })(Request);
