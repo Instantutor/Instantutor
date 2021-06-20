@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
 import Routes from './components/routing/Routes';
-import { LOGOUT } from './actions/types';
-import Request from './components/Request';
+//import { LOGOUT } from './actions/types';
 
 // Redux
 import { Provider } from 'react-redux';
@@ -14,11 +13,13 @@ import setAuthToken from './utils/setAuthToken';
 
 
 import './App.css';
-import formData from './components/profile-forms/ProfileForm';
+
+
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
+/*
 class SearchContainer extends Component {
   constructor(props) {
     super(props);
@@ -30,10 +31,8 @@ class SearchContainer extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitCourse = this.handleSubmitCourse.bind(this);
   }
-
-  
 }
-
+*/
 
 
 

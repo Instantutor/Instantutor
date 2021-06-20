@@ -7,12 +7,10 @@ import DashboardActions from './DashboardActions';
 import DashboardActionsStudent from './DashboardActionsStudent';
 import Spinner from '../layout/Spinner';
 
-import Searchbar from '../Request';
-import { render } from 'react-dom';
 import Expertise from './Expertise';
+//import { render } from 'react-dom';
 
 const Dashboard = ({
-    SearchBox,
     getCurrentProfile,
     deleteAccount,
     auth: { user },
