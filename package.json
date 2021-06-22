@@ -44,5 +44,7 @@
   "bugs": {
     "url": "https://github.com/Daxin-H/instatutor/issues"
   },
-  "homepage": "https://github.com/Daxin-H/instatutor#readme"
+  "homepage": "https://github.com/Daxin-H/instatutor#readme",
+  "proxy": "http://localhost:5000/"
+  
 }
