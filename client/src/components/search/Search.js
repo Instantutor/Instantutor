@@ -16,9 +16,9 @@ const Search = ({obtainResults, result_profiles = []}) => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        console.log("on submit...'")
+        //console.log("on submit...'")
         await obtainResults(searchData);
-        console.log(result_profiles);
+        //console.log(result_profiles);
     };
     
     const { name, role } = searchData;
