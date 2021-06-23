@@ -32,7 +32,7 @@ Create a react app to a folder 'client'
 	npx create-react-app client
 	// If you are in Folder Instantutor you may need to change the name of folder because of conflict
 More tools
-	npm i axios react-router-dom redux react-redux redux-thunk redux-devtools-extension moment react-moment
+	npm i axios react-router-dom redux react-redux redux-thunk redux-devtools-extension moment react-moment antd
 
 //---------------------
 
