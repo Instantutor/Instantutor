@@ -2,18 +2,25 @@ import React, { useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { DatePicker } from 'antd'
+import 'antd/dist/antd.css';
 import formData from '../profile-forms/ProfileForm'
 import { createRequest } from '../../actions/request';
+
+const { RangePicker } = DatePicker;
 
 const Request = ({createRequest}) => {
     const [requestData, setRequestData] = useState({
         request: '',
         course: '',
         grade: '',
-        topic: ''
+        topic: '',
+        help_time: '',
+        availability: [],
+        number_sessions: ''
     });
 
-    const { request, course, grade, topic} = requestData;
+    const { request, course, grade, topic, help_time, availability, number_sessions} = requestData;
     const onChange = e => setRequestData({ ...requestData, [e.target.name]: e.target.value });
 
     const onSubmit = async e => {
@@ -65,6 +72,31 @@ const Request = ({createRequest}) => {
                         placeholder="Topic"
                         name="topic"
                         value={topic}
+                        onChange={onChange}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <DatePicker onChange={
+                        (date) => setRequestData({ ...requestData, help_time: date })
+                    } />
+                </div>
+
+                <div className="form-group">
+                    <RangePicker onChange={
+                        (dates) => {
+                            setRequestData({ ...requestData,
+                                availability: requestData.availability.concat([{range_start: dates[0], range_end: dates[1]}]) });
+                        }
+                    } />
+                </div>
+
+                <div className="form-group">
+                    <input
+                        type="text"
+                        placeholder="How many sessions do you want help with?"
+                        name="number_sessions"
+                        value={number_sessions}
                         onChange={onChange}
                     />
                 </div>

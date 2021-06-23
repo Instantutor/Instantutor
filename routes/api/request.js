@@ -25,7 +25,10 @@ router.post('/', [auth, [
             request,
             course,
             grade,
-            topic
+            topic,
+            help_time,
+            availability,
+            number_sessions
         } = req.body;
 
         const requestFields = {};
@@ -35,6 +38,9 @@ router.post('/', [auth, [
         if (course) requestFields.course = course;
         if (grade) requestFields.grade = grade;
         if (topic) requestFields.topic = topic;
+        if (help_time) requestFields.help_time = help_time;
+        if (availability) requestFields.availability = availability;
+        if (number_sessions) requestFields.number_sessions = number_sessions;
 
         try {
             let newRequest = await Request.findOne({ user: req.user.id });

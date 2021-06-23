@@ -18,6 +18,25 @@ const RequestSchema = new Schema({
     },
     topic: {
         type: String
+    },
+    help_time: {
+        type: Date
+    },
+    availability: [
+        {
+            date: {
+                type: Date
+            },
+            range_start: {
+                type: Date
+            },
+            range_end: {
+                type: Date
+            }
+        }
+    ],
+    number_sessions: {
+        type: Number
     }
 });
 
