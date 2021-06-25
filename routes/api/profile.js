@@ -1,7 +1,7 @@
 const express = require('express');
 const request = require('request')
 const config = require('config')
-
+const partialMatch = require("../../utils/utilities");
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator/check');
@@ -12,7 +12,7 @@ const User = require('../../models/User');
 // @route: GET api/profile/me
 // @desc: Get current users profile
 // @access Private
-
+console.log("type:",typeof(partialMatch));
 router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id }).populate(
@@ -137,12 +137,13 @@ router.get('/search', async (req, res) => {
         const profiles = await Profile.find().populate('user', ['name', 'avatar']);
         // Filtering the profiles array
         const filtered = profiles.filter( (profile) => {
-            if (req.query.name && profile.user.name !== req.query.name)
+            if(req.query.name && (req.query.role == profile.role || req.query.role == "Both")){
+            console.log("Checking Match:",profile.role, profile.user.name, req.query.role, req.query.name);
+            return partialMatch(profile.user.name, req.query.name);
+            }
+            else{
                 return false;
-            
-            if (req.query.role && profile.role !== req.query.role)
-                return false;
-            return true;
+            }
         });
         res.json(filtered);
     }
