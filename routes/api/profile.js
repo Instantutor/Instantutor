@@ -137,7 +137,7 @@ router.get("/search", async (req, res) => {
       if (
         req.query.name &&
         (req.query.role == profile.role ||
-          req.query.role == "Both" ||
+          req.query.role == "" ||
           profile.role == "Both")
       ) {
         return partialMatch(profile.user.name, req.query.name);
