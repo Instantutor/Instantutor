@@ -21,20 +21,10 @@ const RequestSchema = new Schema({
         type: String,
       },
       help_time: {
-        type: Date,
+        type: String,
       },
       availability: [
-        {
-          date: {
-            type: Date,
-          },
-          range_start: {
-            type: Date,
-          },
-          range_end: {
-            type: Date,
-          },
-        },
+        String
       ],
       number_sessions: {
         type: Number,

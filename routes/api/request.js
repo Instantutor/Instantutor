@@ -64,8 +64,7 @@ router.post(
       }
     } else {
       try {
-        //TODO: need to check for upper bound...
-        if (requestByUser.requests.length < 5) {
+        if (requestByUser.requests.length < 3) {
           let originalRequests = await Request.findOneAndUpdate(
             { user: req.user.id },
             { $push: { requests: requestFields } }
@@ -76,10 +75,10 @@ router.post(
             newRequest: requestFields,
           });
         } else {
-          console.error("User cannot exceed maximum of 5 concurrent requests.");
+          console.error("User cannot exceed maximum of 3 concurrent requests.");
           res.status(400).json({
             error:
-              "User tried to exceed maximum of 5 concurrent requests for help.",
+              "User tried to exceed maximum of 3 concurrent requests for help.",
           });
         }
       } catch (err) {
