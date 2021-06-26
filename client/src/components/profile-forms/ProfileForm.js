@@ -108,7 +108,6 @@ const ProfileForm = ({
           </small>
         </div>
 
-        <form className="form" onSubmit={onSubmit}>
         <div className="form-group">
           <select name="role" value={role} onChange={onChange}>
             <option>* Select Your Role</option>
@@ -120,7 +119,6 @@ const ProfileForm = ({
             Select your role (Student, Tutor, or Both!)
           </small>
         </div>
-        </form>
 
         <div className="form-group">
           <input
