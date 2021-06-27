@@ -505,8 +505,28 @@ button {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Timepicker Styles */
+.timepicker {
+	table-layout: fixed;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	height: 200px;
+}
+
+.timepicker th {
+	text-align: center;
+	padding: 5px;
+}
+
+.timepicker td {
+	text-align: center;
+	vertical-align: center;
+	padding: 5px;
+}
+
 /* Mobile Styles */
-@media (max-width: 700px) {
+@media (max-width: 750px) {
 	.container {
 		margin-top: 8rem;
 	}
@@ -546,6 +566,14 @@ button {
 	.navbar .welcome {
 		display: none;
 	}
+
+	/* Timepicker Styles */
+	.timepicker tr > * {
+        display: block;
+    }
+    .timepicker tr {
+        display: table-cell;
+    }
 
 	/* Profiles Page */
 	.profile {

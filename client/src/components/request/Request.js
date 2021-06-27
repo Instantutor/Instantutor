@@ -33,6 +33,25 @@ const Request = ({createRequest}) => {
         await createRequest(requestData);
     };
 
+    // Generating the checkbox
+    const day_names = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const day_times = ['morning', 'evening', 'night'];
+    const day_headers = day_names.map(name => (
+        <th>{name}</th>
+    ));
+    const checkbox = day_times.map(time => (
+        <tr>
+            <th>{time}</th>
+            {
+                day_names.map( day => (
+                    <td>
+                        <input name={day + " " + time} type="checkbox" onChange={setAvailability}></input>
+                    </td>
+                ))
+            }
+        </tr>
+    ));
+
     return (
         <>
             {(formData.role==='Student'||'Both') && (
@@ -108,33 +127,13 @@ const Request = ({createRequest}) => {
                 </div>
 
                 <div className="form-group">
-                    <div>
-                        <input name="sunday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="monday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="tuesday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="wednesday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="thursday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="friday morning" type="checkbox" onChange={setAvailability}></input>
-                        <input name="saturday morning" type="checkbox" onChange={setAvailability}></input>
-                    </div>
-                    <div>
-                        <input name="sunday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="monday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="tuesday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="wednesday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="thursday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="friday evening" type="checkbox" onChange={setAvailability}></input>
-                        <input name="saturday evening" type="checkbox" onChange={setAvailability}></input>
-                    </div>
-                    <div>
-                        <input name="sunday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="monday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="tuesday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="wednesday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="thursday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="friday night" type="checkbox" onChange={setAvailability}></input>
-                        <input name="saturday night" type="checkbox" onChange={setAvailability}></input>
-                    </div>
+                    <table className="timepicker">
+                        <tr>
+                            <th>&nbsp;</th>
+                            {day_headers}
+                        </tr>
+                        {checkbox}
+                    </table>
                     <small className="form-text">
                         When are you generally available?
                     </small>
