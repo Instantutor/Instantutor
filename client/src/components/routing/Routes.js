@@ -21,6 +21,7 @@ import NotFound from '../layout/NotFound';
 
 //Request page
 import Request from '../request/Request';
+import RequestPage from '../request/RequestPage';
 
 // Search page
 import Search from '../search/Search'
@@ -45,6 +46,7 @@ const Routes = () => {
                 <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute exact path="/request" component={Request} />
+                <PrivateRoute exact path="/RequestPage" component={RequestPage} />
                 <PrivateRoute exact path="/search" component={Search} />
                 <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute exact path="/create-profile" component={ProfileForm} />

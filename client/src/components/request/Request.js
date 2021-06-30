@@ -181,6 +181,11 @@ const Request = ({ createRequest }) => {
             <Link className="btn btn-light my-1" to="/dashboard">
               Go Back
             </Link>
+
+            <Link className="btn btn-light my-1" to="/RequestPage">
+              Request History
+            </Link>
+
           </form>
         </Fragment>
       )}
