@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { obtainResults } from '../../actions/search'
+import { obtainResults, getNames } from '../../actions/search'
+import { getCurrentProfile } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchResultItem from './SearchResultItem';
@@ -12,13 +13,16 @@ const Search = ({obtainResults, result_profiles = []}) => {
         role: 'Both'
     });
 
+    const names = getCurrentProfile();
+   
     const onChange = e => setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
     const onSubmit = async e => {
+        console.log(names)
         e.preventDefault();
         console.log("on submit...'")
         await obtainResults(searchData);
-        console.log(result_profiles);
+        // console.log(result_profiles);
     };
     
     const { name, role } = searchData;

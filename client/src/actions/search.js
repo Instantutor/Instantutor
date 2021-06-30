@@ -7,6 +7,7 @@ import {
     GET_SEARCH,
     SEARCH_CLEAR,
     SEARCH_ERROR,
+    retrieveNames
 } from './types';
 
 
@@ -39,3 +40,22 @@ export const obtainResults = searchData => async(dispatch) => {
         dispatch((setAlert("ERROR", "danger")));
     }
 };
+
+export const getNames = () => async(dispatch) =>
+{
+    try {
+        const res = await axios.get('/api/profile/names');
+        // console.log("hello")
+        dispatch({
+            type: retrieveNames,
+            payload: res.data
+        });
+        console.log(res.data);
+    } catch (err) {
+        dispatch({
+            type: retrieveNames,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+    }
+
+}

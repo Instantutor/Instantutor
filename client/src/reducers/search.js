@@ -1,4 +1,4 @@
-import {GET_SEARCH,SEARCH_ERROR, SEARCH_CLEAR } from '../actions/types';
+import {GET_SEARCH,SEARCH_ERROR, SEARCH_CLEAR, retrieveNames } from '../actions/types';
 
 const initialState = {
     result: [],
@@ -9,6 +9,7 @@ const initialState = {
 export default function (state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
+        case retrieveNames:
         case GET_SEARCH:
             return {
                 ...state,
