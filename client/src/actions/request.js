@@ -3,7 +3,9 @@ import { setAlert } from './alert';
 
 import {
     POST_REQUEST,
-    REQUEST_ERROR
+    REQUEST_ERROR,
+    GET_REQUEST
+    
 } from './types';
 
 export const createRequest = requestData => async(dispatch) => {
@@ -38,3 +40,20 @@ export const createRequest = requestData => async(dispatch) => {
         });
     }
 };
+
+
+export const getRequestHistory = userId => async(dispatch) => {
+    try {
+        const res = await axios.get(`/api/request/${userId}`);
+        //console.log(res.data);
+        dispatch({
+            type: GET_REQUEST,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: REQUEST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+    }
+}

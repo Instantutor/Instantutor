@@ -1,4 +1,7 @@
-import {POST_REQUEST,REQUEST_ERROR} from '../actions/types';
+import {POST_REQUEST,
+        REQUEST_ERROR,
+        GET_REQUEST
+} from '../actions/types';
 
 const initialState = {
     request: [],
@@ -15,6 +18,12 @@ export default function (state = initialState, action) {
                 result: payload,
                 loading: false
             };
+        case GET_REQUEST:
+            return {
+                ... state,
+                request_history: payload,
+                loading: false
+            }
 
         case REQUEST_ERROR:
             return {
