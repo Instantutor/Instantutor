@@ -7,7 +7,7 @@ import { getRequestHistory } from '../../actions/request';
 import RequestItem from './RequestItem';
 
 
-const RequestPage = ({ getRequestHistory, req_history = [], match }) => {
+const RequestPage = ({ getRequestHistory, req_history = [], loading = true, match }) => {
     useEffect(async () => {
         await getRequestHistory(match.params.id);
     }, 
@@ -16,26 +16,30 @@ const RequestPage = ({ getRequestHistory, req_history = [], match }) => {
     return (
         <Fragment>
 
-            {req_history === null || req_history.length < 1 ? (
+            {loading ? (
                 <Spinner />
-
-                /*
-                <div>
-                    <h1 className="large text-primary">Oops!</h1>
-                    <h1 className="text-primary">Looks like u did not post any requests yet...</h1>
-                </div>
-                */
-                
             ) : (
-                <div className='request'>
 
-                    <h1 className="large text-primary">Request History</h1>
-                    {req_history[0].requests.map(request => (
-                        <RequestItem key={request._id} item={request} />
-                    ))}
+                req_history === null || req_history.length < 1 ? (    
                     
-                </div>
-
+                    <div>
+                        <h1 className="large text-primary">Oops!</h1>
+                        <h1 className="text-primary">Looks like u did not post any requests yet...</h1>
+                    </div>
+                    
+                    
+                ) : (
+                    
+                    <div className='request'>
+    
+                        <h1 className="large text-primary">Request History</h1>
+                        {req_history[0].requests.map(request => (
+                            <RequestItem key={request._id} item={request} />
+                        ))}
+                        
+                    </div>
+    
+                )
             )}
 
             <Link to="/request" className="btn btn-light">
@@ -48,11 +52,13 @@ const RequestPage = ({ getRequestHistory, req_history = [], match }) => {
 
 RequestPage.propTypes = {
     getRequestHistory: PropTypes.func.isRequired,
+    loading: PropTypes.object.isRequired,
 };
 
 
 const mapStateToProps = (state) => ({
     req_history: state.request.request_history,
+    loading: state.request.loading,
 });
 
 
