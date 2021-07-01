@@ -15,7 +15,10 @@ router.post(
   [auth, [check("request", "request content is required").not().isEmpty()]],
 
   async (req, res) => {
+
     const errors = validationResult(req);
+    //console.log(req)
+
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -75,7 +78,7 @@ router.post(
             newRequest: requestFields,
           });
         } else {
-          console.error("User cannot exceed maximum of 3 concurrent requests.");
+          //console.error("User cannot exceed maximum of 3 concurrent requests.");
           res.status(400).json({
             error:
               "User tried to exceed maximum of 3 concurrent requests for help.",
