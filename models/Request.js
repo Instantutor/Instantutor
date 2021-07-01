@@ -29,6 +29,10 @@ const RequestSchema = new Schema({
       number_sessions: {
         type: Number,
       },
+      post_time: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
 });

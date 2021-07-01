@@ -9,7 +9,8 @@ const RequestItem =({
         grade,
         topic,
         help_time,
-        number_sessions
+        number_sessions,
+        post_time
     }
 }) => {
     return (
@@ -27,6 +28,10 @@ const RequestItem =({
 
                 <p>
                 <strong>Number of sessions: </strong> {number_sessions}
+                </p>
+
+                <p>
+                <strong>Posted on: </strong> {new Date(post_time).toLocaleString()}
                 </p>
                 
             </div>
