@@ -7,9 +7,8 @@ import {
     GET_SEARCH,
     SEARCH_CLEAR,
     SEARCH_ERROR,
-    retrieveNames
+    AUTO_SUGGESTION,
 } from './types';
-
 
 export const obtainResults = searchData => async(dispatch) => {
     try {
@@ -22,7 +21,6 @@ export const obtainResults = searchData => async(dispatch) => {
         }
 
         const res = await axios.get('/api/profile/search', { params: searchData }, config);
-        
         dispatch({
             type: GET_SEARCH,
             payload: res.data
@@ -41,21 +39,29 @@ export const obtainResults = searchData => async(dispatch) => {
     }
 };
 
-export const getNames = () => async(dispatch) =>
-{
+// This will call the api which spawns the python script from algos/SearchBar/Trie.py. Dispatches an array of strings
+
+export const autoSuggestion = searchData => async(dispatch) => {
     try {
-        const res = await axios.get('/api/profile/names');
-        // console.log("hello")
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const res = await axios.get('/api/searchbar/suggestedlist', { params: searchData }, config);
+        const split_string = res.data.split(",");
+        // console.log(split_string);     
         dispatch({
-            type: retrieveNames,
-            payload: res.data
-        });
-        console.log(res.data);
+            type: AUTO_SUGGESTION,
+            payload: split_string
+        }); 
     } catch (err) {
+        console.log(err);
+        
         dispatch({
-            type: retrieveNames,
+            type: SEARCH_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
         });
+        dispatch((setAlert("ERROR", "danger")));
     }
-
-}
+};

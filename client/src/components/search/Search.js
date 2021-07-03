@@ -1,28 +1,30 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { obtainResults, getNames } from '../../actions/search'
+import { obtainResults,autoSuggestion} from '../../actions/search'
 import { getCurrentProfile } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchResultItem from './SearchResultItem';
+// import Dropdown from 'react-bootstrap/Dropdown';
 //import store from '../../store';
 
-const Search = ({obtainResults, result_profiles = []}) => {
+const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profiles = []}) => {
     const [searchData, setSearchData] = useState({
         name: '',
         role: 'Both'
     });
 
-    const names = getCurrentProfile();
-   
-    const onChange = e => setSearchData({ ...searchData, [e.target.name]: e.target.value });
+    const onChange = async e => {
+        setSearchData({ ...searchData, [e.target.name]: e.target.value });;
+        console.log(searchData.name)
+        await autoSuggestion(searchData);
+        console.log(suggested_list);
+    }
 
     const onSubmit = async e => {
-        console.log(names)
         e.preventDefault();
         console.log("on submit...'")
         await obtainResults(searchData);
-        // console.log(result_profiles);
     };
     
     const { name, role } = searchData;
@@ -38,9 +40,9 @@ const Search = ({obtainResults, result_profiles = []}) => {
                     <input
                         type="text"
                         placeholder="Who do you want to search"
+                        onChange={onChange} 
                         name="name"
                         value={name}
-                        onChange={onChange} 
                     />
                     <div>
                         <select name="role" value={role} onChange={onChange}>
@@ -76,18 +78,20 @@ const Search = ({obtainResults, result_profiles = []}) => {
         </Fragment>
     )
 }
-/*
 
- */
 Search.propTypes = {
     obtainResults: PropTypes.func.isRequired,
-    result_profiles: PropTypes.array.isRequired
+    autoSuggestion: PropTypes.func.isRequired,
+    result_profiles: PropTypes.array.isRequired,
+    suggested_list: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
-    result_profiles: state.search.result
+    result_profiles: state.search.result,
+    suggested_list: state.search.second_result
 });
 
-export default connect(mapStateToProps, {obtainResults})(Search);
+export default connect(mapStateToProps, {autoSuggestion,obtainResults})(Search)
+
 
 //export default Search
