@@ -19,7 +19,7 @@ const Dashboard = ({
     useEffect(() => {
         getCurrentProfile();
     }, []);
-    return loading && profile === null ? <Spinner /> :
+    return loading || profile === null ? <Spinner /> :
         <Fragment>
             
             <h1 className="large text-primary"> Personal page </h1>
@@ -30,11 +30,11 @@ const Dashboard = ({
             {profile !== null ? (
                 <Fragment>
                     {profile.role === 'Student' &&
-                    <DashboardActionsStudent/>
+                        <DashboardActionsStudent/>
                     }
 
                     {profile.role !== 'Student' &&
-                    <DashboardActions />
+                        <DashboardActions />
                     }
                     
 

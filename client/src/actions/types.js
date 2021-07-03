@@ -21,3 +21,4 @@ export const AUTO_SUGGESTION = 'AUTO_SUGGESTION';
 //request
 export const POST_REQUEST= 'POST_REQUEST';
 export const REQUEST_ERROR = 'REQUEST_ERROR';
+export const GET_REQUEST = 'GET_REQUEST';

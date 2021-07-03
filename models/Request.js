@@ -1,24 +1,40 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const RequestSchema = new Schema({
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-    },
-    request: {
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  requests: [
+    {
+      request: {
         type: String,
-        required: true
-    },
-    course: {
+      },
+      course: {
         type: String,
+      },
+      grade: {
+        type: String,
+      },
+      topic: {
+        type: String,
+      },
+      help_time: {
+        type: String,
+      },
+      availability: [
+        String
+      ],
+      number_sessions: {
+        type: Number,
+      },
+      post_time: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    grade: {
-        type: String
-    },
-    topic: {
-        type: String
-    }
+  ],
 });
 
-module.exports = mongoose.model('request', RequestSchema);
+module.exports = mongoose.model("request", RequestSchema);

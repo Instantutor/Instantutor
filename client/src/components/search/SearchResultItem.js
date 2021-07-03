@@ -18,7 +18,7 @@ const SearchResultItem =({
                 <h2>{name}</h2>
                 <p>
                 <Fragment>
-                    {role == 'Both' ? (
+                    {role === 'Both' ? (
                         <i class="fas fa-user-tag"> Tutor & Student </i>
                     ) : (
                         <i class="fas fa-user-tag"> {" " + role} </i>

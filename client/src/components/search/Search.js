@@ -23,7 +23,7 @@ const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profil
 
     const onSubmit = async e => {
         e.preventDefault();
-        console.log("on submit...'")
+        //console.log("on submit...'")
         await obtainResults(searchData);
     };
     
