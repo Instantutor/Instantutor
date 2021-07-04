@@ -18,7 +18,7 @@ export const GET_SEARCH= 'GET_SEARCH';
 export const SEARCH_ERROR = 'SEARCH_ERROR';
 export const SEARCH_CLEAR = 'SEARCH_CLEAR';
 
-//request
-export const POST_REQUEST= 'POST_REQUEST';
-export const REQUEST_ERROR = 'REQUEST_ERROR';
-export const GET_REQUEST = 'GET_REQUEST';
+//user request
+export const POST_USER_REQUEST= 'POST_USER_REQUEST';
+export const USER_REQUEST_ERROR = 'USER_REQUEST_ERROR';
+export const GET_USER_REQUEST = 'GET_USER_REQUEST';

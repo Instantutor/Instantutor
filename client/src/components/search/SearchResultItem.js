@@ -19,24 +19,24 @@ const SearchResultItem =({
                 <p>
                 <Fragment>
                     {role === 'Both' ? (
-                        <i class="fas fa-user-tag"> Tutor & Student </i>
+                        <i className="fas fa-user-tag"> Tutor & Student </i>
                     ) : (
-                        <i class="fas fa-user-tag"> {" " + role} </i>
+                        <i className="fas fa-user-tag"> {" " + role} </i>
                     )
                     }
                 </Fragment>
                 </p>
                 <p>
-                    <i class="far fa-address-card"> {" " + bio} </i>
+                    <i className="far fa-address-card"> {" " + bio} </i>
                 </p>
             </div>
             
             <p>
-                <i class="fas fa-award">{" " + degree} </i> 
+                <i className="fas fa-award">{" " + degree} </i> 
             </p>
             
             <Link to={`/profile/${_id}`} className='btn btn-primary'>
-                <i class="fas fa-user-circle"> </i> View Profile
+                <i className="fas fa-user-circle"> </i> View Profile
             </Link>
 
             <ul>

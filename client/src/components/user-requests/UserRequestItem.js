@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const RequestItem =({
+const UserRequestItem =({
     item: {
         request,
         course,
@@ -39,8 +39,8 @@ const RequestItem =({
     )
 }
 
-RequestItem.propTypes = {
+UserRequestItem.propTypes = {
     request: PropTypes.object.isRequired
 };
   
-export default RequestItem;
+export default UserRequestItem;
