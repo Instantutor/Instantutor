@@ -39,7 +39,7 @@ const UserRequestItem =({
     )
 }
 
-RequestItem.propTypes = {
+UserRequestItem.propTypes = {
     item: PropTypes.object.isRequired
 };
   
