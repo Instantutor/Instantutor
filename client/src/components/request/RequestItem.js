@@ -40,7 +40,7 @@ const RequestItem =({
 }
 
 RequestItem.propTypes = {
-    request: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired
 };
   
 export default RequestItem;

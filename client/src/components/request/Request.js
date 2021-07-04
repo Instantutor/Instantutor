@@ -59,14 +59,14 @@ const Request = ({ createRequest }) => {
     "saturday",
   ];
   const day_times = ["morning", "evening", "night"];
-  const day_headers = day_names.map((name) => <th>{name}</th>);
+  const day_headers = day_names.map((name) => <th key = {name}>{name}</th>);
   const checkbox = day_times.map((time) => (
-    <tr>
+    <tr key = {time}>
       <th>{time}</th>
       {day_names.map((day) => (
-        <td>
+        <td key = {day}>
           <input
-            class="checkbox"
+            className="checkbox"
             name={day + " " + time}
             type="checkbox"
             onChange={setAvailability}
@@ -153,11 +153,13 @@ const Request = ({ createRequest }) => {
 
             <div className="form-group">
               <table className="timepicker">
-                <tr>
-                  <th>&nbsp;</th>
-                  {day_headers}
-                </tr>
-                {checkbox}
+                <tbody>
+                  <tr>
+                    <th>&nbsp;</th>
+                    {day_headers}
+                  </tr>
+                  {checkbox}
+                </tbody>
               </table>
               <small className="form-text">
                 When are you generally available?

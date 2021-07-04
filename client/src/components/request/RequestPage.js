@@ -7,19 +7,18 @@ import { getRequestHistory } from '../../actions/request';
 import RequestItem from './RequestItem';
 
 
-const RequestPage = ({ getRequestHistory, req_history = [], loading = true, match }) => {
-    useEffect(async () => {
-        await getRequestHistory(match.params.id);
+const RequestPage = ({ getRequestHistory, req_history = [], loading = true, id}) => {
+    useEffect(() => {
+        getRequestHistory(id);
     }, 
-        [getRequestHistory, match.params.id]
+        [getRequestHistory, id]
     );
     return (
         <Fragment>
-
+            
             {loading ? (
                 <Spinner />
             ) : (
-
                 req_history === null || req_history.length < 1 ? (    
                     
                     <div>
@@ -29,7 +28,6 @@ const RequestPage = ({ getRequestHistory, req_history = [], loading = true, matc
                     
                     
                 ) : (
-                    
                     <div className='request'>
     
                         <h1 className="large text-primary">Request History</h1>
@@ -52,13 +50,15 @@ const RequestPage = ({ getRequestHistory, req_history = [], loading = true, matc
 
 RequestPage.propTypes = {
     getRequestHistory: PropTypes.func.isRequired,
-    loading: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired
 };
 
 
 const mapStateToProps = (state) => ({
     req_history: state.request.request_history,
     loading: state.request.loading,
+    id: state.auth.user._id
 });
 
 
