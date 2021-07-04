@@ -14,7 +14,7 @@ const DashboardActionsStudent = () => {
             <Link to="/request" className="btn btn-light"
             ><i className="fas fa-share-square text-primary"></i> Make Request </Link>
             
-            <Link to="/edit-profile" className="btn btn-light"
+            <Link to="/edit_profile" className="btn btn-light"
             ><i className="fas fa-user-circle text-primary"></i> Edit Profile</Link>
 
         </div>

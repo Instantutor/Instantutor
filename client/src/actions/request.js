@@ -2,15 +2,14 @@ import axios from 'axios';
 import { setAlert } from './alert';
 
 import {
-    POST_REQUEST,
-    REQUEST_ERROR,
-    GET_REQUEST
+    POST_USER_REQUEST,
+    USER_REQUEST_ERROR,
+    GET_USER_REQUEST
     
 } from './types';
 
 export const createRequest = requestData => async(dispatch) => {
     try {
-        console.log('success');
 
         const config = {
             headers: {
@@ -21,7 +20,7 @@ export const createRequest = requestData => async(dispatch) => {
         const res = await axios.post('/api/request', requestData, config);  
 
         dispatch({
-            type: POST_REQUEST,
+            type: POST_USER_REQUEST,
             payload: res.data
         });
 
@@ -38,7 +37,7 @@ export const createRequest = requestData => async(dispatch) => {
         
         if (limit_exceed != null){
             dispatch({
-                type: REQUEST_ERROR,
+                type: USER_REQUEST_ERROR,
                 payload: limit_exceed
             });
             dispatch(setAlert(limit_exceed, 'danger'))
@@ -53,12 +52,12 @@ export const getRequestHistory = userId => async(dispatch) => {
         const res = await axios.get(`/api/request/${userId}`);
         //console.log(res.data);
         dispatch({
-            type: GET_REQUEST,
+            type: GET_USER_REQUEST,
             payload: res.data
         });
     } catch (err) {
         dispatch({
-            type: REQUEST_ERROR,
+            type: USER_REQUEST_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
         });
     }

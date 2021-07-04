@@ -16,12 +16,12 @@ import Profile from '../profile/Profile';
 //Force user to log in, protact dashboard
 import PrivateRoute from '../routing/PrivateRoute';
 
-//did not found page
+//Not found page
 import NotFound from '../layout/NotFound';
 
 //Request page
-import Request from '../request/Request';
-import RequestPage from '../request/RequestPage';
+import UserRequest from '../user-requests/UserRequest';
+import UserRequestHistory from '../user-requests/UserRequestHistory';
 
 // Search page
 import Search from '../search/Search'
@@ -45,13 +45,13 @@ const Routes = () => {
                 <Route exact path="/register" component={Register}></Route>
                 <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/request" component={Request} />
-                <PrivateRoute exact path="/RequestPage" component={RequestPage} />
+                <PrivateRoute exact path="/request" component={UserRequest} />
+                <PrivateRoute exact path="/request_history" component={UserRequestHistory} />
                 <PrivateRoute exact path="/search" component={Search} />
                 <Route exact path="/profile/:id" component={Profile} />
-                <PrivateRoute exact path="/create-profile" component={ProfileForm} />
-                <PrivateRoute exact path="/edit-profile" component={ProfileForm} />
-                <PrivateRoute exact path="/add-expertise" component={AddExpertise} />
+                <PrivateRoute exact path="/create_profile" component={ProfileForm} />
+                <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
+                <PrivateRoute exact path="/add_expertise" component={AddExpertise} />
                 <Route component={NotFound} />
             </Switch>
         </section>

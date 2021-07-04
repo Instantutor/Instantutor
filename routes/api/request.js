@@ -10,6 +10,9 @@ const Request = require("../../models/Request");
 const User = require("../../models/User");
 const { route } = require("./users");
 
+// @route: POST api/request/
+// @desc:  Post a request from a user
+// @access Private
 router.post(
   "/",
   [auth, [check("request", "request content is required").not().isEmpty()]],
@@ -59,7 +62,7 @@ router.post(
         );
         return res.json({
           msg: "Requests for user initialized.",
-          request: newRequest,
+          new_request: newRequest.requests[0],
         });
       } catch (err) {
         console.error(err.message);
@@ -74,8 +77,8 @@ router.post(
           );
           res.json({
             msg: "Request added for user.",
-            "Original requests": originalRequests,
-            newRequest: requestFields,
+            original_requests: originalRequests.requests,
+            new_request: requestFields,
           });
         } else {
           //console.error("User cannot exceed maximum of 3 concurrent requests.");
@@ -92,7 +95,9 @@ router.post(
   }
 );
 
-//List all current requests
+// @route: Get api/request/
+// @desc:  Get a list of all requests
+// @access Private
 router.get("/", auth, async (req, res) => {
   try {
     const reqs = await Request.find().sort({ date: -1 });
@@ -103,10 +108,12 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-//List all current requests by certain user
+// @route: Get api/request/:user_id
+// @desc:  Get a list of all requests made by a certain user
+// @access Private
 router.get("/:user_id", auth, async (req, res) => {
   try {
-    const reqs = await Request.find({ user: req.user.id }).sort({
+    const reqs = await Request.find({ user: req.params.user_id }).sort({
       date: -1,
     });
     res.json(reqs);
