@@ -59,12 +59,12 @@ const UserRequest = ({ createRequest }) => {
     "saturday",
   ];
   const day_times = ["morning", "evening", "night"];
-  const day_headers = day_names.map((name) => <th>{name}</th>);
+  const day_headers = day_names.map((name) => <th key = {name}>{name}</th>);
   const checkbox = day_times.map((time) => (
-    <tr>
+    <tr key = {time}>
       <th>{time}</th>
       {day_names.map((day) => (
-        <td>
+        <td key = {day}>
           <input
             className="checkbox"
             name={day + " " + time}
@@ -153,11 +153,13 @@ const UserRequest = ({ createRequest }) => {
 
             <div className="form-group">
               <table className="timepicker">
-                <tr>
-                  <th>&nbsp;</th>
-                  {day_headers}
-                </tr>
-                {checkbox}
+                <tbody>
+                  <tr>
+                    <th>&nbsp;</th>
+                    {day_headers}
+                  </tr>
+                  {checkbox}
+                </tbody>
               </table>
               <small className="form-text">
                 When are you generally available?

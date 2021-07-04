@@ -19,7 +19,7 @@ const Dashboard = ({
     useEffect(() => {
         getCurrentProfile();
     }, []);
-    return loading || profile === null ? <Spinner /> :
+    return loading ? <Spinner /> :
         <Fragment>
             
             <h1 className="large text-primary"> Personal page </h1>

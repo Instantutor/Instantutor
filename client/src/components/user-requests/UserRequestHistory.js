@@ -25,11 +25,10 @@ const UserRequestHistory = ({ getRequestHistory,
     );
     return (
         <Fragment>
-
+            
             {loading ? (
                 <Spinner />
             ) : (
-
                 req_history === null || req_history.length < 1 ? (    
                     
                     <div>
@@ -39,7 +38,6 @@ const UserRequestHistory = ({ getRequestHistory,
                     
                     
                 ) : (
-                    
                     <div className='request'>
     
                         <h1 className="large text-primary">Request History</h1>
@@ -62,7 +60,8 @@ const UserRequestHistory = ({ getRequestHistory,
 
 UserRequestHistory.propTypes = {
     getRequestHistory: PropTypes.func.isRequired,
-    loading: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired
 };
 
 

@@ -12,8 +12,8 @@ import ProfileExpertise from './ProfileExpertise';
 //  Will show ProfileTop; ProfileAbout and ProfileExperience... 
 
 const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
-    useEffect(async () => {
-        await getProfileById(match.params.id);
+    useEffect(() => {
+        getProfileById(match.params.id);
     }, 
         [getProfileById, match.params.id]
     );
