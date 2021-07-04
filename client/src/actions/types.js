@@ -17,6 +17,7 @@ export const ACCOUNT_DELETED  = 'ACCOUNT_DELETED ';
 export const GET_SEARCH= 'GET_SEARCH';
 export const SEARCH_ERROR = 'SEARCH_ERROR';
 export const SEARCH_CLEAR = 'SEARCH_CLEAR';
+export const AUTO_SUGGESTION = 'AUTO_SUGGESTION';
 
 //user request
 export const POST_USER_REQUEST= 'POST_USER_REQUEST';

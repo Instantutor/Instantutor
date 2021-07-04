@@ -1,7 +1,7 @@
-const express = require("express");
-const request = require("request");
-const config = require("config");
-const partialMatch = require("../../utils/utilities");
+const express = require('express');
+const request = require('request');
+const config = require('config');
+
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
@@ -124,6 +124,21 @@ router.get("/", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+// @route: GET api/profile/names
+// @desc:  Get all profile names
+// @access Pubic
+router.get('/names', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name']);
+        console.log(profiles);
+        res.json(profiles);
+    }
+    catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+})
 
 // @route: GET api/profile/search?param1=text&param2=t
 // @desc:  Get profile and filters by any number of params (all optional)
