@@ -32,7 +32,7 @@ const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profil
     return (
         <Fragment>
              <h1 className='large text-primary'> 
-                <i class="fas fa-search"></i>   Search a user
+                <i className="fas fa-search"></i>   Search a user
             </h1>
 
             <form className="form" onSubmit={onSubmit}>

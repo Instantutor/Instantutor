@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest } from "../../actions/request";
 import "../../App.css";
-const Request = ({ createRequest }) => {
+const UserRequest = ({ createRequest }) => {
   const [requestData, setRequestData] = useState({
     request: "",
     course: "",
@@ -184,7 +184,7 @@ const Request = ({ createRequest }) => {
               Go Back
             </Link>
 
-            <Link className="btn btn-light my-1" to="/RequestPage">
+            <Link className="btn btn-light my-1" to="/request_history">
               Request History
             </Link>
 
@@ -202,8 +202,8 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {createRequest })(Request);
 */
 
-Request.propTypes = {
+UserRequest.propTypes = {
   createRequest: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createRequest })(Request);
+export default connect(null, { createRequest })(UserRequest);

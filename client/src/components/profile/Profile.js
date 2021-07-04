@@ -34,7 +34,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
                     auth.loading === false &&
                     auth.user._id === profile.user._id && (
 
-                        <Link to="/edit-profile" className="btn btn-dark">
+                        <Link to="/edit_profile" className="btn btn-dark">
                             Edit Profile
                         </Link>
                     )}

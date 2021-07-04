@@ -3,7 +3,7 @@ import alert from './alert';
 import auth from './auth';
 import profile from './profile';
 import search from './search';
-import request from './request';
+import user_requests from './user_requests';
 
 
 export default combineReducers({
@@ -11,5 +11,5 @@ export default combineReducers({
     auth,
     profile,
     search,
-    request
+    user_requests
 });

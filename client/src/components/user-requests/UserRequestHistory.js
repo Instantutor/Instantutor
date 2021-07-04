@@ -4,14 +4,24 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getRequestHistory } from '../../actions/request';
-import RequestItem from './RequestItem';
+import RequestItem from './UserRequestItem';
+import UserRequest from './UserRequest';
 
 
-const RequestPage = ({ getRequestHistory, req_history = [], loading = true, id}) => {
-    useEffect(() => {
-        getRequestHistory(id);
+const UserRequestHistory = ({ getRequestHistory,
+    user,
+    req_history = [],
+    loading = true,
+    match }) => {
+
+    useEffect(async () => {
+        /*await (match.params.id ? 
+            getRequestHistory(match.params.id) : 
+            (user &&
+            getRequestHistory(user._id)));*/
+        await user && getRequestHistory(user._id);
     }, 
-        [getRequestHistory, id]
+        [getRequestHistory, match.params.id, user]
     );
     return (
         <Fragment>
@@ -31,7 +41,7 @@ const RequestPage = ({ getRequestHistory, req_history = [], loading = true, id})
                     <div className='request'>
     
                         <h1 className="large text-primary">Request History</h1>
-                        {req_history[0].requests.map(request => (
+                        {req_history.map(request => (
                             <RequestItem key={request._id} item={request} />
                         ))}
                         
@@ -48,7 +58,7 @@ const RequestPage = ({ getRequestHistory, req_history = [], loading = true, id})
 }
 
 
-RequestPage.propTypes = {
+UserRequestHistory.propTypes = {
     getRequestHistory: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired
@@ -56,10 +66,10 @@ RequestPage.propTypes = {
 
 
 const mapStateToProps = (state) => ({
-    req_history: state.request.request_history,
-    loading: state.request.loading,
-    id: state.auth.user._id
+    user: state.auth.user,
+    req_history: state.user_requests.request_history,
+    loading: state.user_requests.loading,
 });
 
 
-export default connect(mapStateToProps, {getRequestHistory})(RequestPage);
+export default connect(mapStateToProps, {getRequestHistory})(UserRequestHistory);
