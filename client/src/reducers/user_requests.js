@@ -24,7 +24,7 @@ export default function (state = initialState, action) {
         case GET_USER_REQUEST:
             return {
                 ... state,
-                request_history: payload[0].requests,
+                request_history: payload.length === 0 ? [] : payload[0].requests,
                 loading: false
             }
 

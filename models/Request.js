@@ -33,6 +33,20 @@ const RequestSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      status: {
+        type: String,
+        default: "open",
+      },
+      bids: [
+        {
+          bidder_id: {
+            type: String,
+          },
+          fee: {
+            type: String,
+          }
+        }
+      ]
     },
   ],
 });
