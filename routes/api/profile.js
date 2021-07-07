@@ -4,6 +4,7 @@ const config = require('config');
 
 const router = express.Router();
 const auth = require("../../middleware/auth");
+const partialMatch = require("../../utils/utilities");
 const { check, validationResult } = require("express-validator");
 
 const Profile = require("../../models/Profile");
@@ -12,7 +13,6 @@ const User = require("../../models/User");
 // @route: GET api/profile/me
 // @desc: Get current users profile
 // @access Private
-console.log("type:", typeof partialMatch);
 router.get("/me", auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(

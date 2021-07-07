@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getRequestHistory } from '../../actions/request';
 import RequestItem from './UserRequestItem';
-import UserRequest from './UserRequest';
 
 
 const UserRequestHistory = ({ getRequestHistory,
@@ -61,7 +60,7 @@ const UserRequestHistory = ({ getRequestHistory,
 UserRequestHistory.propTypes = {
     getRequestHistory: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
-    id: PropTypes.string.isRequired
+    user: PropTypes.object
 };
 
 
