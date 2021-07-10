@@ -18,7 +18,9 @@ const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profil
 
     const onChange = async e => {
         setSearchData({ ...searchData, [e.target.name]: e.target.value });
+        console.log(searchData.name);
         await autoSuggestion(searchData);
+        console.log(suggested_list);
     }
 
     const onSubmit = async e => {

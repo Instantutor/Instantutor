@@ -1,7 +1,6 @@
 const express = require('express');
 const request = require('request');
 const config = require('config');
-
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const partialMatch = require("../../utils/utilities");
@@ -31,10 +30,10 @@ router.get("/me", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
 // @route: POST api/profile
 // @desc: Create/update user profile
 // @access Public
-
 router.post(
   "/",
   [
@@ -89,7 +88,7 @@ router.post(
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });
-
+      let user = await User.findById(req.user.id);
       // Already have, update
       if (profile) {
         profile = await Profile.findOneAndUpdate(
@@ -104,6 +103,12 @@ router.post(
       //Create
       profile = new Profile(profileFields);
       await profile.save(); //save it
+      var spawn = require('child_process').spawn;
+      const process = spawn('python3', ['.algos/SearchBar/Trie.py', user.name]);
+      process.on('exit', function (code, signal) {
+        console.log('child process exited with ' +
+                    `code ${code} and signal ${signal}`);
+      });
       res.json(profile); //send back to the profile
     } catch (err) {
       console.error(err.message);
@@ -203,7 +208,6 @@ router.delete("/", auth, async (req, res) => {
 
     // Remove User
     await User.findOneAndRemove({ _id: req.user.id });
-
     res.json({ msg: "User deleted." });
   } catch (err) {
     console.error(err.message);
