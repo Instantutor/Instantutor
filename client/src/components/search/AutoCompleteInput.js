@@ -1,4 +1,4 @@
-import { useState, useRef, Fragment } from "react";
+import { useState, useRef } from "react";
 import PropTypes from 'prop-types';
 
 const AutoCompleteInput = ({
@@ -28,20 +28,40 @@ const AutoCompleteInput = ({
         isMenuHover.current = false;
     }
 
+    const onKeyDown = e => {
+        if (e.key === "ArrowUp") {
+            selectedOption > 0 && setSelectedOption(selectedOption - 1);
+        }
+        else if (e.key === "ArrowDown") {
+            selectedOption < options.length - 1 && setSelectedOption(selectedOption + 1);
+            !showAutoComplete && setAutoComplete(true);
+        } else if (e.key === "Enter") {
+            setSearchData({ ...searchData, [fieldName]: options[selectedOption] });
+
+            setAutoComplete(false);
+            setSelectedOption(-1);
+            isOptionSelected.current = false;
+            isMenuHover.current = false;
+        } else {
+            setSelectedOption(-1);
+        }
+    }
+
     return (
-        <Fragment>
+        <div onKeyDown={onKeyDown}>
             <input
                 type="text"
                 placeholder={placeholder}
                 onChange={onChange} 
                 onFocus={() => setAutoComplete(true)}
                 onBlur={() => !isMenuHover.current && setAutoComplete(false)}
+                onClick={() => !showAutoComplete && setAutoComplete(true)}
                 name={fieldName}
                 value={fieldData}
                 autoComplete="off"
             />
 
-            {(showAutoComplete && options && options.length !== 0 && options[0].length !== 0) &&
+            {(showAutoComplete && options.length !== 0 && options[0].length !== 0) &&
             (<div 
                 className="autocomplete" 
                 style={{marginTop: -10}}
@@ -64,7 +84,7 @@ const AutoCompleteInput = ({
                 </ul>
             </div>)}
 
-        </Fragment>)
+        </div>)
 }
 
 AutoCompleteInput.propTypes = {
