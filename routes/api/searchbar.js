@@ -8,7 +8,7 @@ router.get('/suggestedlist', (req,res) => {
         var spawn = require('child_process').spawn;
         const process = spawn('python3', ['./algos/SearchBar/Trie.py', req.query.name]);
         process.stdout.on('data', (data) => {
-            res.send(data.toString());
+            res.send(data.toString().trim());
         });
 });
 module.exports = router;
