@@ -19,6 +19,9 @@ const DashboardActions = () => {
 
             <Link to="/add_expertise" className="btn btn-light"
             ><i className="fas fa-user-graduate text-primary"></i> Add Expertise</Link>
+
+            <Link to="/peer_request" className="btn btn-light"
+            ><i className="fas fa-inbox text-primary"></i> Received Request </Link>
         </div>
     )
 }
