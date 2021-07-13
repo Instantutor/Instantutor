@@ -1,4 +1,9 @@
-import {GET_SEARCH,SEARCH_ERROR, SEARCH_CLEAR, AUTO_SUGGESTION } from '../actions/types';
+import {GET_SEARCH,
+        SEARCH_ERROR, 
+        CLEAR_SEARCH,
+        ACCOUNT_DELETED,
+        LOGOUT,
+        AUTO_SUGGESTION } from '../actions/types';
 
 const initialState = {
     result: [],
@@ -31,12 +36,14 @@ export default function (state = initialState, action) {
                 loading: false
             };
 
-        case SEARCH_CLEAR:
+        case LOGOUT:
+        case ACCOUNT_DELETED:
+        case CLEAR_SEARCH:
+            
+            state = initialState;
             return {
-                ...state,
-                result: [],
-                loading: false
-            };
+                ...state
+            }
 
         default:
             return state;

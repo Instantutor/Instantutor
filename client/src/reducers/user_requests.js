@@ -1,7 +1,9 @@
 import {POST_USER_REQUEST,
         USER_REQUEST_ERROR,
         GET_USER_REQUEST,
-        LOGOUT
+        CLEAR_USER_REQUEST,
+        LOGOUT,
+        ACCOUNT_DELETED
 } from '../actions/types';
 
 const initialState = {
@@ -36,11 +38,12 @@ export default function (state = initialState, action) {
             };
         
         case LOGOUT:
+        case ACCOUNT_DELETED:
+        case CLEAR_USER_REQUEST:
+            
+            state = initialState;
             return {
-                ...state,
-                result: [],
-                request_history: [],
-                loading: true
+                ...state
             }
 
         default:

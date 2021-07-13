@@ -65,7 +65,7 @@ class Trie:
 
     def serialize(self) -> str:
         curr = self.root
-        f = open("serializedtrie","w")
+        f = open("./algos/SearchBar/serializedtrie","w")
         ans = ""
         dfs = [[curr,"",0]]
         while dfs:
@@ -106,8 +106,15 @@ class Trie:
 
 
 # Driver for now, when there are more Tries for different search bars I will fix this. Too lazy for now
-obj = Trie()
-obj.deserialize()
-print(",".join(obj.autosuggestion(sys.argv[1])))
+def main():
+    obj = Trie()
+    obj.deserialize()
+    if len(sys.argv) == 2: print(",".join(obj.autosuggestion(sys.argv[1])))
+    elif len(sys.argv) > 2:
+        obj.Build(sys.argv[1])
+        obj.serialize()
 
-# Check to see if the slack channel is working sdfasfasdfasdfasfsdfsdfasdffsdfasfsdfasfasdfasdfasfa
+if __name__=="__main__":
+    main()
+
+
