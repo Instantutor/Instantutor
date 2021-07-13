@@ -23,8 +23,10 @@ import NotFound from '../layout/NotFound';
 import UserRequest from '../user-requests/UserRequest';
 import UserRequestHistory from '../user-requests/UserRequestHistory';
 
+import PeerRequestPage from '../peer-requests/PeerRequestPage';
+
 // Search page
-import Search from '../search/Search'
+import Search from '../search/Search';
 
 /*
 class SearchContainer extends Component {
@@ -45,12 +47,17 @@ const Routes = () => {
                 <Route exact path="/register" component={Register}></Route>
                 <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+
                 <PrivateRoute exact path="/request" component={UserRequest} />
                 <PrivateRoute exact path="/request_history" component={UserRequestHistory} />
+                <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
+
                 <PrivateRoute exact path="/search" component={Search} />
+
                 <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute exact path="/create_profile" component={ProfileForm} />
                 <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
+
                 <PrivateRoute exact path="/add_expertise" component={AddExpertise} />
                 <Route component={NotFound} />
             </Switch>
