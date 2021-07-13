@@ -23,9 +23,7 @@ const RequestSchema = new Schema({
       help_time: {
         type: String,
       },
-      availability: [
-        String
-      ],
+      availability: [String],
       number_sessions: {
         type: Number,
       },
@@ -37,6 +35,7 @@ const RequestSchema = new Schema({
         type: String,
         default: "open",
       },
+      potential_tutors: [],
       bids: [
         {
           bidder_id: {
@@ -44,9 +43,9 @@ const RequestSchema = new Schema({
           },
           fee: {
             type: String,
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
   ],
 });
