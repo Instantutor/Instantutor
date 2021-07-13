@@ -9,12 +9,12 @@ const ProfileExpertise = ({
   <div>
     <h3 className="text-dark">{area}</h3>
 
-    <p>
+    <div>
       {relatedCourses.map((course, index) => (
-                            <div key={index} className='text-primary'>
-                                <p className='fas fa-check' /> {course}
-                            </div>))}
-    </p>
+                            <p key={index} className='text-primary'>
+                                <strong className='fas fa-check' /> {course}
+                            </p>))}
+    </div>
 
     <p>
       <strong>Degree: </strong> {degree}
