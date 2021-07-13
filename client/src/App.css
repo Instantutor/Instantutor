@@ -305,7 +305,7 @@ button {
   align-items: center;
   padding: 0.7rem 2rem;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   width: 100%;
   top: 0;
   border-bottom: solid 1px var(--primary-color);
@@ -524,23 +524,38 @@ button {
   padding: 5px;
 }
 
-/* Search Styles*/
+/* Autocomplete Input Styles*/
 .autocomplete {
-  position: fixed;
-  width: 360px;
-  max-height: 150px;
-  overflow: auto;
-  padding: 6.4px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  background-color: white; 
-  box-shadow: 1px 2px rgba(0, 0, 0, 0.7);
+  position: relative;
   text-align: left;
 }
 
+.autocomplete .menu {
+  position: absolute;
+  z-index: 1;
+  width: 360px;
+  max-height: 150px;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+  border: 1px solid black;
+  margin-bottom: 10px;
+  background-color: white; 
+}
+
+.autocomplete .menu::-webkit-scrollbar {
+  display: none;
+}
+
+.autocomplete .option {
+  padding: 0px 6.4px;
+  color: black;
+  font-size: 1.1em;
+}
+
 .autocomplete .selected {
-  background-color: lightblue;
+  color: white;
+  background-color: rgb(30, 144, 255);
 }
 
 /* Mobile Styles */
