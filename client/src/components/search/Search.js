@@ -4,8 +4,8 @@ import { obtainResults,autoSuggestion} from '../../actions/search'
 import { getCurrentProfile } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import AutoCompleteMenu from './AutoCompleteMenu';
 import SearchResultItem from './SearchResultItem';
+import AutoCompleteInput from './AutoCompleteInput';
 // import Dropdown from 'react-bootstrap/Dropdown';
 //import store from '../../store';
 
@@ -14,7 +14,6 @@ const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profil
         name: '',
         role: 'Both'
     });
-    const [showAutoComplete, setAutoComplete] = useState(false);
 
     const onChange = async e => {
         setSearchData({ ...searchData, [e.target.name]: e.target.value });
@@ -39,24 +38,15 @@ const Search = ({obtainResults,autoSuggestion, suggested_list = [],result_profil
 
             <form className="form" onSubmit={onSubmit}>
                 <div className="searchbar">
-                    <input
-                        type="text"
-                        placeholder="Who do you want to search"
-                        onChange={onChange} 
-                        onFocus={() => setAutoComplete(true)}
-                        onBlur={() => setAutoComplete(true)}
-                        name="name"
-                        value={name}
-                        autoComplete="off"
-                    />
-                    {(showAutoComplete && suggested_list && suggested_list.length !== 0) &&
-                    <AutoCompleteMenu
-                        setSearchData={setSearchData}
-                        searchData={searchData}
-                        setAutoComplete={setAutoComplete}
-                        field="name"
+                    <AutoCompleteInput
+                        fieldName="name"
+                        fieldData={searchData.name}
                         options={suggested_list}
-                    />}
+                        placeholder="Who do you want to search?"
+                        searchData={searchData}
+                        setSearchData={setSearchData}
+                        onChange={onChange}
+                    />
                     <div>
                         <select name="role" value={role} onChange={onChange}>
                             <option value="Student">Student</option>
