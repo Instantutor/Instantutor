@@ -4,7 +4,9 @@ import { setAlert } from './alert';
 import {
     POST_USER_REQUEST,
     USER_REQUEST_ERROR,
-    GET_USER_REQUEST
+    GET_USER_REQUEST,
+    PEER_REQUEST_ERROR,
+    CHECK_NEW_PEER_REQUEST
     
 } from './types';
 
@@ -58,6 +60,31 @@ export const getRequestHistory = userId => async(dispatch) => {
     } catch (err) {
         dispatch({
             type: USER_REQUEST_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        });
+    }
+}
+
+// Check if the user received new peer requests
+export const checkNewPeerRequest = () => async(dispatch) => {
+    try {
+        //const res = await axios.get(`/api/request/${userId}`);
+        //console.log(res.data);
+
+        // Hardcode data for test. Need to be updated!!!
+        const res = 2;
+
+        dispatch({
+            type: CHECK_NEW_PEER_REQUEST,
+            payload: res.data
+        });
+
+        if (res > 0){
+            dispatch(setAlert(`You received ${res} new requests!`, 'success'))
+        }
+    } catch (err) {
+        dispatch({
+            type: PEER_REQUEST_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
         });
     }

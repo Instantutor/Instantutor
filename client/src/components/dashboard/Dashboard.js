@@ -2,7 +2,10 @@ import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
+//import { checkNewPeerRequest } from '../../actions/request';
+
 import DashboardActions from './DashboardActions';
 import DashboardActionsStudent from './DashboardActionsStudent';
 import Spinner from '../layout/Spinner';
@@ -14,33 +17,45 @@ const Dashboard = ({
     getCurrentProfile,
     deleteAccount,
     auth: { user },
-    profile: { profile, loading } }) => {
+    profile: { profile, loading }, 
+    //checkNewPeerRequest,
+}) => {
 
     useEffect(() => {
         getCurrentProfile();
+        //checkNewPeerRequest();
     }, []);
     return loading ? <Spinner /> :
         <Fragment>
-            
-            <h1 className="large text-primary"> Personal page </h1>
-            <p className="lead">
-                <i className='fas fa-user '></i> Welcome {user && user.name}
-            </p>
-
+        
             {profile !== null ? (
                 <Fragment>
-                    {profile.role === 'Student' &&
-                        <DashboardActionsStudent/>
-                    }
 
-                    {profile.role !== 'Student' &&
-                        <DashboardActions />
-                    }
-                    
+                    <h1 className="large text-primary"> Personal page </h1>
+                    <p className="lead">
+                        <i className='fas fa-user '></i> Welcome, 
 
-                    {profile.role !== 'Student' && (
-                        <Expertise expertise = {profile.expertise}/>
-                    )}
+                        <Fragment>
+                                {profile.role === 'Both' ? (
+                                        <i> Tutor & Student </i>
+                                    ) : (
+                                        <i> {" " + profile.role} </i>
+                                    )
+                                }
+                        </Fragment>
+                        
+                        {user && user.name}
+                    </p>
+
+                    {profile.role === 'Student' ? (
+                            <DashboardActionsStudent/>
+                        ) : (
+                            <Fragment>
+                                <DashboardActions />
+                                <Expertise expertise = {profile.expertise}/>
+                            </Fragment>
+                        )
+                    }
 
                     <div className="my-2">
                         <button className="btn btn-danger" onClick={() => deleteAccount()}>
@@ -67,6 +82,7 @@ const Dashboard = ({
 
 Dashboard.propTypes = {
     getCurrentProfile: PropTypes.func.isRequired,
+    //checkNewPeerRequest: PropTypes.func.isRequired,
     deleteAccount: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     profile: PropTypes.object.isRequired
@@ -80,7 +96,8 @@ const mapStateToProps = (state) => ({
 export default connect(
     mapStateToProps, {
     getCurrentProfile,
-    deleteAccount
+    deleteAccount,
+    //checkNewPeerRequest
 })(
     Dashboard
 );
