@@ -1,14 +1,15 @@
-const express = require('express');
-const request = require('request');
-const config = require('config');
+const express = require("express");
+const request = require("request");
+const config = require("config");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const partialMatch = require("../../utils/utilities");
 const { check, validationResult } = require("express-validator");
-
+const mongoose = require("mongoose");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const Request = require("../../models/Request");
+const checkObjectId = require("../../middleware/checkObjectId");
 
 // @route: GET api/profile/me
 // @desc: Get current users profile
@@ -104,11 +105,12 @@ router.post(
       //Create
       profile = new Profile(profileFields);
       await profile.save(); //save it
-      var spawn = require('child_process').spawn;
-      const process = spawn('python3', ['.algos/SearchBar/Trie.py', user.name]);
-      process.on('exit', function (code, signal) {
-        console.log('child process exited with ' +
-                    `code ${code} and signal ${signal}`);
+      var spawn = require("child_process").spawn;
+      const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
+      process.on("exit", function (code, signal) {
+        console.log(
+          "child process exited with " + `code ${code} and signal ${signal}`
+        );
       });
       res.json(profile); //send back to the profile
     } catch (err) {
@@ -134,17 +136,16 @@ router.get("/", async (req, res) => {
 // @route: GET api/profile/names
 // @desc:  Get all profile names
 // @access Pubic
-router.get('/names', async (req, res) => {
-    try {
-        const profiles = await Profile.find().populate('user', ['name']);
-        console.log(profiles);
-        res.json(profiles);
-    }
-    catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-})
+router.get("/names", async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate("user", ["name"]);
+    console.log(profiles);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 // @route: GET api/profile/search?param1=text&param2=t
 // @desc:  Get profile and filters by any number of params (all optional)
@@ -501,6 +502,41 @@ router.get("/github/:username", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     return res.status(404).json({ msg: "No Github profile found" });
+  }
+});
+
+router.get("/tutor/requests", auth, async (req, res) => {
+  //Get all requests for which tutor qualifies or has been chosen]
+  /* Should consider simply adding a field in database for user 
+  that stores potential requests instead of performing all these
+  searches.*/
+  try {
+    var currentUser = await Profile.findOne({ user: req.user.id });
+    if (currentUser.role == "Student") {
+      throw Error("User must have Tutor role.");
+    }
+    var matchingRequests = await Request.find({
+      requests: {
+        $elemMatch: {
+          potential_tutors: mongoose.Types.ObjectId(req.user.id),
+        },
+      },
+    });
+    var tutorRequests = [];
+    for (var i in matchingRequests) {
+      var userRequests = matchingRequests[i]["requests"];
+      for (var j in userRequests) {
+        if (userRequests[j]["potential_tutors"].includes(req.user.id)) {
+          const matchingRequest = userRequests[j];
+          delete matchingRequest.potential_tutors;
+          tutorRequests.push(matchingRequest);
+        }
+      }
+    }
+    res.json({ matching_requests: tutorRequests });
+  } catch (err) {
+    console.error("Error getting tutor requests:", err.message);
+    res.status(500).send("Server Error");
   }
 });
 
