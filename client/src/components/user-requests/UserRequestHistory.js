@@ -49,8 +49,12 @@ const UserRequestHistory = ({ getRequestHistory,
                 )
             )}
 
-            <Link to="/request" className="btn btn-light">
-                Back To Request
+            <Link to="/dashboard" className="btn btn-light">
+                Back to dashboard
+            </Link>
+
+            <Link to="/make_request" className="btn btn-light">
+                Make a Request
             </Link>
         </Fragment>
     )
