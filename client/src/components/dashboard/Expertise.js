@@ -1,8 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {deleteExpertise} from '../../actions/profile';
+
+//import Moment from 'react-moment';
 
 const Expertise = ({ expertise, deleteExpertise }) => {
     const expertises = expertise.map((exp) => (
@@ -12,12 +14,19 @@ const Expertise = ({ expertise, deleteExpertise }) => {
             <td className="hide-sm">{exp.relatedCourses.map((course) => (
                 course + '; '
             ))}</td>
+
             <td className="hide-sm">{exp.description}</td>
+            <td>
+                <Link to={`/edit_expertise/${exp._id}`} className='btn btn-primary'>
+                    Edit
+                </Link>
+            </td>
 
             <td>
                 <button 
-                    onClick = {()=>deleteExpertise(exp.id)} 
-                    className = 'btn btn-danger'>Delete</button>
+                    onClick = {()=>deleteExpertise(exp._id)} 
+                    className = 'btn btn-danger'>Delete
+                </button>
             </td>
         </tr>
     ));

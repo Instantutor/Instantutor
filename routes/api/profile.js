@@ -321,6 +321,80 @@ router.put(
   }
 );
 
+
+// @route: GET api/profile/expertise/:expertise_id
+// @desc:  Get expertise by its id
+// @access private
+router.get("/expertise/:expertise_id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id })
+    
+    const expertiseIndex = profile.expertise
+      .map((item) => item.id)
+      .indexOf(req.params.expertise_id);
+
+    if (expertiseIndex === -1){
+      throw({message : "Invalid expertise_id"});
+    }
+
+    res.json(profile.expertise[expertiseIndex]);
+    
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: PUT api/profile/expertise/:expertise_id
+// @desc:  Update profile expertise
+// @access Private
+router.put(
+  "/expertise/:expertise_id",
+  [
+    auth,
+    check("area", "Area is required").not().isEmpty(),
+    check("degree", "Degree is required").not().isEmpty(),
+    check("relatedCourses", "Related courses are required").not().isEmpty(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { area, degree, relatedCourses, description } = req.body;
+
+      const updatedExp = {
+        area,
+        degree,
+        description,
+      };
+      updatedExp.relatedCourses = (relatedCourses + "")
+        .split(",")
+        .map((relatedCourses) => relatedCourses.trim());
+
+      const profile = await Profile.findOne({ user: req.user.id });
+  
+      // Get the index of experience we want to update
+      const updateIndex = profile.expertise
+        .map((item) => item.id)
+        .indexOf(req.params.expertise_id);
+  
+      profile.expertise[updateIndex] = updatedExp;
+  
+      await profile.save();
+  
+      res.json(profile);
+
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+
 // @route: DELETE api/profile/expertise/:expertise:id
 // @desc:  Delete an expertise by ID
 // @access Private
