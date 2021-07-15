@@ -79,8 +79,8 @@ export const createProfile = ( formData, history, edit = false ) => async dispat
     }
 }
 
-// add Expertise
-export const addExpertise = (formData, history) => async dispatch => {
+// add Expertise, edit when id is specified
+export const addExpertise = (formData, history, id = null) => async dispatch => {
     try{
         const config = {
             headers:{
@@ -88,14 +88,18 @@ export const addExpertise = (formData, history) => async dispatch => {
             }
         }
 
-        const res = await axios.put('/api/profile/expertise', formData, config);
+        const res = await axios.put(
+            id ? 
+                `/api/profile/expertise/${id}` : '/api/profile/expertise', 
+            formData, config
+        );
 
         dispatch({
             type: UPDATE_PROFILE,
             payload: res.data
         });
 
-        dispatch((setAlert('Expertise Added', 'success')));
+        dispatch((setAlert(id ? 'Expertise Updated' : 'Expertise Added', 'success')));
         history.push('/dashboard');
     }
     catch (err){

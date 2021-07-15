@@ -2,16 +2,55 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addExpertise } from '../../actions/profile';
+import { addExpertise, getCurrentProfile } from '../../actions/profile';
 
-const AddExpertise = ({ addExpertise, history })  => {
-    const [formData, setFormData] = useState({
-        area: '',
-        degree: '',
-        description: '',
-        relatedCourses: ''
-    });
+const initialState = {
+  area: '',
+  degree: '',
+  description: '',
+  relatedCourses: ''
+};
+
+
+const ExpertiseForm = (
+    { addExpertise, 
+      match, 
+      profile: { profile, loading }, 
+      getCurrentProfile, 
+      history 
+    })  => {
+
+    const [formData, setFormData] = useState(initialState);
     const { area, degree, description, relatedCourses} = formData;
+    
+    // Check if expertise_id in URL esists
+    let expertise_id = match.params.id
+    
+    // Fill the form with data if id is provided
+    useEffect(() => {
+      if (expertise_id){
+        console.log(expertise_id);
+        if (! profile)
+          getCurrentProfile();
+
+        if (! loading && profile) {
+          const expertise_data = {...initialState};
+
+          const expertiseIndex = profile.expertise
+            .map((item) => item._id)
+            .indexOf(expertise_id);
+          const exist_expertise = profile.expertise[expertiseIndex];
+
+          for (const key in exist_expertise){
+            if (key in expertise_data){
+              expertise_data[key] = exist_expertise[key];
+            }
+          }
+
+          setFormData(expertise_data);
+        }
+      }
+    }, [loading, getCurrentProfile, profile, expertise_id]);
 
     const onChange = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +66,7 @@ const AddExpertise = ({ addExpertise, history })  => {
           className="form"
           onSubmit={e => {
             e.preventDefault();
-            addExpertise(formData,  history);
+            addExpertise(formData,  history, expertise_id);
           }}
         >
           <div className="form-group">
@@ -85,8 +124,17 @@ const AddExpertise = ({ addExpertise, history })  => {
     )
 }
 
-AddExpertise.propTypes = {
-    addExpertise: PropTypes.func.isRequired
+const mapStateToProps = state => ({
+  profile: state.profile
+});
+
+ExpertiseForm.propTypes = {
+    addExpertise: PropTypes.func.isRequired,
+    getCurrentProfile: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired
 }
 
-export default connect(null, {addExpertise})(AddExpertise);
+export default connect(
+  mapStateToProps,
+  {addExpertise, getCurrentProfile}
+)(ExpertiseForm);

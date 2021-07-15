@@ -8,7 +8,7 @@ import Dashboard from '../dashboard/Dashboard';
 
 // Edit Profile
 import ProfileForm from '../profile-forms/ProfileForm';
-import AddExpertise from '../profile-forms/AddExpertise';
+import ExpertiseForm from '../profile-forms/ExpertiseForm';
 
 // Profile display
 import Profile from '../profile/Profile';
@@ -58,7 +58,8 @@ const Routes = () => {
                 <PrivateRoute exact path="/create_profile" component={ProfileForm} />
                 <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
 
-                <PrivateRoute exact path="/add_expertise" component={AddExpertise} />
+                <PrivateRoute exact path="/add_expertise" component={ExpertiseForm} />
+                <PrivateRoute exact path="/edit_expertise/:id" component={ExpertiseForm} />
                 <Route component={NotFound} />
             </Switch>
         </section>
