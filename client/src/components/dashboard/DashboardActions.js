@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Link, NavLink } from 'react-router-dom';
 //import formData from '../profile-forms/ProfileForm'
 
 
-const DashboardActions = () => {
+const DashboardActions = ({ role }) => {
     return (
 
         <div className="dash-buttons">
@@ -11,17 +11,27 @@ const DashboardActions = () => {
             <Link to="/search" className="btn btn-light"
             ><i className="fas fa-search text-primary"></i> Search bar </Link>
 
-            <Link to="/request" className="btn btn-light"
-            ><i className="fas fa-share-square text-primary"></i> Make Request </Link>
+            {role !== "Tutor" ?
+                <Link to="/requests" className="btn btn-light"
+                ><i className="fas fa-share-square text-primary"></i> Your requests </Link>
+                : <Fragment />
+            }
             
             <Link to="/edit_profile" className="btn btn-light"
-            ><i className="fas fa-user-circle text-primary"></i> Edit Profile</Link>
+            ><i className="fas fa-user-circle text-primary"></i> Edit Profile </Link>
 
-            <Link to="/add_expertise" className="btn btn-light"
-            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise</Link>
+            {role !== "Student" ?
+                <Link to="/add_expertise" className="btn btn-light"
+                ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </Link>
+                : <Fragment />
+            }
 
-            <Link to="/peer_request" className="btn btn-light"
-            ><i className="fas fa-inbox text-primary"></i> Received Request </Link>
+            {role !== "Student" ?
+                <Link to="/peer_request" className="btn btn-light"
+                ><i className="fas fa-inbox text-primary"></i> Received Request </Link>
+                : <Fragment />
+            }
+
         </div>
     )
 }

@@ -48,8 +48,8 @@ const Routes = () => {
                 <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
-                <PrivateRoute exact path="/request" component={UserRequest} />
-                <PrivateRoute exact path="/request_history" component={UserRequestHistory} />
+                <PrivateRoute exact path="/make_request" component={UserRequest} />
+                <PrivateRoute exact path="/requests" component={UserRequestHistory} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
 
                 <PrivateRoute exact path="/search" component={Search} />

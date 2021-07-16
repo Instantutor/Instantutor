@@ -7,7 +7,6 @@ import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 //import { checkNewPeerRequest } from '../../actions/request';
 
 import DashboardActions from './DashboardActions';
-import DashboardActionsStudent from './DashboardActionsStudent';
 import Spinner from '../layout/Spinner';
 
 import Expertise from './Expertise';
@@ -47,14 +46,11 @@ const Dashboard = ({
                         {user && user.name}
                     </p>
 
-                    {profile.role === 'Student' ? (
-                            <DashboardActionsStudent/>
-                        ) : (
-                            <Fragment>
-                                <DashboardActions />
-                                <Expertise expertise = {profile.expertise}/>
-                            </Fragment>
-                        )
+                    <DashboardActions role={profile.role} />
+
+                    {profile.role !== "Student" ?
+                        <Expertise expertise = {profile.expertise}/> :
+                        <Fragment />
                     }
 
                     <div className="my-2">
