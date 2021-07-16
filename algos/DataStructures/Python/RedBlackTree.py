@@ -87,6 +87,7 @@ class Red_Black_Tree:
             if target_node == self.root: break
         self.root.color = 0
 
+
     def printall(self):
         deq,vals = deque([[self.root]]),[[self.root.val,self.root.color]]
         while deq:
