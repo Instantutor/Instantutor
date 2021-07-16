@@ -29,7 +29,9 @@ const ExpertiseForm = (
     // Fill the form with data if id is provided
     useEffect(() => {
       if (expertise_id){
-        console.log(expertise_id);
+
+        //console.log(expertise_id);
+        
         if (! profile)
           getCurrentProfile();
 
@@ -57,7 +59,7 @@ const ExpertiseForm = (
 
     return (
         <Fragment>
-        <h1 className="large text-primary">Add An Expertise</h1>
+        <h1 className="large text-primary">Manage your Expertise</h1>
         <p className="lead">
           <i className="fas fa-code-branch" /> Add any expertise to show you can be a tutor.
         </p>
