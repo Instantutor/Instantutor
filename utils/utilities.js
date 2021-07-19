@@ -13,7 +13,7 @@ function partialMatch(profileName, queryName) {
   }
   return false;
 }
-async function getTutorMatches(requestFields) {
+async function getTutorMatches(requestFields, currentUserID) {
   //TODO: Make course selection limited so a non-existent course cannot be entered
   //Brute force for now, just return first 5 tutors by id
   const {
@@ -35,13 +35,18 @@ async function getTutorMatches(requestFields) {
         $elemMatch: { $or: queryArr },
       },
     },
-    { _id: 1 }
+    { user: 1 }
   ).limit(5);
   //max of 5 tutors at the moment
   var tutorArr = [];
   for (var i in tutors) {
-    tutorArr.push(tutors[i]["_id"]);
+    //Don't add if id equal to current user's
+    // const user_id = tutors[i]["user"];
+    // if (user_id != currentUserID) {
+    tutorArr.push(tutors[i]["user"]);
+    // }
   }
+
   return tutorArr;
 }
 module.exports = {
