@@ -40,7 +40,10 @@ router.post(
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
     if (number_sessions) requestFields.number_sessions = number_sessions;
-    requestFields.potential_tutors = await getTutorMatches(req.body);
+    requestFields.potential_tutors = await getTutorMatches(
+      req.body,
+      req.user.id
+    );
     const requestByUser = await Request.findOne({ user: req.user.id });
     if (!requestByUser) {
       //initialize new set of requests for user

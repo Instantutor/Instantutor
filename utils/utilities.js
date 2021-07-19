@@ -13,17 +13,40 @@ function partialMatch(profileName, queryName) {
   }
   return false;
 }
-async function getTutorMatches(requestFields) {
+async function getTutorMatches(requestFields, currentUserID) {
+  //TODO: Make course selection limited so a non-existent course cannot be entered
   //Brute force for now, just return first 5 tutors by id
+  const {
+    request,
+    course,
+    grade,
+    topic,
+    help_time,
+    availability,
+    number_sessions,
+  } = requestFields;
+  var queryArr = [];
+  if (course) queryArr.push({ area: course });
+  if (grade) queryArr.push({ degree: grade });
   const tutors = await Profile.find(
-    { role: { $in: ["Tutor", "Both"] } },
-    { _id: 1 }
+    {
+      role: { $in: ["Tutor", "Both"] },
+      expertise: {
+        $elemMatch: { $or: queryArr },
+      },
+    },
+    { user: 1 }
   ).limit(5);
-  //max of 5 tutors at the momentreq.user.id
+  //max of 5 tutors at the moment
   var tutorArr = [];
   for (var i in tutors) {
-    tutorArr.push(tutors[i]["_id"]);
+    //Don't add if id equal to current user's
+    // const user_id = tutors[i]["user"];
+    // if (user_id != currentUserID) {
+    tutorArr.push(tutors[i]["user"]);
+    // }
   }
+
   return tutorArr;
 }
 module.exports = {
