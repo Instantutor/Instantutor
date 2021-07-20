@@ -14,10 +14,10 @@ const UserRequestItem =({
         help_time,
         number_sessions,
         post_time
-    }
+    },
+    deleteRequest
 }) => {
 
-    console.log(deleteRequest);
     return (
         <div className="profile-exp bg-white p-2">
             <div>
@@ -29,10 +29,7 @@ const UserRequestItem =({
                     <Link to={`/edit_request/${_id}`} className='btn btn-primary'>
                         Edit
                     </Link>
-                    <button className = "btn btn-danger" onClick={() => {
-                            console.log(_id);
-                            deleteRequest(_id)
-                        }}>
+                    <button className = "btn btn-danger" onClick={() => deleteRequest(_id)}>
                         Delete
                     </button>
                 </span>

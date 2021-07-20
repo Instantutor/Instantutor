@@ -50,7 +50,7 @@ export const createRequest = requestData => async(dispatch) => {
     }
 };
 
-export const editRequest = requestData => async(dispatch) => {
+export const editRequest = (requestData, request_id) => async(dispatch) => {
     try {
 
         const config = {
@@ -59,7 +59,7 @@ export const editRequest = requestData => async(dispatch) => {
             }
         }
 
-        const res = await axios.put(`/api/request/edit/${requestData._id}`, requestData, config);  
+        const res = await axios.put(`/api/request/edit/${request_id}`, requestData, config);  
 
         dispatch({
             type: EDIT_USER_REQUEST,
@@ -69,6 +69,12 @@ export const editRequest = requestData => async(dispatch) => {
         dispatch((setAlert("Request Edited", "success")));
 
     } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
         dispatch({
             type: USER_REQUEST_ERROR,
             payload: {msg: err.response.statusText, status: err.response.status }
@@ -77,7 +83,6 @@ export const editRequest = requestData => async(dispatch) => {
 };
 
 export const deleteRequest = request_id => async(dispatch) => {
-    console.log("success");
     try {
 
         const config = {

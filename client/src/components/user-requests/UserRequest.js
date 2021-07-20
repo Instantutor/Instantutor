@@ -6,7 +6,13 @@ import formData from "../profile-forms/ProfileForm";
 import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
 
-const UserRequest = ({ createRequest, editRequest, request_history, user, match }) => {
+const UserRequest = ({ createRequest,
+  editRequest,
+  getRequestHistory,
+  request_history,
+  user,
+  loading,
+  match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
     course: "",
@@ -17,10 +23,6 @@ const UserRequest = ({ createRequest, editRequest, request_history, user, match 
     number_sessions: "",
   });
   const [requestID, setRequestID] = useState(match.params.id);
-  /*const [oldRequest, setOldRequest] = useState(requestID &&
-    request_history.find(request => request._id === requestID));
-
-  console.log(request_history);*/
 
   const {
     request,
@@ -34,20 +36,19 @@ const UserRequest = ({ createRequest, editRequest, request_history, user, match 
 
   useEffect(async () => {
     if (requestID && user) {
-      //await getRequestHistory(user._id);
-      //console.log('success');
+      if (request_history.length === 0)
+        await getRequestHistory(user._id).then(console.log("success: ", request_history));
 
-      //console.log(request_history);
-      /*let old_request = requestHistory.find(request => request._id === requestID);
-      for (let field in requestData)
-        if (old_request[field]) {
-          setRequestData({ ...requestData, [field]: old_request[field] });
-          console.log(requestData);
-        }*/
-      //setRequestData({ ...requestData, id: requestID });
-      setRequestData({ ...request_history.find(request => request._id === requestID)});
+      let request = request_history.find(req => req._id === requestID);
+      let oldRequestData = { ...requestData };
+
+      for (const prop in requestData)
+        if (request && request[prop])
+          oldRequestData[prop] = request[prop];
+      
+      setRequestData(oldRequestData);
     }
-  }, []);
+  }, [getRequestHistory, user, loading]);
 
   const onChange = (e) =>
     setRequestData({ ...requestData, [e.target.name]: e.target.value });
@@ -56,21 +57,19 @@ const UserRequest = ({ createRequest, editRequest, request_history, user, match 
     if (e.target.checked)
       setRequestData({
         ...requestData,
-        availability: requestData.availability.concat(e.target.name),
+        availability: availability.concat(e.target.name),
       });
     else
       setRequestData({
         ...requestData,
-        availability: requestData.availability.filter(
-          (elem) => elem !== e.target.name
-        ),
+        availability: availability.filter(elem => elem !== e.target.name),
       });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     if (requestID)
-      await editRequest(requestData);
+      await editRequest(requestData, requestID);
     else
       await createRequest(requestData);
   };
@@ -91,14 +90,24 @@ const UserRequest = ({ createRequest, editRequest, request_history, user, match 
     <tr key = {time}>
       <th>{time}</th>
       {day_names.map((day) => (
+        availability && availability.find(period => period === day + " " + time) ?
         <td key = {day}>
           <input
             className="checkbox"
             name={day + " " + time}
             type="checkbox"
-            checked={availability && availability.find(period => period === day + " " + time)}
+            checked={true}
             onChange={setAvailability}
           />
+        </td> :
+        <td key = {day}>
+          <input
+            className="checkbox"
+            name={day + " " + time}
+            type="checkbox"
+            checked={false}
+            onChange={setAvailability}
+        />
         </td>
       ))}
     </tr>
@@ -225,7 +234,8 @@ UserRequest.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  request_history: state.user_requests.request_history
+  request_history: state.user_requests.request_history,
+  loading: state.user_requests.loading
 });
 
 export default connect(mapStateToProps, {createRequest, editRequest, getRequestHistory})(UserRequest);
