@@ -35,7 +35,7 @@ const SearchResultItem =({
                 <i className="fas fa-award">{" " + degree} </i> 
             </p>
             
-            <Link to={`/profile/${_id}`} className='btn btn-primary'>
+            <Link to={`/profile/${_id}`} target="_blank" className='btn btn-primary'>
                 <i className="fas fa-user-circle"> </i> View Profile
             </Link>
 
