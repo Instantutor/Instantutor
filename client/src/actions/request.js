@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-
 import {
     POST_USER_REQUEST,
     USER_REQUEST_ERROR,
@@ -10,7 +9,7 @@ import {
     
 } from './types';
 
-export const createRequest = requestData => async(dispatch) => {
+export const createRequest = (requestData, history) => async(dispatch) => {
     try {
 
         const config = {
@@ -27,6 +26,9 @@ export const createRequest = requestData => async(dispatch) => {
         });
 
         dispatch((setAlert("Request Posted", "success")));
+        
+        // Redirect to the matched tutor page:
+        history.push(`/request_matched_tutors/${res.data.new_request._id}`);
 
     } catch (err) {
         const errors = err.response.data.errors;

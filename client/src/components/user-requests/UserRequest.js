@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest } from "../../actions/request";
 import "../../App.css";
-const UserRequest = ({ createRequest }) => {
+const UserRequest = ({ createRequest, history }) => {
   const [requestData, setRequestData] = useState({
     request: "",
     course: "",
@@ -45,7 +45,7 @@ const UserRequest = ({ createRequest }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await createRequest(requestData);
+    await createRequest(requestData, history);
   };
 
   // Generating the checkbox

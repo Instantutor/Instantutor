@@ -20,7 +20,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 result: payload,
-                loading: false
+                loading: true
             };
 
         case GET_USER_REQUEST:

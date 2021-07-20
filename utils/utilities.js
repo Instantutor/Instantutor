@@ -25,6 +25,7 @@ async function getTutorMatches(requestFields, currentUserID) {
     availability,
     number_sessions,
   } = requestFields;
+
   var queryArr = [];
   if (course) queryArr.push({ area: course });
   if (grade) queryArr.push({ degree: grade });
@@ -35,18 +36,23 @@ async function getTutorMatches(requestFields, currentUserID) {
         $elemMatch: { $or: queryArr },
       },
     },
-    { user: 1 }
-  ).limit(5);
+  ).populate("user", ["name", "avatar"]).limit(5);
   //max of 5 tutors at the moment
   var tutorArr = [];
   for (var i in tutors) {
     //Don't add if id equal to current user's
     // const user_id = tutors[i]["user"];
     // if (user_id != currentUserID) {
-    tutorArr.push(tutors[i]["user"]);
+    returnField = {
+      _id: tutors[i].user._id,
+      name: tutors[i].user.name,
+      avatar: tutors[i].user.avatar,
+      bio: tutors[i].bio,
+    }
+    tutorArr.push(returnField);
     // }
   }
-
+  //console.log(tutorArr)
   return tutorArr;
 }
 module.exports = {

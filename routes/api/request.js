@@ -73,14 +73,14 @@ router.post(
     } else {
       try {
         if (requestByUser.requests.length < 3) {
-          let originalRequests = await Request.findOneAndUpdate(
-            { user: req.user.id },
-            { $push: { requests: requestFields } }
-          );
+          
+          requestByUser.requests.unshift(requestFields);
+          await requestByUser.save();
+
           res.json({
             msg: "Request added for user.",
-            original_requests: originalRequests.requests,
-            new_request: requestFields,
+            requests: requestByUser.requests,
+            new_request: requestByUser.requests[0],
           });
         } else {
           //console.error("User cannot exceed maximum of 3 concurrent requests.");
