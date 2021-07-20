@@ -1,9 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { deleteRequest } from '../../actions/request';
 
 const UserRequestItem =({
     item: {
+        _id,
         request,
         course,
         grade,
@@ -13,21 +16,38 @@ const UserRequestItem =({
         post_time
     }
 }) => {
+
+    console.log(deleteRequest);
     return (
         <div className="profile-exp bg-white p-2">
-              <div>
-                <h3 className="text-dark"> Request: {request}</h3>
+            <div>
+                <h3 className="text-dark request-header">
+                    Request: {request}
+                </h3>
+
+                <span className="request-header-right">
+                    <Link to={`/edit_request/${_id}`} className='btn btn-primary'>
+                        Edit
+                    </Link>
+                    <button className = "btn btn-danger" onClick={() => {
+                            console.log(_id);
+                            deleteRequest(_id)
+                        }}>
+                        Delete
+                    </button>
+                </span>
+
 
                 <p>
-                <strong>Course: </strong> {course}
+                <strong>Course: </strong> {course ? course : "N/A"}
                 </p>
 
                 <p>
-                <strong>Topic: </strong> {topic}
+                <strong>Topic: </strong> {topic ? topic : "N/A"}
                 </p>
 
                 <p>
-                <strong>Number of sessions: </strong> {number_sessions}
+                <strong>Number of sessions: </strong> {number_sessions ? number_sessions : "N/A"}
                 </p>
 
                 <p>
@@ -43,4 +63,4 @@ UserRequestItem.propTypes = {
     item: PropTypes.object.isRequired
 };
   
-export default UserRequestItem;
+export default connect(null, {deleteRequest})(UserRequestItem);

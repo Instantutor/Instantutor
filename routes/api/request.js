@@ -149,7 +149,7 @@ router.put("/edit/:request_id", auth, async (req, res) => {
         if (number_sessions) requestMatch["number_sessions"] = number_sessions;
         doc.save();
 
-        res.json({ msg: "Request updated", updated_requests: requestMatch });
+        res.json({ msg: "Request updated", updated_request: requestMatch });
       } else {
         res.status(400).json({ error: "Request ID is invalid" });
       }
@@ -160,10 +160,10 @@ router.put("/edit/:request_id", auth, async (req, res) => {
   }
 });
 
-// @route: DELETE api/request/edit/:request_id
+// @route: DELETE api/request/delete/:request_id
 // @desc:  Deletes a request made by a user
 // @access Private
-router.delete("/edit/:request_id", auth, async (req, res) => {
+router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
     await Request.findOne({ user: req.user.id }).then((doc) => {
       let requestMatch = doc.requests.id(req.params.request_id);
@@ -174,7 +174,7 @@ router.delete("/edit/:request_id", auth, async (req, res) => {
         );
 
         doc.save();
-        res.json({ msg: "Request deleted", updated_requests: doc.requests });
+        res.json({ msg: "Request deleted", deleted_request: requestMatch });
       } else {
         res.status(400).json({ error: "Request ID is invalid" });
       }
@@ -253,7 +253,7 @@ router.put(
 );
 
 // @route: DELETE api/request/bid
-// @desc:  Deletes a bid may be user
+// @desc:  Deletes a bid made by a user
 // @access Private
 router.delete(
   "/bid",

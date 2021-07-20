@@ -1,11 +1,12 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
-import { createRequest } from "../../actions/request";
+import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
-const UserRequest = ({ createRequest }) => {
+
+const UserRequest = ({ createRequest, editRequest, request_history, user, match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
     course: "",
@@ -15,6 +16,11 @@ const UserRequest = ({ createRequest }) => {
     availability: [],
     number_sessions: "",
   });
+  const [requestID, setRequestID] = useState(match.params.id);
+  /*const [oldRequest, setOldRequest] = useState(requestID &&
+    request_history.find(request => request._id === requestID));
+
+  console.log(request_history);*/
 
   const {
     request,
@@ -25,6 +31,24 @@ const UserRequest = ({ createRequest }) => {
     availability,
     number_sessions,
   } = requestData;
+
+  useEffect(async () => {
+    if (requestID && user) {
+      //await getRequestHistory(user._id);
+      //console.log('success');
+
+      //console.log(request_history);
+      /*let old_request = requestHistory.find(request => request._id === requestID);
+      for (let field in requestData)
+        if (old_request[field]) {
+          setRequestData({ ...requestData, [field]: old_request[field] });
+          console.log(requestData);
+        }*/
+      //setRequestData({ ...requestData, id: requestID });
+      setRequestData({ ...request_history.find(request => request._id === requestID)});
+    }
+  }, []);
+
   const onChange = (e) =>
     setRequestData({ ...requestData, [e.target.name]: e.target.value });
 
@@ -45,7 +69,10 @@ const UserRequest = ({ createRequest }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await createRequest(requestData);
+    if (requestID)
+      await editRequest(requestData);
+    else
+      await createRequest(requestData);
   };
 
   // Generating the checkbox
@@ -69,6 +96,7 @@ const UserRequest = ({ createRequest }) => {
             className="checkbox"
             name={day + " " + time}
             type="checkbox"
+            checked={availability && availability.find(period => period === day + " " + time)}
             onChange={setAvailability}
           />
         </td>
@@ -191,15 +219,13 @@ const UserRequest = ({ createRequest }) => {
   );
 };
 
-/*
-const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-});
-export default connect(mapStateToProps, {createRequest })(Request);
-*/
-
 UserRequest.propTypes = {
   createRequest: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createRequest })(UserRequest);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  request_history: state.user_requests.request_history
+});
+
+export default connect(mapStateToProps, {createRequest, editRequest, getRequestHistory})(UserRequest);
