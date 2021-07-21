@@ -21,7 +21,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 request_history: payload.requests ?
-                    payload.requests.concat(payload.new_request) :
+                    payload.requests :
                     [payload.new_request],
                 loading: false
             };

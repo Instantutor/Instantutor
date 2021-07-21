@@ -74,13 +74,13 @@ router.post(
       try {
         if (requestByUser.requests.length < 3) {
           
-          requestByUser.requests.unshift(requestFields);
+          requestByUser.requests.push(requestFields);
           await requestByUser.save();
 
           res.json({
             msg: "Request added for user.",
             requests: requestByUser.requests,
-            new_request: requestByUser.requests[0],
+            new_request: requestByUser.requests[requestByUser.requests.length - 1],
           });
         } else {
           //console.error("User cannot exceed maximum of 3 concurrent requests.");

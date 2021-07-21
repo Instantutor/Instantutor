@@ -9,9 +9,8 @@ import "../../App.css";
 const UserRequest = ({ createRequest,
   editRequest,
   getRequestHistory,
-  request_history,
+  requests: {request_history, loading},
   user,
-  loading,
   history,
   match }) => {
   const [requestData, setRequestData] = useState({
@@ -235,8 +234,7 @@ UserRequest.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  request_history: state.user_requests.request_history,
-  loading: state.user_requests.loading
+  requests: state.user_requests
 });
 
 export default connect(mapStateToProps, {createRequest, editRequest, getRequestHistory})(UserRequest);
