@@ -1,11 +1,18 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
-import { createRequest } from "../../actions/request";
+import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
-const UserRequest = ({ createRequest, history }) => {
+
+const UserRequest = ({ createRequest,
+  editRequest,
+  getRequestHistory,
+  requests: {request_history, loading},
+  user,
+  history,
+  match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
     course: "",
@@ -15,6 +22,7 @@ const UserRequest = ({ createRequest, history }) => {
     availability: [],
     number_sessions: "",
   });
+  const [requestID, setRequestID] = useState(match.params.id);
 
   const {
     request,
@@ -25,6 +33,23 @@ const UserRequest = ({ createRequest, history }) => {
     availability,
     number_sessions,
   } = requestData;
+
+  useEffect(async () => {
+    if (requestID && user) {
+      if (request_history.length === 0)
+        await getRequestHistory(user._id).then(console.log("success: ", request_history));
+
+      let request = request_history.find(req => req._id === requestID);
+      let oldRequestData = { ...requestData };
+
+      for (const prop in requestData)
+        if (request && request[prop])
+          oldRequestData[prop] = request[prop];
+      
+      setRequestData(oldRequestData);
+    }
+  }, [getRequestHistory, user, loading]);
+
   const onChange = (e) =>
     setRequestData({ ...requestData, [e.target.name]: e.target.value });
 
@@ -32,20 +57,21 @@ const UserRequest = ({ createRequest, history }) => {
     if (e.target.checked)
       setRequestData({
         ...requestData,
-        availability: requestData.availability.concat(e.target.name),
+        availability: availability.concat(e.target.name),
       });
     else
       setRequestData({
         ...requestData,
-        availability: requestData.availability.filter(
-          (elem) => elem !== e.target.name
-        ),
+        availability: availability.filter(elem => elem !== e.target.name),
       });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await createRequest(requestData, history);
+    if (requestID)
+      await editRequest(requestData, requestID);
+    else
+      await createRequest(requestData, history);
   };
 
   // Generating the checkbox
@@ -64,13 +90,24 @@ const UserRequest = ({ createRequest, history }) => {
     <tr key = {time}>
       <th>{time}</th>
       {day_names.map((day) => (
+        availability && availability.find(period => period === day + " " + time) ?
         <td key = {day}>
           <input
             className="checkbox"
             name={day + " " + time}
             type="checkbox"
+            checked={true}
             onChange={setAvailability}
           />
+        </td> :
+        <td key = {day}>
+          <input
+            className="checkbox"
+            name={day + " " + time}
+            type="checkbox"
+            checked={false}
+            onChange={setAvailability}
+        />
         </td>
       ))}
     </tr>
@@ -191,15 +228,13 @@ const UserRequest = ({ createRequest, history }) => {
   );
 };
 
-/*
-const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
-});
-export default connect(mapStateToProps, {createRequest })(Request);
-*/
-
 UserRequest.propTypes = {
   createRequest: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createRequest })(UserRequest);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  requests: state.user_requests
+});
+
+export default connect(mapStateToProps, {createRequest, editRequest, getRequestHistory})(UserRequest);

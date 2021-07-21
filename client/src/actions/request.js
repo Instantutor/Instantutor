@@ -4,6 +4,8 @@ import {
     POST_USER_REQUEST,
     USER_REQUEST_ERROR,
     GET_USER_REQUEST,
+    EDIT_USER_REQUEST,
+    DELETE_USER_REQUEST,
     PEER_REQUEST_ERROR,
     CHECK_NEW_PEER_REQUEST
     
@@ -50,6 +52,63 @@ export const createRequest = (requestData, history) => async(dispatch) => {
     }
 };
 
+export const editRequest = (requestData, request_id) => async(dispatch) => {
+    try {
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const res = await axios.put(`/api/request/edit/${request_id}`, requestData, config);  
+
+        dispatch({
+            type: EDIT_USER_REQUEST,
+            payload: res.data
+        });
+
+        dispatch((setAlert("Request Edited", "success")));
+
+    } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+
+        dispatch({
+            type: USER_REQUEST_ERROR,
+            payload: {msg: err.response.statusText, status: err.response.status }
+        });
+    }
+};
+
+export const deleteRequest = request_id => async(dispatch) => {
+    try {
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const res = await axios.delete(`/api/request/delete/${request_id}`, config);  
+
+        dispatch({
+            type: DELETE_USER_REQUEST,
+            payload: res.data
+        });
+
+        dispatch((setAlert("Request Deleted", "success")));
+
+    } catch (err) {
+        dispatch({
+            type: USER_REQUEST_ERROR,
+            payload: {msg: err.response.statusText, status: err.response.status }
+        });
+    }
+};
 
 export const getRequestHistory = userId => async(dispatch) => {
     try {

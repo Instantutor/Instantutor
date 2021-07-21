@@ -51,6 +51,7 @@ const Routes = () => {
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
                 <PrivateRoute exact path="/make_request" component={UserRequest} />
+                <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
                 <PrivateRoute exact path="/requests" component={UserRequestHistory} />
                 <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />

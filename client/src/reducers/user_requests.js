@@ -1,13 +1,14 @@
 import {POST_USER_REQUEST,
         USER_REQUEST_ERROR,
         GET_USER_REQUEST,
+        EDIT_USER_REQUEST,
+        DELETE_USER_REQUEST,
         CLEAR_USER_REQUEST,
         LOGOUT,
-        ACCOUNT_DELETED
+        ACCOUNT_DELETED,
 } from '../actions/types';
 
 const initialState = {
-    result: [],
     request_history: [],
     loading: true,
     error: {}
@@ -19,15 +20,33 @@ export default function (state = initialState, action) {
         case POST_USER_REQUEST:
             return {
                 ...state,
-                result: payload,
-                loading: true
+                request_history: payload.requests ?
+                    payload.requests :
+                    [payload.new_request],
+                loading: false
             };
 
         case GET_USER_REQUEST:
             return {
-                ... state,
+                ...state,
                 request_history: payload.length === 0 ? [] : payload[0].requests,
                 loading: false
+            }
+
+        case EDIT_USER_REQUEST:
+            return {
+                ...state,
+                request_history: state.request_history.map(
+                    elem => elem._id === payload.updated_request._id ?
+                    payload.updated_request :
+                    elem)
+            }
+
+        case DELETE_USER_REQUEST:
+            return {
+                ...state,
+                request_history: state.request_history.filter(
+                    elem => elem._id !== payload.deleted_request._id)
             }
 
         case USER_REQUEST_ERROR:

@@ -453,6 +453,16 @@ button {
   flex-basis: 20%;
 }
 
+/* Requests */
+.request-header {
+  display: inline-block;
+}
+
+.request-header-right {
+  display: inline-block;
+  float: right;
+}
+
 /* Posts Page */
 .post-form .post-form-header {
   background: var(--primary-color);
