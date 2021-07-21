@@ -12,6 +12,7 @@ const UserRequest = ({ createRequest,
   request_history,
   user,
   loading,
+  history,
   match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
@@ -71,7 +72,7 @@ const UserRequest = ({ createRequest,
     if (requestID)
       await editRequest(requestData, requestID);
     else
-      await createRequest(requestData);
+      await createRequest(requestData, history);
   };
 
   // Generating the checkbox

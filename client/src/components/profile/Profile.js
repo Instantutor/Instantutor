@@ -26,10 +26,6 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
             ) : (
                 <Fragment> 
 
-                    <Link to="/search" className="btn btn-light">
-                        Back To Search
-                    </Link>
-
                     {auth.isAuthenticated &&
                     auth.loading === false &&
                     auth.user._id === profile.user._id && (

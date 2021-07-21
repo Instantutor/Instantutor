@@ -20,7 +20,7 @@ export default function (state = initialState, action) {
         case POST_USER_REQUEST:
             return {
                 ...state,
-                request_history: payload.original_requests.concat(payload.new_request),
+                request_history: payload.requests.concat(payload.new_request),
                 loading: false
             };
 

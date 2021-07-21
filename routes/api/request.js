@@ -40,7 +40,10 @@ router.post(
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
     if (number_sessions) requestFields.number_sessions = number_sessions;
-    requestFields.potential_tutors = await getTutorMatches(req.body);
+    requestFields.potential_tutors = await getTutorMatches(
+      req.body,
+      req.user.id
+    );
     const requestByUser = await Request.findOne({ user: req.user.id });
     if (!requestByUser) {
       //initialize new set of requests for user
@@ -70,14 +73,14 @@ router.post(
     } else {
       try {
         if (requestByUser.requests.length < 3) {
-          let originalRequests = await Request.findOneAndUpdate(
-            { user: req.user.id },
-            { $push: { requests: requestFields } }
-          );
+          
+          requestByUser.requests.unshift(requestFields);
+          await requestByUser.save();
+
           res.json({
             msg: "Request added for user.",
-            original_requests: originalRequests.requests,
-            new_request: requestFields,
+            requests: requestByUser.requests,
+            new_request: requestByUser.requests[0],
           });
         } else {
           //console.error("User cannot exceed maximum of 3 concurrent requests.");

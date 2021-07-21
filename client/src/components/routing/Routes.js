@@ -22,8 +22,10 @@ import NotFound from '../layout/NotFound';
 //Request page
 import UserRequest from '../user-requests/UserRequest';
 import UserRequestHistory from '../user-requests/UserRequestHistory';
+import UserRequestMatchedTutor from '../user-requests/UserRequestMatchedTutor';
 
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
+
 
 // Search page
 import Search from '../search/Search';
@@ -51,6 +53,7 @@ const Routes = () => {
                 <PrivateRoute exact path="/make_request" component={UserRequest} />
                 <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
                 <PrivateRoute exact path="/requests" component={UserRequestHistory} />
+                <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
 
                 <PrivateRoute exact path="/search" component={Search} />

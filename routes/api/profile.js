@@ -321,24 +321,22 @@ router.put(
   }
 );
 
-
 // @route: GET api/profile/expertise/:expertise_id
 // @desc:  Get expertise by its id
 // @access private
 router.get("/expertise/:expertise_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id })
-    
+    const profile = await Profile.findOne({ user: req.user.id });
+
     const expertiseIndex = profile.expertise
       .map((item) => item.id)
       .indexOf(req.params.expertise_id);
 
-    if (expertiseIndex === -1){
-      throw({message : "Invalid expertise_id"});
+    if (expertiseIndex === -1) {
+      throw { message: "Invalid expertise_id" };
     }
 
     res.json(profile.expertise[expertiseIndex]);
-    
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -375,25 +373,23 @@ router.put(
         .map((relatedCourses) => relatedCourses.trim());
 
       const profile = await Profile.findOne({ user: req.user.id });
-  
+
       // Get the index of experience we want to update
       const updateIndex = profile.expertise
         .map((item) => item.id)
         .indexOf(req.params.expertise_id);
-  
-      profile.expertise[updateIndex] = updatedExp;
-  
-      await profile.save();
-  
-      res.json(profile);
 
+      profile.expertise[updateIndex] = updatedExp;
+
+      await profile.save();
+
+      res.json(profile);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
     }
   }
 );
-
 
 // @route: DELETE api/profile/expertise/:expertise:id
 // @desc:  Delete an expertise by ID
@@ -601,8 +597,8 @@ router.get("/tutor/requests", auth, async (req, res) => {
       var userRequests = matchingRequests[i]["requests"];
       for (var j in userRequests) {
         if (userRequests[j]["potential_tutors"].includes(req.user.id)) {
-          const matchingRequest = userRequests[j];
-          delete matchingRequest.potential_tutors;
+          var matchingRequest = userRequests[j];
+          matchingRequest.potential_tutors = undefined;
           tutorRequests.push(matchingRequest);
         }
       }
