@@ -4,19 +4,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
+import { getRequestHistory } from '../../actions/request';
+
 //import { checkNewPeerRequest } from '../../actions/request';
 
 import DashboardActions from './DashboardActions';
 import Spinner from '../layout/Spinner';
 
 import Expertise from './Expertise';
+import UserRequest from './UserRequest';
 //import { render } from 'react-dom';
 
 const Dashboard = ({
     getCurrentProfile,
+    getRequestHistory,
     deleteAccount,
     auth: { user },
     profile: { profile, loading }, 
+    req_history = [],
     //checkNewPeerRequest,
 }) => {
 
@@ -24,6 +29,11 @@ const Dashboard = ({
         getCurrentProfile();
         //checkNewPeerRequest();
     }, []);
+
+    useEffect(() => {
+        user && getRequestHistory(user._id);
+    }, [user]);
+
     return loading ? <Spinner /> :
         <Fragment>
         
@@ -53,6 +63,8 @@ const Dashboard = ({
                         <Fragment />
                     }
 
+                    <UserRequest user_request = {req_history}/>
+
                     <div className="my-2">
                         <button className="btn btn-danger" onClick={() => deleteAccount()}>
                             <i className="fas fa-user-minus"></i>
@@ -78,6 +90,7 @@ const Dashboard = ({
 
 Dashboard.propTypes = {
     getCurrentProfile: PropTypes.func.isRequired,
+    getRequestHistory: PropTypes.func.isRequired,
     //checkNewPeerRequest: PropTypes.func.isRequired,
     deleteAccount: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -86,13 +99,15 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
-    profile: state.profile
+    profile: state.profile,
+    req_history: state.user_requests.request_history,
 });
 
 export default connect(
     mapStateToProps, {
     getCurrentProfile,
     deleteAccount,
+    getRequestHistory,
     //checkNewPeerRequest
 })(
     Dashboard
