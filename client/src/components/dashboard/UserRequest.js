@@ -62,7 +62,7 @@ const UserRequest = ({ user_request, deleteRequest }) => {
                 </Fragment>
             ) : (
                 <Fragment>
-                    <p> You currently have to active request</p>
+                    <p> You currently have no active request...</p>
                 </Fragment>
             )} 
         </Fragment>
