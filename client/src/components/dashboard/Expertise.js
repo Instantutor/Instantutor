@@ -44,7 +44,7 @@ const Expertise = ({ expertise, deleteExpertise }) => {
                             <th>Area</th>
                             <th className="hide-sm">Degree</th>
                             <th className="hide-sm">Courses</th>
-                            <th>Desc</th>
+                            <th className="hide-sm">Desc</th>
                             <th>Operations</th>
                             <th />
                         </tr>

@@ -32,7 +32,7 @@ const MatchedTutorItem =(tutor) => {
 }
 
 MatchedTutorItem.propTypes = {
-    profile: PropTypes.object.isRequired
+    tutor: PropTypes.object
 };
   
 export default MatchedTutorItem;
