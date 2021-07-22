@@ -54,8 +54,13 @@ const UserRequestMatchedTutor =({
                     </div>
                 )
             )}
-        </Fragment>
 
+            <button 
+                onClick = {() => window.history.back(-1)} 
+                className = 'btn btn-dark'>Go Back
+            </button>
+        </Fragment>
+        
     )
 }
 

@@ -217,11 +217,13 @@ const UserRequest = ({ createRequest,
             </div>
 
             <input type="submit" className="btn btn-primary my-1" />
-            <Link className="btn btn-light my-1" to="/requests">
-              Go Back
-            </Link>
-
           </form>
+
+          <button 
+              onClick = {() => history.goBack()} 
+              className = 'btn btn-dark'>Go Back
+          </button>
+
         </Fragment>
       )}
     </>
