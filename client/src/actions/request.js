@@ -85,28 +85,34 @@ export const editRequest = (requestData, request_id) => async(dispatch) => {
 };
 
 export const deleteRequest = request_id => async(dispatch) => {
-    try {
+    if (
+        window.confirm(
+          "Are you sure you want to delete this expertise? \n This cannot undo!"
+        )
+    ) {
+        try {
 
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             }
+    
+            const res = await axios.delete(`/api/request/delete/${request_id}`, config);  
+    
+            dispatch({
+                type: DELETE_USER_REQUEST,
+                payload: res.data
+            });
+    
+            dispatch((setAlert("Request Deleted", "success")));
+    
+        } catch (err) {
+            dispatch({
+                type: USER_REQUEST_ERROR,
+                payload: {msg: err.response.statusText, status: err.response.status }
+            });
         }
-
-        const res = await axios.delete(`/api/request/delete/${request_id}`, config);  
-
-        dispatch({
-            type: DELETE_USER_REQUEST,
-            payload: res.data
-        });
-
-        dispatch((setAlert("Request Deleted", "success")));
-
-    } catch (err) {
-        dispatch({
-            type: USER_REQUEST_ERROR,
-            payload: {msg: err.response.statusText, status: err.response.status }
-        });
     }
 };
 
