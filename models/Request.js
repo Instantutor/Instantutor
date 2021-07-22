@@ -27,7 +27,7 @@ const RequestSchema = new Schema({
       number_sessions: {
         type: Number,
       },
-      post_time: {
+      last_edit_time: {
         type: Date,
         default: Date.now,
       },

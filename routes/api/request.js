@@ -150,6 +150,7 @@ router.put("/edit/:request_id", auth, async (req, res) => {
         if (help_time) requestMatch["help_time"] = help_time;
         if (availability) requestMatch["availability"] = availability;
         if (number_sessions) requestMatch["number_sessions"] = number_sessions;
+        requestMatch["last_edit_time"] = Date.now();
         doc.save();
 
         res.json({ msg: "Request updated", updated_request: requestMatch });

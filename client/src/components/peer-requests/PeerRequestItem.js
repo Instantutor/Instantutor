@@ -10,7 +10,7 @@ const PeerRequestItem =({
         topic,
         help_time,
         number_sessions,
-        post_time
+        last_edit_time
     }
 }) => {
     return (
@@ -31,7 +31,7 @@ const PeerRequestItem =({
                 </p>
 
                 <p>
-                <strong>Posted on: </strong> {new Date(post_time).toLocaleString()}
+                <strong>Last edit: </strong> {new Date(last_edit_time).toLocaleString()}
                 </p>
 
 

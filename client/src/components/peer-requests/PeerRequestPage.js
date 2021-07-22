@@ -17,7 +17,7 @@ const PeerRequestPage = ({ recived_req = [], loading = false }) => {
     {
       id: 0,
       availability: ["sunday morning", "monday evening"],
-      post_time: "2021-07-12T20:46:29.155Z",
+      last_edit_time: "2021-07-12T20:46:29.155Z",
       request: "OS Exam!",
       status: "open",
       course: "CSCI",
@@ -30,7 +30,7 @@ const PeerRequestPage = ({ recived_req = [], loading = false }) => {
     {
       id: 1,
       availability: ["sunday evening", "monday morning"],
-      post_time: "2021-07-10T20:46:29.155Z",
+      last_edit_time: "2021-07-10T20:46:29.155Z",
       request: "I dont know",
       status: "open",
       grade: "Undergraduate",
