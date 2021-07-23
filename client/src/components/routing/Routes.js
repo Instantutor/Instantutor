@@ -30,6 +30,8 @@ import PeerRequestPage from '../peer-requests/PeerRequestPage';
 // Search page
 import Search from '../search/Search';
 
+//
+import VideoPage from '../video/VideoPage';
 /*
 class SearchContainer extends Component {
     state = {
@@ -61,7 +63,7 @@ const Routes = () => {
                 <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute exact path="/create_profile" component={ProfileForm} />
                 <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
-
+                {/* <PrivateRoute exact path = "/videocall" component = {VideoPage}/> */}
                 <PrivateRoute exact path="/add_expertise" component={ExpertiseForm} />
                 <PrivateRoute exact path="/edit_expertise/:id" component={ExpertiseForm} />
                 <Route component={NotFound} />
