@@ -24,12 +24,12 @@ class MatchedTutorItem extends React.Component {
   render() {
     const tutor = this.props;
     const confirmButtonClicked = () => {
+      const newStyle =
+        this.state.currentStyle == defaultConfirm
+          ? clickedConfirm
+          : defaultConfirm;
+      this.setState({ currentStyle: newStyle });
       this.setState({ clicked: !this.state.clicked });
-      if (this.state.clicked) {
-        this.setState({ currentStyle: clickedConfirm });
-      } else {
-        this.setState({ currentStyle: defaultConfirm });
-      }
       //dispatch to add tutor to list of tutors to confirm for user
     };
 

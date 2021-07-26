@@ -13,7 +13,6 @@ const UserRequestMatchedTutor = ({
 }) => {
   let request_id = match.params.id;
   const [tutors, setTutorsData] = useState(null);
-  const [tutorsComponent, setTutorsComponent] = useState(null);
   useEffect(async () => {
     (await user) && getRequestHistory(user._id);
   }, [getRequestHistory, user]);
@@ -53,12 +52,22 @@ const UserRequestMatchedTutor = ({
       ;
     </Fragment>;
   } else {
-    //set up tutors component
-    var tutorsComponentUtil = tutors.map((tutor) => (
-      <MatchedTutorItem key={tutor._id} item={tutor} />
-    ));
-
-    setTutorsComponent(tutorsComponentUtil);
+    const tutorRefs = [];
+    for (var i in tutors) {
+      var ref = React.createRef();
+      tutorRefs.push(ref);
+    }
+    var i = 0;
+    //set up references to components
+    var tutorsComponent = [];
+    tutors.forEach((tutor) => {
+      const tutorRef = tutorRefs[i];
+      const component = (
+        <MatchedTutorItem ref={tutorRef} key={tutor._id} item={tutor} />
+      );
+      tutorsComponent.push(component);
+      i++;
+    });
 
     return (
       <Fragment>
@@ -74,10 +83,12 @@ const UserRequestMatchedTutor = ({
         </button>
         <button
           onClick={() => {
-            for (var i in tutorsComponent) {
-              console.log("Confirmed:", tutorsComponent[i].isConfirmed());
+            for (var i in tutorRefs) {
+              if (tutorRefs[i].current.isConfirmed()) {
+                console.log("Confirmed:", tutorRefs[i].current.props.item);
+              }
             }
-            /*Send those that are confirmed to mongo*/
+            /*Placeholder: Send those that are confirmed to mongo under new field 'chosen_tutors*/
           }}
           className="btn btn-primary"
           style={{ float: "right" }}
