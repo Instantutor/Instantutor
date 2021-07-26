@@ -547,10 +547,10 @@ button {
   max-height: 150px;
   overflow: auto;
   -ms-overflow-style: none;
-  scrollbar-width: none; 
+  scrollbar-width: none;
   border: 1px solid black;
   margin-bottom: 10px;
-  background-color: white; 
+  background-color: white;
 }
 
 .autocomplete .menu::-webkit-scrollbar {
@@ -698,4 +698,37 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
   background-color: #17a2b8;
   border: 0px;
+}
+button.btn-confirm {
+  position: sticky;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  color: #000;
+  cursor: pointer;
+  border: 1px solid var(--primary-color);
+  transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s;
+}
+button.btn-confirm:hover {
+  color: #fff !important;
+  background-color: transparent;
+  text-shadow: nthree;
+}
+button.btn-confirm:hover:before {
+  left: 0%;
+  right: auto;
+  width: 100%;
+}
+
+button.btn-confirm:before {
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  width: 0px;
+  z-index: -1;
+  content: "";
+  color: #000 !important;
+  background: var(--primary-color);
+  transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s;
 }

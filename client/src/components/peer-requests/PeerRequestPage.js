@@ -2,43 +2,15 @@ import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../layout/Spinner";
 import PeerRequestItem from "./PeerRequestItem";
-import { getTutorRequests } from "../../actions/profile";
-/*
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-*/
-const PeerRequestPage = ({ recived_req = [], loading = false }) => {
-  // Hardcoded content for test, will be removed!
+import { checkNewPeerRequest } from "../../actions/request";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
   /* TODO: Use localhost:5000/api/profile/tutor/requests path to get all requests
      that have matches to the current tutor. This should be in the getTutorRequests
      function in actions, but a reducer and state management in this file is still
      needed.*/
-  recived_req = [
-    {
-      id: 0,
-      availability: ["sunday morning", "monday evening"],
-      last_edit_time: "2021-07-12T20:46:29.155Z",
-      request: "OS Exam!",
-      status: "open",
-      course: "CSCI",
-      grade: "Undergraduate",
-      help_time: "ASAP",
-      number_sessions: 10,
-      topic: "First OS exam question!",
-    },
-
-    {
-      id: 1,
-      availability: ["sunday evening", "monday morning"],
-      last_edit_time: "2021-07-10T20:46:29.155Z",
-      request: "I dont know",
-      status: "open",
-      grade: "Undergraduate",
-      help_time: "The month",
-      number_sessions: 1000,
-      topic: "First OS exam question!",
-    },
-  ];
+  var recived_req = peer_requests;
 
   return (
     <Fragment>
@@ -69,4 +41,18 @@ const PeerRequestPage = ({ recived_req = [], loading = false }) => {
   );
 };
 
-export default PeerRequestPage;
+PeerRequestPage.propTypes = {
+  checkNewPeerRequest: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  user: PropTypes.object,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  peer_requests: state.peer_requests.peer_requests,
+  loading: state.user_requests.loading,
+});
+
+export default connect(mapStateToProps, { checkNewPeerRequest })(
+  PeerRequestPage
+);

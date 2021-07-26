@@ -576,7 +576,8 @@ router.get("/github/:username", async (req, res) => {
 });
 
 router.get("/tutor/requests", auth, async (req, res) => {
-  //Get all requests for which tutor qualifies or has been chosen]
+  //get those tutors that the student has accepted
+  //Get all requests for which tutor qualifies or has been chosen
   /* Should consider simply adding a field in database for user 
   that stores potential requests instead of performing all these
   searches.*/
@@ -588,18 +589,25 @@ router.get("/tutor/requests", auth, async (req, res) => {
     var matchingRequests = await Request.find({
       requests: {
         $elemMatch: {
-          potential_tutors: mongoose.Types.ObjectId(req.user.id),
+          potential_tutors: {
+            $elemMatch: { _id: mongoose.Types.ObjectId(req.user.id) },
+          },
         },
       },
     });
+    console.log("MR:", matchingRequests);
     var tutorRequests = [];
     for (var i in matchingRequests) {
       var userRequests = matchingRequests[i]["requests"];
       for (var j in userRequests) {
-        if (userRequests[j]["potential_tutors"].includes(req.user.id)) {
-          var matchingRequest = userRequests[j];
-          matchingRequest.potential_tutors = undefined;
-          tutorRequests.push(matchingRequest);
+        var potential_tutors = userRequests[j].potential_tutors;
+        for (var k in potential_tutors) {
+          if (potential_tutors[k]._id == req.user.id) {
+            var matchingRequest = userRequests[j];
+            matchingRequest.potential_tutors = undefined;
+            tutorRequests.push(matchingRequest);
+            break;
+          }
         }
       }
     }
