@@ -9,6 +9,8 @@ const { check, validationResult } = require("express-validator");
 const Request = require("../../models/Request");
 const User = require("../../models/User");
 const { route } = require("./users");
+const mongoose = require("mongoose");
+const Profile = require("../../models/Profile");
 
 // @route: POST api/request/
 // @desc:  Post a request from a user
@@ -73,14 +75,14 @@ router.post(
     } else {
       try {
         if (requestByUser.requests.length < 3) {
-          
           requestByUser.requests.push(requestFields);
           await requestByUser.save();
 
           res.json({
             msg: "Request added for user.",
             requests: requestByUser.requests,
-            new_request: requestByUser.requests[requestByUser.requests.length - 1],
+            new_request:
+              requestByUser.requests[requestByUser.requests.length - 1],
           });
         } else {
           //console.error("User cannot exceed maximum of 3 concurrent requests.");
@@ -312,4 +314,40 @@ router.delete(
     }
   }
 );
+// @route: PUT api/request/disperse
+// @desc:  Adds request id to each confirmed tutor's active_request
+// @access Private
+router.put("/disperse", auth, async (req, res) => {
+  try {
+    const tutor_ids = req.body.tutor_ids;
+    const request_id = req.body.request_id;
+    for (var i in tutor_ids) {
+      const tutor_id = tutor_ids[i];
+      var tutor = await Profile.findOne({
+        user: mongoose.Types.ObjectId(tutor_id),
+      });
+      if (!tutor) {
+        console.log("Tutor id", tutor_id, "does not exist.");
+        return res
+          .status(400)
+          .json({ errors: { msg: "One of the tutors does not exist." } });
+      }
+      if (tutor.requests == undefined) {
+        tutor.requests = [request_id];
+      } else {
+        if (!tutor.requests.includes(request_id)) {
+          tutor.requests.push(request_id);
+        }
+      }
+      await tutor.save();
+    }
+    res.json({
+      tutors: tutor_ids,
+      request: request_id,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+});
 module.exports = router;

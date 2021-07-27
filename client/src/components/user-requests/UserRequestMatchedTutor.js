@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Spinner from "../layout/Spinner";
 import { connect } from "react-redux";
-import { getRequestHistory } from "../../actions/request";
+import { getRequestHistory, disperseToTutors } from "../../actions/request";
 import MatchedTutorItem from "./MatchedTutorItem";
 
 const UserRequestMatchedTutor = ({
@@ -10,9 +10,11 @@ const UserRequestMatchedTutor = ({
   match,
   requests: { request_history, loading },
   getRequestHistory,
+  disperseToTutors,
 }) => {
   let request_id = match.params.id;
   const [tutors, setTutorsData] = useState(null);
+  const [requestId, setRequestId] = useState(null);
   useEffect(async () => {
     (await user) && getRequestHistory(user._id);
   }, [getRequestHistory, user]);
@@ -24,6 +26,7 @@ const UserRequestMatchedTutor = ({
           .map((item) => item._id)
           .indexOf(request_id);
         setTutorsData(request_history[request_index].potential_tutors);
+        setRequestId(request_history[request_index]._id);
       }
     }
   }, [loading, request_history]);
@@ -83,12 +86,15 @@ const UserRequestMatchedTutor = ({
         </button>
         <button
           onClick={() => {
+            var tutor_ids = [];
             for (var i in tutorRefs) {
               if (tutorRefs[i].current.isConfirmed()) {
-                console.log("Confirmed:", tutorRefs[i].current.props.item);
+                tutor_ids.push(tutorRefs[i].current.props.item._id);
               }
             }
-            /*Placeholder: Send those that are confirmed to mongo under new field 'chosen_tutors*/
+            console.log("Tutors and request Id:", tutors, requestId);
+            disperseToTutors(tutor_ids, requestId);
+            window.history.back(-1);
           }}
           className="btn btn-primary"
           style={{ float: "right" }}
@@ -102,6 +108,7 @@ const UserRequestMatchedTutor = ({
 
 UserRequestMatchedTutor.propTypes = {
   getRequestHistory: PropTypes.func.isRequired,
+  disperseToTutors: PropTypes.func.isRequired,
   user: PropTypes.object,
 };
 
@@ -110,6 +117,7 @@ const mapStateToProps = (state) => ({
   requests: state.user_requests,
 });
 
-export default connect(mapStateToProps, { getRequestHistory })(
-  UserRequestMatchedTutor
-);
+export default connect(mapStateToProps, {
+  getRequestHistory,
+  disperseToTutors,
+})(UserRequestMatchedTutor);

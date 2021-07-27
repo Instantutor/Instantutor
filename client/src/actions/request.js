@@ -9,6 +9,8 @@ import {
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
   AUTH_ERROR,
+  DISPERSE_REQUESTS,
+  DISPERSE_REQUEST_ERROR,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -168,3 +170,35 @@ export const checkNewPeerRequest = () => async (dispatch) => {
     });
   }
 };
+export const disperseToTutors =
+  (chosen_tutors, request_id) => async (dispatch) => {
+    //add to request field in tutors; chosen_tutors should be list of id's
+    try {
+      var token = localStorage.getItem("token");
+      if (!token) {
+        dispatch({
+          type: AUTH_ERROR,
+        });
+        throw Error("Unauthorized request.");
+      }
+      var res = await axios.put(
+        "/api/request/disperse",
+        { tutor_ids: chosen_tutors, request_id: request_id },
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+      dispatch({
+        type: DISPERSE_REQUESTS,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.error(err);
+      dispatch({
+        type: DISPERSE_REQUEST_ERROR,
+        payload: { msg: err },
+      });
+    }
+  };

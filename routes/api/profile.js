@@ -586,32 +586,28 @@ router.get("/tutor/requests", auth, async (req, res) => {
     if (currentUser.role == "Student") {
       throw Error("User must have Tutor role.");
     }
-    var matchingRequests = await Request.find({
-      requests: {
-        $elemMatch: {
-          potential_tutors: {
-            $elemMatch: { _id: mongoose.Types.ObjectId(req.user.id) },
+    var allRequests = [];
+    for (var i in currentUser.requests) {
+      const request_id = currentUser.requests[i];
+      var matchingRequest = await Request.findOne(
+        {
+          requests: {
+            $elemMatch: {
+              _id: mongoose.Types.ObjectId(request_id),
+            },
           },
         },
-      },
-    });
-    console.log("MR:", matchingRequests);
-    var tutorRequests = [];
-    for (var i in matchingRequests) {
-      var userRequests = matchingRequests[i]["requests"];
-      for (var j in userRequests) {
-        var potential_tutors = userRequests[j].potential_tutors;
-        for (var k in potential_tutors) {
-          if (potential_tutors[k]._id == req.user.id) {
-            var matchingRequest = userRequests[j];
-            matchingRequest.potential_tutors = undefined;
-            tutorRequests.push(matchingRequest);
-            break;
-          }
+        {
+          requests: {
+            $elemMatch: {
+              _id: mongoose.Types.ObjectId(request_id),
+            },
+          },
         }
-      }
+      );
+      allRequests.push(matchingRequest.requests[0]);
     }
-    res.json({ matching_requests: tutorRequests });
+    res.json({ matching_requests: allRequests });
   } catch (err) {
     console.error("Error getting tutor requests:", err.message);
     res.status(500).send("Server Error");

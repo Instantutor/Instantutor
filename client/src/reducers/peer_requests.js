@@ -1,4 +1,9 @@
-import { CHECK_NEW_PEER_REQUEST, PEER_REQUEST_ERROR } from "../actions/types";
+import {
+  CHECK_NEW_PEER_REQUEST,
+  PEER_REQUEST_ERROR,
+  DISPERSE_REQUESTS,
+  DISPERSE_REQUEST_ERROR,
+} from "../actions/types";
 
 const initialState = {
   peer_requests: [],
@@ -17,10 +22,17 @@ export default function (state = initialState, action) {
       };
 
     case PEER_REQUEST_ERROR:
+    case DISPERSE_REQUEST_ERROR:
       return {
         ...state,
         error: payload,
         loading: false,
+      };
+    case DISPERSE_REQUESTS:
+      return {
+        ...state,
+        chosen_tutors: payload.tutors,
+        for_request: payload.request,
       };
 
     default:
