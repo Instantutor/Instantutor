@@ -155,6 +155,38 @@ router.get("/:user_id", auth, async (req, res) => {
 });
 
 
+
+// @route: GET api/request/:user_id
+// @desc:  Get a list of all requests made by a certain user
+// @access Private
+router.get("/received/:user_id", auth, async (req, res) => {
+  try {
+    const Tutor = await RequestRelate.findOne({ user: req.user.id })
+    let reqs = []
+
+    if (! Tutor){
+      return res.json(reqs);
+    }
+
+    for (i = 0; i < Tutor.received_requests.length; i++){
+      temp =  await Request.findOne({
+        _id: Tutor.received_requests[i].id,
+      })
+      if (!temp){
+        return res.status(400).json({
+          msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
+        });
+      }
+      reqs.push(temp)
+    }
+    res.json(reqs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
 // @access Private
@@ -191,6 +223,47 @@ router.put("/edit/:request_id", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+
+// @route: PUT api/request/disperse
+// @desc:  Adds request id to each confirmed tutor's active_request
+// @access Private
+router.put("/disperse", auth, async (req, res) => {
+  try {
+    const tutor_ids = req.body.tutor_ids;
+    const request_id = req.body.request_id;
+
+    for (var i in tutor_ids) {
+      const tutor_id = tutor_ids[i];
+      var tutor = await RequestRelate.findOne({
+        user: tutor_id,
+      });
+      if (!tutor) {
+        console.log("new tutor");
+        tutor = new RequestRelate({
+          user: tutor_id,
+          received_requests: [{_id : request_id}]
+        })
+      }
+      else{
+        // Prevent multi sending
+        if (JSON.stringify(tutor.received_requests).
+          indexOf(JSON.stringify({_id : request_id})) === -1)
+          
+          tutor.received_requests.push(request_id);
+      }
+      await tutor.save();
+    }
+    res.json({
+      tutors: tutor_ids,
+      request: request_id,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+});
+
 
 // @route: DELETE api/request/delete/:request_id
 // @desc:  Deletes a request made by a user
