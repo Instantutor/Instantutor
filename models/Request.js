@@ -34,7 +34,19 @@ const RequestSchema = new Schema({
         type: String,
         default: "open",
       },
-      potential_tutors: [],
+      potential_tutors: [
+        {
+          _id : {
+            type : String
+          },
+          name : {
+            type : String
+          },
+          avatar : {
+            type : String
+          },
+        }
+      ],
       bids: [
         {
           bidder_id: {
