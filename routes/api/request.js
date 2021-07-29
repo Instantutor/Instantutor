@@ -7,6 +7,7 @@ const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const Request = require("../../models/Request");
+const RequestRelate = require("../../models/RequestRelate");
 const User = require("../../models/User");
 const { route } = require("./users");
 
@@ -15,7 +16,12 @@ const { route } = require("./users");
 // @access Private
 router.post(
   "/",
-  [auth, [check("request", "request content is required").not().isEmpty()]],
+  [auth, 
+    [
+      check("request", "request content is required").not().isEmpty(),
+      check("course", "Related course is required").not().isEmpty()
+    ]
+  ],
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -33,6 +39,7 @@ router.post(
       number_sessions,
     } = req.body;
     const requestFields = {};
+    requestFields.user = req.user.id;
     if (request) requestFields.request = request;
     if (course) requestFields.course = course;
     if (grade) requestFields.grade = grade;
@@ -44,59 +51,42 @@ router.post(
       req.body,
       req.user.id
     );
-    const requestByUser = await Request.findOne({ user: req.user.id });
-    if (!requestByUser) {
-      //initialize new set of requests for user
 
-      const requestData = {};
-      requestData.name = req.user.name;
-      requestData.user = req.user.id;
-      var requestArr = [];
-      requestArr.push(requestFields);
-      requestData.requests = requestArr;
+    try {
+      const new_request = new Request(requestFields);
+      await new_request.save(); 
 
-      try {
-        //Adds new request to requests collection
-        let newRequest = new Request(requestData);
-        await newRequest.save();
-        console.log(
-          "Requests for user initialized as user did not exists or had no active requests."
-        );
-        return res.json({
-          msg: "Requests for user initialized.",
-          new_request: newRequest.requests[0],
-        });
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
+      let requestByUser = await RequestRelate.findOne({ user: req.user.id });
+      if (!requestByUser){
+        requestByUser = new RequestRelate({
+          user: req.user.id,
+          posted_requests: [{_id : new_request._id}]
+        })
       }
-    } else {
-      try {
-        if (requestByUser.requests.length < 3) {
-          
-          requestByUser.requests.push(requestFields);
-          await requestByUser.save();
+      else{
+        if (requestByUser.posted_requests.length >= 3) 
+          return res.status(400).json({
+            errors:
+              [{msg : "User tried to exceed maximum of 3 concurrent requests for help."}],
+          });
 
-          res.json({
-            msg: "Request added for user.",
-            requests: requestByUser.requests,
-            new_request: requestByUser.requests[requestByUser.requests.length - 1],
-          });
-        } else {
-          //console.error("User cannot exceed maximum of 3 concurrent requests.");
-          res.status(400).json({
-            error:
-              "User tried to exceed maximum of 3 concurrent requests for help.",
-          });
-        }
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server error (adding)");
+        requestByUser.posted_requests.push(new_request._id)
       }
+      await requestByUser.save();
+      return res.json({
+        requestByUser: requestByUser, 
+        new_request: new_request
+      });
+
+    }
+    catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
     }
   }
 );
 
+/*
 // @route: GET api/request/
 // @desc:  Get a list of all requests
 // @access Private
@@ -109,21 +99,61 @@ router.get("/", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+*/
+
+router.get("/requestID/:request_id", auth, async (req, res) => {
+  //Get all requests for which tutor qualifies or has been chosen]
+  /* Should consider simply adding a field in database for user 
+  that stores potential requests instead of performing all these
+  searches.*/
+  try {
+      const request = await Request.findOne({
+        _id: req.params.request_id,
+      })
+  
+      if (!request)
+        return res.status(400).json({
+          msg: `request of the _id ${req.params.request_id} not found`,
+        });
+  
+      res.json(request);
+  } catch (err) {
+    console.error("Error getting requests by ID", err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 
 // @route: GET api/request/:user_id
 // @desc:  Get a list of all requests made by a certain user
 // @access Private
 router.get("/:user_id", auth, async (req, res) => {
   try {
-    const reqs = await Request.find({ user: req.params.user_id }).sort({
-      date: -1,
-    });
+    const requestUser = await RequestRelate.findOne({ user: req.user.id })
+    let reqs = []
+
+    if (! requestUser){
+      return res.json(reqs);
+    }
+
+    for (i = 0; i < requestUser.posted_requests.length; i++){
+      temp =  await Request.findOne({
+        _id: requestUser.posted_requests[i].id,
+      })
+      if (!temp){
+        return res.status(400).json({
+          msg: `request of the _id ${requestUser.posted_requests[i].id} not found`,
+        });
+      }
+      reqs.push(temp)
+    }
     res.json(reqs);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
+
 
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
@@ -140,9 +170,8 @@ router.put("/edit/:request_id", auth, async (req, res) => {
   } = req.body;
 
   try {
-    await Request.findOne({ user: req.user.id }).then((doc) => {
-      let requestMatch = doc.requests.id(req.params.request_id);
-      if (requestMatch) {
+    requestMatch = await Request.findOne({_id: req.params.request_id,})
+    if (requestMatch) {
         if (request) requestMatch["request"] = request;
         if (course) requestMatch["course"] = course;
         if (grade) requestMatch["grade"] = grade;
@@ -151,13 +180,12 @@ router.put("/edit/:request_id", auth, async (req, res) => {
         if (availability) requestMatch["availability"] = availability;
         if (number_sessions) requestMatch["number_sessions"] = number_sessions;
         requestMatch["last_edit_time"] = Date.now();
-        doc.save();
+        requestMatch.save();
 
         res.json({ msg: "Request updated", updated_request: requestMatch });
       } else {
         res.status(400).json({ error: "Request ID is invalid" });
-      }
-    });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -169,26 +197,25 @@ router.put("/edit/:request_id", auth, async (req, res) => {
 // @access Private
 router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
-    await Request.findOne({ user: req.user.id }).then((doc) => {
-      let requestMatch = doc.requests.id(req.params.request_id);
+    await Request.findOneAndRemove({ _id: req.params.request_id });
+    const requestUser = await RequestRelate.findOne({ user: req.user.id })
 
-      if (requestMatch) {
-        doc.requests = doc.requests.filter(
-          (request) => request._id.toString() !== req.params.request_id
-        );
+    const removeIndex = requestUser.posted_requests
+      .map((item) => item.id)
+      .indexOf(req.params.request_id);
 
-        doc.save();
-        res.json({ msg: "Request deleted", deleted_request: requestMatch });
-      } else {
-        res.status(400).json({ error: "Request ID is invalid" });
-      }
-    });
+    requestUser.posted_requests.splice(removeIndex, 1);
+    await requestUser.save()
+
+    res.json(requestUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
 
+
+/* Need renew
 // @route: PUT api/request/bid
 // @desc:  A user can bid, adding to the bids array
 // @access Private
@@ -312,4 +339,6 @@ router.delete(
     }
   }
 );
+*/
+
 module.exports = router;

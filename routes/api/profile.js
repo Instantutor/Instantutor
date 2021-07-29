@@ -10,6 +10,7 @@ const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const Request = require("../../models/Request");
 const checkObjectId = require("../../middleware/checkObjectId");
+const RequestRelate = require("../../models/RequestRelate");
 
 // @route: GET api/profile/me
 // @desc: Get current users profile
@@ -209,7 +210,10 @@ router.delete("/", auth, async (req, res) => {
     await Profile.findOneAndRemove({ user: req.user.id });
 
     // Remove posted requests
-    await Request.findOneAndRemove({ user: req.user.id });
+    while (await Request.findOneAndRemove({ user: req.user.id })){
+      continue
+    }
+    await RequestRelate.findOneAndRemove({ user: req.user.id });
 
     // Remove User
     await User.findOneAndRemove({ _id: req.user.id });

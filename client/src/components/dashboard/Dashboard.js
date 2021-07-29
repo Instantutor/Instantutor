@@ -20,7 +20,8 @@ const Dashboard = ({
     getRequestHistory,
     deleteAccount,
     auth: { user },
-    profile: { profile, loading }, 
+    profile: { profile, loading },
+    user_requests, 
     req_history = [],
     //checkNewPeerRequest,
 }) => {
@@ -32,7 +33,7 @@ const Dashboard = ({
 
     useEffect(() => {
         user && getRequestHistory(user._id);
-    }, [user]);
+    }, [user, user_requests.loading]);
 
     return loading ? <Spinner /> :
         <Fragment>
@@ -101,6 +102,7 @@ const mapStateToProps = (state) => ({
     auth: state.auth,
     profile: state.profile,
     req_history: state.user_requests.request_history,
+    user_requests: state.user_requests,
 });
 
 export default connect(

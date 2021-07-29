@@ -6,8 +6,7 @@ const RequestSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  requests: [
-    {
+
       request: {
         type: String,
       },
@@ -46,8 +45,6 @@ const RequestSchema = new Schema({
           },
         },
       ],
-    },
-  ],
 });
 
 module.exports = mongoose.model("request", RequestSchema);

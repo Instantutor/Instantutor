@@ -38,17 +38,6 @@ export const createRequest = (requestData, history) => async(dispatch) => {
         if (errors) {
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
-        
-        const limit_exceed = err.response.data.error;
-        
-        if (limit_exceed != null){
-            dispatch({
-                type: USER_REQUEST_ERROR,
-                payload: limit_exceed
-            });
-            dispatch(setAlert(limit_exceed, 'danger'))
-        }
-
     }
 };
 
@@ -99,12 +88,12 @@ export const deleteRequest = request_id => async(dispatch) => {
             }
     
             const res = await axios.delete(`/api/request/delete/${request_id}`, config);  
-    
+            
             dispatch({
                 type: DELETE_USER_REQUEST,
                 payload: res.data
             });
-    
+
             dispatch((setAlert("Request Deleted", "success")));
     
         } catch (err) {
