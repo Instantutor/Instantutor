@@ -1,3 +1,4 @@
+const { request } = require("express");
 const Profile = require("../models/Profile");
 
 function partialMatch(profileName, queryName) {
@@ -29,14 +30,14 @@ async function getTutorMatches(requestFields, currentUserID) {
   var queryArr = [];
   if (course) queryArr.push({ area: course });
   if (grade) queryArr.push({ degree: grade });
-  const tutors = await Profile.find(
-    {
-      role: { $in: ["Tutor", "Both"] },
-      expertise: {
-        $elemMatch: { $or: queryArr },
-      },
+  const tutors = await Profile.find({
+    role: { $in: ["Tutor", "Both"] },
+    expertise: {
+      $elemMatch: { $or: queryArr },
     },
-  ).populate("user", ["name", "avatar"]).limit(5);
+  })
+    .populate("user", ["name", "avatar"])
+    .limit(5);
   //max of 5 tutors at the moment
   var tutorArr = [];
   for (var i in tutors) {
@@ -48,13 +49,14 @@ async function getTutorMatches(requestFields, currentUserID) {
       name: tutors[i].user.name,
       avatar: tutors[i].user.avatar,
       bio: tutors[i].bio,
-    }
+    };
     tutorArr.push(returnField);
     // }
   }
   //console.log(tutorArr)
   return tutorArr;
 }
+
 module.exports = {
   partialMatch: partialMatch,
   getTutorMatches: getTutorMatches,
