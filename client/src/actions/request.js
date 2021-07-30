@@ -196,6 +196,9 @@ export const disperseToTutors =
         type: DISPERSE_REQUESTS,
         payload: res.data,
       });
+
+      dispatch(setAlert(`Your request has been dispatched to selected tutors!`, "success"));
+
     } catch (err) {
       console.error(err);
       dispatch({
