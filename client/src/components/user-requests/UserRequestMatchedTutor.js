@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../layout/Spinner";
 import { connect } from "react-redux";
@@ -43,17 +44,22 @@ const UserRequestMatchedTutor = ({
       </Fragment>
     );
   } else if (tutors.length < 1) {
-    <Fragment>
-      <div>
-        <h1 className="large text-primary">Oops!</h1>
-        <h1 className="text-primary">No matched tutor...</h1>
-      </div>
-      ;
-      <button onClick={() => window.history.back(-1)} className="btn btn-dark">
-        Go Back
-      </button>
-      ;
-    </Fragment>;
+    return (
+      <Fragment>
+        <div>
+          <h1 className="large text-primary">Oops!</h1>
+          <h1 className="text-primary">No matched tutor...</h1>
+        </div>
+        ;
+        <button
+          onClick={() => window.history.back(-1)}
+          className="btn btn-dark"
+        >
+          Go Back
+        </button>
+        ;
+      </Fragment>
+    );
   } else {
     const tutorRefs = [];
     for (var i in tutors) {
@@ -84,7 +90,10 @@ const UserRequestMatchedTutor = ({
         >
           Go Back
         </button>
-        <button
+        <Link to="/dashboard" className="btn btn-light">
+          Back To Dashboard
+        </Link>
+        <Link
           onClick={() => {
             var tutor_ids = [];
             for (var i in tutorRefs) {
@@ -94,13 +103,13 @@ const UserRequestMatchedTutor = ({
             }
             console.log("Tutors and request Id:", tutors, requestId);
             disperseToTutors(tutor_ids, requestId);
-            window.history.back(-1);
           }}
+          to="/dashboard"
           className="btn btn-primary"
           style={{ float: "right" }}
         >
           Submit
-        </button>
+        </Link>
       </Fragment>
     );
   }

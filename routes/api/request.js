@@ -269,14 +269,31 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
     await Request.findOneAndRemove({ _id: req.params.request_id });
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
-
+    //need to remove this request from all tutors received_request
     const removeIndex = requestUser.posted_requests
       .map((item) => item.id)
       .indexOf(req.params.request_id);
 
     requestUser.posted_requests.splice(removeIndex, 1);
     await requestUser.save();
-
+    const tutorsWithRequest = await RequestRelate.find({
+      received_requests: {
+        $elemMatch: {
+          _id: mongoose.Types.ObjectId(req.params.request_id),
+        },
+      },
+    });
+    for (var i in tutorsWithRequest) {
+      const tutor = tutorsWithRequest[i];
+      const index = tutor.received_requests
+        .map((item) => item._id)
+        .indexOf(req.params.request_id);
+      tutor.received_requests.splice(index, 1);
+      await RequestRelate.findOneAndUpdate(
+        { _id: tutor._id },
+        { $set: { received_requests: tutor.received_requests } }
+      );
+    }
     res.json(requestUser);
   } catch (err) {
     console.error(err.message);
