@@ -10,6 +10,7 @@ const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const Request = require("../../models/Request");
 const checkObjectId = require("../../middleware/checkObjectId");
+const RequestRelate = require("../../models/RequestRelate");
 
 // @route: GET api/profile/me
 // @desc: Get current users profile
@@ -209,7 +210,10 @@ router.delete("/", auth, async (req, res) => {
     await Profile.findOneAndRemove({ user: req.user.id });
 
     // Remove posted requests
-    await Request.findOneAndRemove({ user: req.user.id });
+    while (await Request.findOneAndRemove({ user: req.user.id })) {
+      continue;
+    }
+    await RequestRelate.findOneAndRemove({ user: req.user.id });
 
     // Remove User
     await User.findOneAndRemove({ _id: req.user.id });
@@ -572,41 +576,6 @@ router.get("/github/:username", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     return res.status(404).json({ msg: "No Github profile found" });
-  }
-});
-
-router.get("/tutor/requests", auth, async (req, res) => {
-  //Get all requests for which tutor qualifies or has been chosen]
-  /* Should consider simply adding a field in database for user 
-  that stores potential requests instead of performing all these
-  searches.*/
-  try {
-    var currentUser = await Profile.findOne({ user: req.user.id });
-    if (currentUser.role == "Student") {
-      throw Error("User must have Tutor role.");
-    }
-    var matchingRequests = await Request.find({
-      requests: {
-        $elemMatch: {
-          potential_tutors: mongoose.Types.ObjectId(req.user.id),
-        },
-      },
-    });
-    var tutorRequests = [];
-    for (var i in matchingRequests) {
-      var userRequests = matchingRequests[i]["requests"];
-      for (var j in userRequests) {
-        if (userRequests[j]["potential_tutors"].includes(req.user.id)) {
-          var matchingRequest = userRequests[j];
-          matchingRequest.potential_tutors = undefined;
-          tutorRequests.push(matchingRequest);
-        }
-      }
-    }
-    res.json({ matching_requests: tutorRequests });
-  } catch (err) {
-    console.error("Error getting tutor requests:", err.message);
-    res.status(500).send("Server Error");
   }
 });
 

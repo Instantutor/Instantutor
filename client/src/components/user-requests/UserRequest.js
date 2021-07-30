@@ -137,7 +137,7 @@ const UserRequest = ({ createRequest,
             <div className="form-group">
               <input
                 type="text"
-                placeholder="Subject"
+                placeholder="* Subject"
                 name="course"
                 value={course}
                 onChange={onChange}
