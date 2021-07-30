@@ -13,18 +13,18 @@ import Spinner from "../layout/Spinner";
 
 import Expertise from "./Expertise";
 import UserRequest from "./UserRequest";
-import peer_requests from "../../reducers/peer_requests";
 //import { render } from 'react-dom';
 
 const Dashboard = ({
   getCurrentProfile,
   getRequestHistory,
   deleteAccount,
+  checkNewPeerRequest,
+
   auth: { user },
   profile: { profile, loading },
   user_requests,
-  req_history = [],
-  checkNewPeerRequest,
+  peer_requests,
 }) => {
   useEffect(() => {
     getCurrentProfile();
@@ -64,7 +64,11 @@ const Dashboard = ({
             <Fragment />
           )}
 
-          <UserRequest user_request={req_history} />
+          {user_requests.loading ? (
+            <Spinner />
+          ) : (
+            <UserRequest user_request={user_requests.request_history} />
+          )}
 
           <div className="my-2">
             <button className="btn btn-danger" onClick={() => deleteAccount()}>
@@ -92,13 +96,15 @@ Dashboard.propTypes = {
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  user_requests: PropTypes.object.isRequired,
+  peer_requests: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
-  req_history: state.user_requests.request_history,
   user_requests: state.user_requests,
+  peer_requests: state.peer_requests,
 });
 
 export default connect(mapStateToProps, {

@@ -4,14 +4,27 @@ import Spinner from "../layout/Spinner";
 import PeerRequestItem from "./PeerRequestItem";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { removeReqDups } from "../../utils/utilities";
-const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
-  var received_req = removeReqDups(peer_requests);
+import { checkNewPeerRequest } from '../../actions/request';
+
+
+const PeerRequestPage = ({ 
+  user, 
+  peer_requests, 
+  loading = true, 
+  checkNewPeerRequest 
+}) => {
+
+  useEffect(async () => {
+    await user && checkNewPeerRequest(user._id);
+  }, 
+      [checkNewPeerRequest, user, loading]
+  );
+
   return (
     <Fragment>
       {loading ? (
         <Spinner />
-      ) : received_req === null || received_req.length < 1 ? (
+      ) : peer_requests === null || peer_requests.length < 1 ? (
         <div>
           <h1 className="large text-primary">
             Oops! No requests for you now...
@@ -23,7 +36,7 @@ const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
       ) : (
         <div className="request">
           <h1 className="large text-primary">Check Request for you!</h1>
-          {received_req.map((peer_request) => (
+          {peer_requests.map((peer_request) => (
             <PeerRequestItem key={peer_request.id} item={peer_request} />
           ))}
         </div>
@@ -37,6 +50,7 @@ const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
 };
 
 PeerRequestPage.propTypes = {
+  checkNewPeerRequest: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   user: PropTypes.object,
 };
@@ -44,7 +58,7 @@ PeerRequestPage.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   peer_requests: state.peer_requests.peer_requests,
-  loading: state.user_requests.loading,
+  loading: state.peer_requests.loading,
 });
 
-export default connect(mapStateToProps)(PeerRequestPage);
+export default connect(mapStateToProps, {checkNewPeerRequest})(PeerRequestPage);

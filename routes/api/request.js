@@ -138,7 +138,7 @@ router.get("/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
-    for (i = 0; i < requestUser.posted_requests.length; i++) {
+    for (i in requestUser.posted_requests) {
       temp = await Request.findOne({
         _id: requestUser.posted_requests[i].id,
       });
@@ -166,7 +166,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
     if (!Tutor) {
       return res.json(reqs);
     }
-    for (i = 0; i < Tutor.received_requests.length; i++) {
+    for (i in Tutor.received_requests) {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
