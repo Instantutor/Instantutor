@@ -4,9 +4,14 @@ import Spinner from "../layout/Spinner";
 import PeerRequestItem from "./PeerRequestItem";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { removeReqDups } from "../../utils/utilities";
 const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
-  var received_req = removeReqDups(peer_requests);
+  /* TODO: Use localhost:5000/api/profile/tutor/requests path to get all requests
+     that have matches to the current tutor. This should be in the getTutorRequests
+     function in actions, but a reducer and state management in this file is still
+     needed.*/
+  var received_req = peer_requests;
+  console.log("received requests:", received_req);
+
   return (
     <Fragment>
       {loading ? (
