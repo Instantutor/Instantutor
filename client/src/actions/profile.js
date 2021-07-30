@@ -6,8 +6,6 @@ import {
   PROFILE_ERROR,
   ACCOUNT_DELETED,
   UPDATE_PROFILE,
-  GET_TUTOR_REQUESTS,
-  TUTOR_REQUESTS_ERROR,
 } from "./types";
 
 // Get current users profile
