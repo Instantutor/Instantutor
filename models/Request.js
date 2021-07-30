@@ -6,8 +6,7 @@ const RequestSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  requests: [
-    {
+
       request: {
         type: String,
       },
@@ -35,7 +34,19 @@ const RequestSchema = new Schema({
         type: String,
         default: "open",
       },
-      potential_tutors: [],
+      potential_tutors: [
+        {
+          _id : {
+            type : String
+          },
+          name : {
+            type : String
+          },
+          avatar : {
+            type : String
+          },
+        }
+      ],
       bids: [
         {
           bidder_id: {
@@ -46,8 +57,6 @@ const RequestSchema = new Schema({
           },
         },
       ],
-    },
-  ],
 });
 
 module.exports = mongoose.model("request", RequestSchema);

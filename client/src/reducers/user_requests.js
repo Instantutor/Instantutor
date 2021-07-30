@@ -20,34 +20,16 @@ export default function (state = initialState, action) {
         case POST_USER_REQUEST:
             return {
                 ...state,
-                request_history: payload.requests ?
-                    payload.requests :
-                    [payload.new_request],
-                loading: false
+                loading: true
             };
 
         case GET_USER_REQUEST:
             return {
                 ...state,
-                request_history: payload.length === 0 ? [] : payload[0].requests,
+                request_history: payload,
                 loading: false
             }
 
-        case EDIT_USER_REQUEST:
-            return {
-                ...state,
-                request_history: state.request_history.map(
-                    elem => elem._id === payload.updated_request._id ?
-                    payload.updated_request :
-                    elem)
-            }
-
-        case DELETE_USER_REQUEST:
-            return {
-                ...state,
-                request_history: state.request_history.filter(
-                    elem => elem._id !== payload.deleted_request._id)
-            }
 
         case USER_REQUEST_ERROR:
             return {
@@ -59,6 +41,8 @@ export default function (state = initialState, action) {
         case LOGOUT:
         case ACCOUNT_DELETED:
         case CLEAR_USER_REQUEST:
+        case EDIT_USER_REQUEST:
+        case DELETE_USER_REQUEST:
             
             state = initialState;
             return {

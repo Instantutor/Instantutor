@@ -21,23 +21,24 @@ const Dashboard = ({
   deleteAccount,
   auth: { user },
   profile: { profile, loading },
+  user_requests,
   req_history = [],
-  checkNewPeerRequest,
+  //checkNewPeerRequest,
 }) => {
   useEffect(() => {
     getCurrentProfile();
-    checkNewPeerRequest();
+    //checkNewPeerRequest();
   }, []);
 
   useEffect(() => {
     user && getRequestHistory(user._id);
-  }, [user]);
+  }, [user, user_requests.loading]);
 
   return loading ? (
     <Spinner />
   ) : (
     <Fragment>
-      {profile !== null ? (
+      {profile != null ? (
         <Fragment>
           <h1 className="large text-primary"> Personal page </h1>
           <p className="lead">
@@ -94,6 +95,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
   req_history: state.user_requests.request_history,
+  user_requests: state.user_requests,
 });
 
 export default connect(mapStateToProps, {
