@@ -13,6 +13,7 @@ import Spinner from "../layout/Spinner";
 
 import Expertise from "./Expertise";
 import UserRequest from "./UserRequest";
+import peer_requests from "../../reducers/peer_requests";
 //import { render } from 'react-dom';
 
 const Dashboard = ({
@@ -23,16 +24,18 @@ const Dashboard = ({
   profile: { profile, loading },
   user_requests,
   req_history = [],
-  //checkNewPeerRequest,
+  checkNewPeerRequest,
 }) => {
   useEffect(() => {
     getCurrentProfile();
-    //checkNewPeerRequest();
   }, []);
 
   useEffect(() => {
     user && getRequestHistory(user._id);
   }, [user, user_requests.loading]);
+  useEffect(() => {
+    user && checkNewPeerRequest(user._id);
+  }, [user, peer_requests.loading]);
 
   return loading ? (
     <Spinner />

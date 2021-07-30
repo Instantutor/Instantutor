@@ -17,7 +17,7 @@ export default function (state = initialState, action) {
     case CHECK_NEW_PEER_REQUEST:
       return {
         ...state,
-        peer_requests: payload.length === 0 ? [] : payload.matching_requests,
+        peer_requests: payload,
         loading: false,
       };
 
@@ -32,7 +32,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         chosen_tutors: payload.tutors,
-        for_request: payload.request,
+        request: payload.request,
       };
 
     default:

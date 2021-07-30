@@ -156,19 +156,18 @@ router.get("/:user_id", auth, async (req, res) => {
   }
 });
 
-// @route: GET api/request/:user_id
+// @route: GET api/request/received/:user_id
 // @desc:  Get a list of all requests made by a certain user
 // @access Private
 router.get("/received/:user_id", auth, async (req, res) => {
   try {
     const Tutor = await RequestRelate.findOne({ user: req.user.id });
     let reqs = [];
-
     if (!Tutor) {
       return res.json(reqs);
     }
-
     for (i = 0; i < Tutor.received_requests.length; i++) {
+      //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
       });
@@ -223,10 +222,10 @@ router.put("/edit/:request_id", auth, async (req, res) => {
   }
 });
 
-// @route: PUT api/request/disperse
+// @route: POST api/request/disperse
 // @desc:  Adds request id to each confirmed tutor's active_request
 // @access Private
-router.put("/disperse", auth, async (req, res) => {
+router.post("/disperse", auth, async (req, res) => {
   try {
     const tutor_ids = req.body.tutor_ids;
     const request_id = req.body.request_id;

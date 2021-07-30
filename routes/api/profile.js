@@ -210,8 +210,8 @@ router.delete("/", auth, async (req, res) => {
     await Profile.findOneAndRemove({ user: req.user.id });
 
     // Remove posted requests
-    while (await Request.findOneAndRemove({ user: req.user.id })){
-      continue
+    while (await Request.findOneAndRemove({ user: req.user.id })) {
+      continue;
     }
     await RequestRelate.findOneAndRemove({ user: req.user.id });
 
@@ -576,45 +576,6 @@ router.get("/github/:username", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     return res.status(404).json({ msg: "No Github profile found" });
-  }
-});
-
-router.get("/tutor/requests", auth, async (req, res) => {
-  //get those tutors that the student has accepted
-  //Get all requests for which tutor qualifies or has been chosen
-  /* Should consider simply adding a field in database for user 
-  that stores potential requests instead of performing all these
-  searches.*/
-  try {
-    var currentUser = await Profile.findOne({ user: req.user.id });
-    if (currentUser.role == "Student") {
-      throw Error("User must have Tutor role.");
-    }
-    var allRequests = [];
-    for (var i in currentUser.requests) {
-      const request_id = currentUser.requests[i];
-      var matchingRequest = await Request.findOne(
-        {
-          requests: {
-            $elemMatch: {
-              _id: mongoose.Types.ObjectId(request_id),
-            },
-          },
-        },
-        {
-          requests: {
-            $elemMatch: {
-              _id: mongoose.Types.ObjectId(request_id),
-            },
-          },
-        }
-      );
-      allRequests.push(matchingRequest.requests[0]);
-    }
-    res.json({ matching_requests: allRequests });
-  } catch (err) {
-    console.error("Error getting tutor requests:", err.message);
-    res.status(500).send("Server Error");
   }
 });
 

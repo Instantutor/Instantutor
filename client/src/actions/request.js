@@ -8,6 +8,9 @@ import {
   DELETE_USER_REQUEST,
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
+  AUTH_ERROR,
+  DISPERSE_REQUESTS,
+  DISPERSE_REQUEST_ERROR,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -35,19 +38,51 @@ export const createRequest = (requestData, history) => async (dispatch) => {
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
-  }
 
-  const limit_exceed = err.response.data.error;
+    const limit_exceed = err.response.data.error;
 
-  if (limit_exceed != null) {
-    dispatch({
-      type: USER_REQUEST_ERROR,
-      payload: limit_exceed,
-    });
-    dispatch(setAlert(limit_exceed, "danger"));
+    if (limit_exceed != null) {
+      dispatch({
+        type: USER_REQUEST_ERROR,
+        payload: limit_exceed,
+      });
+      dispatch(setAlert(limit_exceed, "danger"));
+    }
   }
 };
+export const editRequest = (requestData, request_id) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
+    const res = await axios.put(
+      `/api/request/edit/${request_id}`,
+      requestData,
+      config
+    );
+
+    dispatch({
+      type: EDIT_USER_REQUEST,
+      payload: res.data,
+    });
+
+    dispatch(setAlert("Request Edited", "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+
+    dispatch({
+      type: USER_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
 export const deleteRequest = (request_id) => async (dispatch) => {
   if (
     window.confirm(
@@ -77,40 +112,7 @@ export const deleteRequest = (request_id) => async (dispatch) => {
         type: USER_REQUEST_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status },
       });
-    }
-  }
 
-  dispatch({
-    type: USER_REQUEST_ERROR,
-    payload: { msg: err.response.statusText, status: err.response.status },
-  });
-};
-
-export const deleteRequest = (request_id) => async (dispatch) => {
-  if (
-    window.confirm(
-      "Are you sure you want to delete this expertise? \n This cannot undo!"
-    )
-  ) {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const res = await axios.delete(
-        `/api/request/delete/${request_id}`,
-        config
-      );
-
-      dispatch({
-        type: DELETE_USER_REQUEST,
-        payload: res.data,
-      });
-
-      dispatch(setAlert("Request Deleted", "success"));
-    } catch (err) {
       dispatch({
         type: USER_REQUEST_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status },
@@ -136,7 +138,7 @@ export const getRequestHistory = (userId) => async (dispatch) => {
 };
 
 // Check if the user received new peer requests
-export const checkNewPeerRequest = () => async (dispatch) => {
+export const checkNewPeerRequest = (userId) => async (dispatch) => {
   try {
     //const res = await axios.get(`/api/request/${userId}`);
     //console.log(res.data);
@@ -149,12 +151,11 @@ export const checkNewPeerRequest = () => async (dispatch) => {
       });
       throw Error("Unauthorized request.");
     }
-    var res = await axios.get("/api/profile/tutor/requests", {
+    var res = await axios.get(`/api/request/received/${userId}`, {
       headers: {
         "x-auth-token": token,
       },
     });
-    console.log("All requests for tutor:", res.data);
     dispatch({
       type: CHECK_NEW_PEER_REQUEST,
       payload: res.data,
@@ -182,7 +183,7 @@ export const disperseToTutors =
         });
         throw Error("Unauthorized request.");
       }
-      var res = await axios.put(
+      var res = await axios.post(
         "/api/request/disperse",
         { tutor_ids: chosen_tutors, request_id: request_id },
         {
