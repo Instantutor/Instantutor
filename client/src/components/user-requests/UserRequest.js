@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
@@ -22,7 +22,7 @@ const UserRequest = ({ createRequest,
     availability: [],
     number_sessions: "",
   });
-  const [requestID, setRequestID] = useState(match.params.id);
+  const requestID = match.params.id;
 
   const {
     request,
@@ -137,7 +137,7 @@ const UserRequest = ({ createRequest,
             <div className="form-group">
               <input
                 type="text"
-                placeholder="Subject"
+                placeholder="* Subject"
                 name="course"
                 value={course}
                 onChange={onChange}

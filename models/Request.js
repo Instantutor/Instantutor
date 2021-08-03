@@ -6,46 +6,54 @@ const RequestSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  requests: [
+  request: {
+    type: String,
+  },
+  course: {
+    type: String,
+  },
+  grade: {
+    type: String,
+  },
+  topic: {
+    type: String,
+  },
+  help_time: {
+    type: String,
+  },
+  availability: [String],
+  number_sessions: {
+    type: Number,
+  },
+  last_edit_time: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: String,
+    default: "open",
+  },
+  potential_tutors: [
     {
-      request: {
+      _id: {
         type: String,
       },
-      course: {
+      name: {
         type: String,
       },
-      grade: {
+      avatar: {
         type: String,
       },
-      topic: {
+    },
+  ],
+  bids: [
+    {
+      bidder_id: {
         type: String,
       },
-      help_time: {
+      fee: {
         type: String,
       },
-      availability: [String],
-      number_sessions: {
-        type: Number,
-      },
-      last_edit_time: {
-        type: Date,
-        default: Date.now,
-      },
-      status: {
-        type: String,
-        default: "open",
-      },
-      potential_tutors: [],
-      bids: [
-        {
-          bidder_id: {
-            type: String,
-          },
-          fee: {
-            type: String,
-          },
-        },
-      ],
     },
   ],
 });

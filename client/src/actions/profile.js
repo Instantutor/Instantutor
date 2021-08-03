@@ -6,8 +6,6 @@ import {
   PROFILE_ERROR,
   ACCOUNT_DELETED,
   UPDATE_PROFILE,
-  GET_TUTOR_REQUESTS,
-  TUTOR_REQUESTS_ERROR,
 } from "./types";
 
 // Get current users profile
@@ -164,21 +162,5 @@ export const deleteAccount = () => async (dispatch) => {
         payload: { msg: err.response.statusText, status: err.response.status },
       });
     }
-  }
-};
-
-export const getTutorRequests = (userId) => async (dispatch) => {
-  try {
-    const res = await axios.get(`/api/profile/tutor/requests`);
-    console.log("Tutor requests:", res.data);
-    dispatch({
-      type: GET_TUTOR_REQUESTS,
-      payload: res.data,
-    });
-  } catch (err) {
-    dispatch({
-      type: TUTOR_REQUESTS_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
-    });
   }
 };
