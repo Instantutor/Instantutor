@@ -32,6 +32,7 @@ export const CLEAR_USER_REQUEST = "CLEAR_USER_REQUEST";
 //peer request
 export const CHECK_NEW_PEER_REQUEST = "CHECK_NEW_PEER_REQUEST";
 export const PEER_REQUEST_ERROR = "PEER_REQUEST_ERROR";
+export const UPDATE_CHECK_TIME = "UPDATE_CHECK_TIME";
 
 //disperse requests
 export const DISPERSE_REQUESTS = "DISPERSE_REQUESTS";
