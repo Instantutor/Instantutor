@@ -166,6 +166,8 @@ router.get("/received/:user_id", auth, async (req, res) => {
     if (!Tutor) {
       return res.json(reqs);
     }
+
+    let num_new_request = 0;
     for (i in Tutor.received_requests) {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
@@ -176,9 +178,19 @@ router.get("/received/:user_id", auth, async (req, res) => {
           msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
         });
       }
+      
+      if (temp.last_edit_time > Tutor.last_check_time){
+        num_new_request += 1;
+      }
       reqs.push(temp);
     }
-    res.json(reqs);
+
+    // Sort the peered requests such that the newest one be the first
+    reqs.sort(function(a,b){
+      return b.last_edit_time - a.last_edit_time;
+    })
+
+    res.json({peer_requests: reqs, new_request : num_new_request, last_checked : Tutor.last_check_time});
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -300,6 +312,36 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+
+// @route: PUT api/request/checked
+// @desc:  Update the last check time when a user check his peer requests.
+// @access Private
+router.put("/checked", auth, async (req, res) => {
+
+  try {
+    const requestUser = await RequestRelate.findOne({ user: req.user.id });
+
+    if (requestUser) {
+      if (req.body.last_check_time){
+        requestUser.last_check_time = req.body.last_check_time;
+      }
+      else{
+        requestUser.last_check_time = Date.now();
+      }
+      requestUser.save();
+
+      res.json({ msg: "Request check time updated!", last_check_time: requestUser.last_check_time });
+    } else {
+      res.status(400).json({ error: "User ID is invalid" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 
 /* Need renew
 // @route: PUT api/request/bid
