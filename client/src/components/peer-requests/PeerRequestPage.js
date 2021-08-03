@@ -70,7 +70,7 @@ PeerRequestPage.propTypes = {
   loading: PropTypes.bool.isRequired,
   user: PropTypes.object,
   num_new_request: PropTypes.string,
-  last_check_time: PropTypes.string,
+  last_check_time: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
