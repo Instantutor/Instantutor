@@ -7,6 +7,11 @@ const RequestRelateSchema = new Schema({
         ref: "user",
     },
 
+    last_check_time: {
+        type: Date,
+        default: new Date(0),
+    },
+    
     posted_requests: [ 
         {
             request_id: {

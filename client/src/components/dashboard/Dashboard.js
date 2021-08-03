@@ -33,8 +33,12 @@ const Dashboard = ({
   useEffect(() => {
     user && getRequestHistory(user._id);
   }, [user, user_requests.loading]);
+
+  // Only for non-student-user: check their peered requests
   useEffect(() => {
-    user && checkNewPeerRequest(user._id);
+    user && profile 
+    && profile.role !== "Student" 
+    && checkNewPeerRequest(user._id);
   }, [user, peer_requests.loading]);
 
   return loading ? (
@@ -53,7 +57,12 @@ const Dashboard = ({
                 <i> {" " + profile.role} </i>
               )}
             </Fragment>
-            {user && user.name}
+            {user && user.name + '. '}
+            <Fragment>
+              {peer_requests&&peer_requests.num_new_request > 0 && (
+                <i className="text-primary"> {"You got "  + peer_requests.num_new_request + " new requests from others."}</i> 
+              )}
+            </Fragment>
           </p>
 
           <DashboardActions role={profile.role} />
