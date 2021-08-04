@@ -7,6 +7,7 @@ import {
   LOGOUT,
   ACCOUNT_DELETED,
   UPDATE_CHECK_TIME,
+  REQUEST_RESPONSE,
 } from "../actions/types";
 
 const initialState = {
@@ -49,6 +50,11 @@ export default function (state = initialState, action) {
         request: payload.request,
       };
     
+    case REQUEST_RESPONSE:
+      return {
+        ...state,
+        loading: true,
+      }
     case UPDATE_PROFILE:
     case LOGOUT:
     case ACCOUNT_DELETED:
