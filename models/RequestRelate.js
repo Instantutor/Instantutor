@@ -24,6 +24,10 @@ const RequestRelateSchema = new Schema({
         {
             request_id: {
                 type: String
+            },
+            state:{
+                type: String,
+                default: "CHECKING",
             }
         }
     ]
