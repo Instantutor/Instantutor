@@ -12,6 +12,7 @@ import {
   AUTH_ERROR,
   DISPERSE_REQUESTS,
   DISPERSE_REQUEST_ERROR,
+  REQUEST_RESPONSE,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -174,7 +175,6 @@ export const checkNewPeerRequest = (userId) => async (dispatch) => {
 };
 
 
-
 export const updateCheckTime = () => async (dispatch) => {
   try {
     const res = await axios.put("/api/request/checked");
@@ -192,6 +192,35 @@ export const updateCheckTime = () => async (dispatch) => {
     });
   }
 }
+
+
+export const updateTutorResponse = (response, id) => async (dispatch) => {
+  if (
+    window.confirm(
+      `You want to ${response} this request, are you sure?`
+    )
+  ) {
+    try {
+      const res = await axios.put(`/api/request/tutor/response`, {response: response, _id: id});
+      //console.log(res.data);
+      
+      dispatch({
+        type: REQUEST_RESPONSE,
+        payload: res.data,
+      });
+      
+  
+      dispatch(setAlert(`${response} the request...`, "success"));
+  
+    } catch (err) {
+      dispatch({
+        type: PEER_REQUEST_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  }
+}
+
 
 export const disperseToTutors =
   (chosen_tutors, request_id) => async (dispatch) => {
