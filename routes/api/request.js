@@ -266,7 +266,7 @@ router.post("/disperse", auth, async (req, res) => {
 
         if (
           tutor.received_requests.findIndex(
-            item => item._id === request_id
+            item => item._id == request_id
           ) === -1
         )
           tutor.received_requests.push(request_id);
