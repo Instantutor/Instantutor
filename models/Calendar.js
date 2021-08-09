@@ -5,38 +5,36 @@ const CalendarSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
     },
-    recurring_events: [
+    availability: [
         {
-            start: {
-                type: Number
+            // tutor = 0, student = 1 or both = 2
+            target: {
+                type: Number,
+                required: true
             },
-            stop: {
-                type: Number
-            }
-        },
-    ],
-    weekly_events: [
-        {
-            delete: {
-                type: Boolean
+            // Integers between 0 and 2359 corresponding to military time
+            // ie. 0:00 = 0, 0:30 = 30, 1:30 = 130, 14:30 = 1430
+            start_time: {
+                type: Number,
+                required: true
             },
-            year: {
-                type: Number
+            stop_time: {
+                type: Number,
+                required: true
             },
-            month: {
-                type: Number
+            // An array that will hold 7 bools corresponding to days of the week
+            days: [
+                Boolean
+            ],
+            start_date: {
+                type: Date
             },
-            day: {
-                type: Number
+            stop_date: {
+                type: Date
             },
-            time: {
-                start: {
-                    type: Number
-                },
-                stop: {
-                    type: Number
-                }
-            },
+            exceptions: [
+                Date
+            ]
         }
     ]
 });
