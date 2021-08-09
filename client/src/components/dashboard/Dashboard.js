@@ -39,7 +39,7 @@ const Dashboard = ({
     user && profile 
     && profile.role !== "Student" 
     && checkNewPeerRequest(user._id);
-  }, [user, peer_requests.loading]);
+  }, [user, profile, peer_requests.loading]);
 
   return loading ? (
     <Spinner />

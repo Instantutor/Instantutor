@@ -69,8 +69,8 @@ PeerRequestPage.propTypes = {
   updateCheckTime: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   user: PropTypes.object,
-  num_new_request: PropTypes.string,
-  last_check_time: PropTypes.number,
+  num_new_request: PropTypes.number,
+  last_check_time: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

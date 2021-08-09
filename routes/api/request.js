@@ -178,11 +178,19 @@ router.get("/received/:user_id", auth, async (req, res) => {
           msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
         });
       }
-      
-      if (temp.last_edit_time > Tutor.last_check_time){
+
+      // Create a copy of the request. May be switch to hard-code version if this copy code has error.
+      var copy = JSON.parse(JSON.stringify(temp));
+
+      // Remove some unnessary information for user, add the tutor's response.
+      //console.log(Tutor.received_requests[i]);
+      copy.state = Tutor.received_requests[i].state ? Tutor.received_requests[i].state : "CHECKING";
+      delete copy.potential_tutors;
+
+      if (new Date(copy.last_edit_time) > new Date(Tutor.last_check_time)){
         num_new_request += 1;
       }
-      reqs.push(temp);
+      reqs.push(copy);
     }
 
     // Sort the peered requests such that the newest one be the first
@@ -255,9 +263,10 @@ router.post("/disperse", auth, async (req, res) => {
         });
       } else {
         // Prevent multi sending
+
         if (
-          JSON.stringify(tutor.received_requests).indexOf(
-            JSON.stringify({ _id: request_id })
+          tutor.received_requests.findIndex(
+            item => item._id == request_id
           ) === -1
         )
           tutor.received_requests.push(request_id);
@@ -342,6 +351,47 @@ router.put("/checked", auth, async (req, res) => {
 });
 
 
+
+// @route: PUT api/request/tutor/response
+// @desc:  Update tutor's response about one request: Accept or Deny
+// @access Private
+router.put("/tutor/response", auth, async (req, res) => {
+
+  try {
+    const requestUser = await RequestRelate.findOne({ user: req.user.id });
+    const request = await Request.findOne({ _id: req.body._id });
+
+    if (requestUser && req.body.response && req.body._id) {
+
+      console.log(req.body._id);
+      // Update the tutor's request-relate information
+      let updateIndex = requestUser.received_requests.findIndex(
+        item => item._id == req.body._id
+      )
+      requestUser.received_requests[updateIndex].state = req.body.response;
+      requestUser.save();
+      
+      // Update the request information
+      updateIndex = request.potential_tutors.findIndex(
+        item => item._id == req.user.id 
+      )
+
+      request.potential_tutors[updateIndex].state = req.body.response;
+      request.save();
+
+      res.json({  msg: "Tutor response saved!", 
+                  request: request, 
+                  response: request.potential_tutors[updateIndex].state}
+      );
+
+    } else {
+      res.status(400).json({ error: "Tutor/Response: tutor not find or input incorrect: usage {response, _id}" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 /* Need renew
 // @route: PUT api/request/bid
