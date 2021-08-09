@@ -138,7 +138,7 @@ router.get("/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
-    for (i = 0; i < requestUser.posted_requests.length; i++) {
+    for (i in requestUser.posted_requests) {
       temp = await Request.findOne({
         _id: requestUser.posted_requests[i].id,
       });
@@ -166,7 +166,9 @@ router.get("/received/:user_id", auth, async (req, res) => {
     if (!Tutor) {
       return res.json(reqs);
     }
-    for (i = 0; i < Tutor.received_requests.length; i++) {
+
+    let num_new_request = 0;
+    for (i in Tutor.received_requests) {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
@@ -176,9 +178,27 @@ router.get("/received/:user_id", auth, async (req, res) => {
           msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
         });
       }
-      reqs.push(temp);
+
+      // Create a copy of the request. May be switch to hard-code version if this copy code has error.
+      var copy = JSON.parse(JSON.stringify(temp));
+
+      // Remove some unnessary information for user, add the tutor's response.
+      //console.log(Tutor.received_requests[i]);
+      copy.state = Tutor.received_requests[i].state ? Tutor.received_requests[i].state : "CHECKING";
+      delete copy.potential_tutors;
+
+      if (new Date(copy.last_edit_time) > new Date(Tutor.last_check_time)){
+        num_new_request += 1;
+      }
+      reqs.push(copy);
     }
-    res.json(reqs);
+
+    // Sort the peered requests such that the newest one be the first
+    reqs.sort(function(a,b){
+      return b.last_edit_time - a.last_edit_time;
+    })
+
+    res.json({peer_requests: reqs, new_request : num_new_request, last_checked : Tutor.last_check_time});
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -243,9 +263,10 @@ router.post("/disperse", auth, async (req, res) => {
         });
       } else {
         // Prevent multi sending
+
         if (
-          JSON.stringify(tutor.received_requests).indexOf(
-            JSON.stringify({ _id: request_id })
+          tutor.received_requests.findIndex(
+            item => item._id == request_id
           ) === -1
         )
           tutor.received_requests.push(request_id);
@@ -295,6 +316,77 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
       );
     }
     res.json(requestUser);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// @route: PUT api/request/checked
+// @desc:  Update the last check time when a user check his peer requests.
+// @access Private
+router.put("/checked", auth, async (req, res) => {
+
+  try {
+    const requestUser = await RequestRelate.findOne({ user: req.user.id });
+
+    if (requestUser) {
+      if (req.body.last_check_time){
+        requestUser.last_check_time = req.body.last_check_time;
+      }
+      else{
+        requestUser.last_check_time = Date.now();
+      }
+      requestUser.save();
+
+      res.json({ msg: "Request check time updated!", last_check_time: requestUser.last_check_time });
+    } else {
+      res.status(400).json({ error: "User ID is invalid" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+// @route: PUT api/request/tutor/response
+// @desc:  Update tutor's response about one request: Accept or Deny
+// @access Private
+router.put("/tutor/response", auth, async (req, res) => {
+
+  try {
+    const requestUser = await RequestRelate.findOne({ user: req.user.id });
+    const request = await Request.findOne({ _id: req.body._id });
+
+    if (requestUser && req.body.response && req.body._id) {
+
+      console.log(req.body._id);
+      // Update the tutor's request-relate information
+      let updateIndex = requestUser.received_requests.findIndex(
+        item => item._id == req.body._id
+      )
+      requestUser.received_requests[updateIndex].state = req.body.response;
+      requestUser.save();
+      
+      // Update the request information
+      updateIndex = request.potential_tutors.findIndex(
+        item => item._id == req.user.id 
+      )
+
+      request.potential_tutors[updateIndex].state = req.body.response;
+      request.save();
+
+      res.json({  msg: "Tutor response saved!", 
+                  request: request, 
+                  response: request.potential_tutors[updateIndex].state}
+      );
+
+    } else {
+      res.status(400).json({ error: "Tutor/Response: tutor not find or input incorrect: usage {response, _id}" });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

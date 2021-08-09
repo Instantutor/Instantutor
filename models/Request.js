@@ -44,6 +44,10 @@ const RequestSchema = new Schema({
       avatar: {
         type: String,
       },
+      state: {
+        type: String,
+        default: "CHECKING",
+      },
     },
   ],
   bids: [

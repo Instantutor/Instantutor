@@ -1,14 +1,13 @@
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { isThisTypeNode } from "typescript";
 
 const defaultConfirm = {
-  "background-color": "#f2f2f2",
+  "backgroundColor": "#f2f2f2",
   color: "black",
 };
 const clickedConfirm = {
-  "background-color": "#17a2b8",
+  "backgroundColor": "#17a2b8",
   color: "white",
 };
 
@@ -25,7 +24,7 @@ class MatchedTutorItem extends React.Component {
     const tutor = this.props;
     const confirmButtonClicked = () => {
       const newStyle =
-        this.state.currentStyle == defaultConfirm
+        this.state.currentStyle === defaultConfirm
           ? clickedConfirm
           : defaultConfirm;
       this.setState({ currentStyle: newStyle });

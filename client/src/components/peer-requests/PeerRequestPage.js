@@ -4,14 +4,30 @@ import Spinner from "../layout/Spinner";
 import PeerRequestItem from "./PeerRequestItem";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { removeReqDups } from "../../utils/utilities";
-const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
-  var received_req = removeReqDups(peer_requests);
+import { checkNewPeerRequest, updateCheckTime } from '../../actions/request';
+
+
+const PeerRequestPage = ({ 
+  user, 
+  peer_requests, 
+  num_new_request,
+  last_check_time,
+  loading = true, 
+  checkNewPeerRequest,
+  updateCheckTime
+}) => {
+
+  useEffect(async () => {
+    await user && checkNewPeerRequest(user._id);
+  }, 
+    [checkNewPeerRequest, user, loading, num_new_request, last_check_time]
+  );
+
   return (
     <Fragment>
       {loading ? (
         <Spinner />
-      ) : received_req === null || received_req.length < 1 ? (
+      ) : peer_requests === null || peer_requests.length < 1 ? (
         <div>
           <h1 className="large text-primary">
             Oops! No requests for you now...
@@ -22,8 +38,15 @@ const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
         </div>
       ) : (
         <div className="request">
-          <h1 className="large text-primary">Check Request for you!</h1>
-          {received_req.map((peer_request) => (
+          <h1 className="large text-primary">Request for you!</h1>
+          <i className="fas fa-clock"></i> Last checked time: 
+          <i className="text-primary">{new Date(last_check_time).toLocaleString()}</i> 
+          <small> (Click "mark as checked" to make sure you checked all new requests!) </small>
+
+          {peer_requests.slice(0, num_new_request).map((peer_request) => (
+            <PeerRequestItem key={peer_request.id} item={peer_request} />
+          ))}
+          {peer_requests.slice(num_new_request).map((peer_request) => (
             <PeerRequestItem key={peer_request.id} item={peer_request} />
           ))}
         </div>
@@ -32,19 +55,30 @@ const PeerRequestPage = ({ user, peer_requests, loading = false }) => {
       <Link to="/dashboard" className="btn btn-light">
         Back To Dashboard
       </Link>
+
+      <button 
+        onClick = {updateCheckTime} 
+        className = 'btn btn-dark'>Mark as checked
+      </button>
     </Fragment>
   );
 };
 
 PeerRequestPage.propTypes = {
+  checkNewPeerRequest: PropTypes.func.isRequired,
+  updateCheckTime: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   user: PropTypes.object,
+  num_new_request: PropTypes.number,
+  last_check_time: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   peer_requests: state.peer_requests.peer_requests,
-  loading: state.user_requests.loading,
+  loading: state.peer_requests.loading,
+  num_new_request: state.peer_requests.num_new_request,
+  last_check_time: state.peer_requests.last_check_time,
 });
 
-export default connect(mapStateToProps)(PeerRequestPage);
+export default connect(mapStateToProps, {checkNewPeerRequest, updateCheckTime})(PeerRequestPage);

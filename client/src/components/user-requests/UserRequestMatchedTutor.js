@@ -104,7 +104,6 @@ const UserRequestMatchedTutor = ({
             console.log("Tutors and request Id:", tutors, requestId);
             disperseToTutors(tutor_ids, requestId);
           }}
-          to="/dashboard"
           className="btn btn-primary"
           style={{ float: "right" }}
         >

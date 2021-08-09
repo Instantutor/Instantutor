@@ -1,17 +1,22 @@
 import React, { Fragment } from 'react';
 //import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
+import {updateTutorResponse} from "../../actions/request";
 
 const PeerRequestItem =({
     item: {
+        _id,
         request,
         course,
         grade,
         topic,
         help_time,
         number_sessions,
-        last_edit_time
-    }
+        last_edit_time,
+        state
+    },
+    updateTutorResponse,
 }) => {
     return (
         <div className="profile-exp bg-white p-2">
@@ -34,23 +39,29 @@ const PeerRequestItem =({
                 <strong>Last edit: </strong> {new Date(last_edit_time).toLocaleString()}
                 </p>
 
+                {state === "CHECKING" ? (
+                    <div>
+                        <button 
+                            onClick = {function(){updateTutorResponse("ACCEPT", _id)}}
+                            className = 'btn btn-success'>Accept
+                        </button>
 
+                        <button 
+                            onClick = {function(){updateTutorResponse("DENY", _id)}}
+                            className = 'btn btn-danger'>Deny
+                        </button>
 
-                <button 
-                    // The onClick operations are needed to be further implemented!
-                    //onClick = {()} 
-                    className = 'btn btn-success'>Accept
-                </button>
+                        <button 
+                            //onClick = {()} 
+                            className = 'btn btn'> Chat with the poster
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        Your response to this request is: <i className="text-primary">{state}</i>
+                    </div>
+                )}
 
-                <button 
-                    //onClick = {()} 
-                    className = 'btn btn-danger'>Deny
-                </button>
-
-                <button 
-                    //onClick = {()} 
-                    className = 'btn btn'> Chat with the poster
-                </button>
 
             </div>
         </div>
@@ -61,4 +72,7 @@ PeerRequestItem.propTypes = {
     item: PropTypes.object.isRequired
 };
   
-export default PeerRequestItem;
+export default connect(null, { updateTutorResponse })(
+    PeerRequestItem
+);
+  

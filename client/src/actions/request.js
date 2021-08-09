@@ -8,9 +8,11 @@ import {
   DELETE_USER_REQUEST,
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
+  UPDATE_CHECK_TIME,
   AUTH_ERROR,
   DISPERSE_REQUESTS,
   DISPERSE_REQUEST_ERROR,
+  REQUEST_RESPONSE,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -151,19 +153,18 @@ export const checkNewPeerRequest = (userId) => async (dispatch) => {
       });
       throw Error("Unauthorized request.");
     }
-    var res = await axios.get(`/api/request/received/${userId}`, {
-      headers: {
-        "x-auth-token": token,
-      },
-    });
+    var res = await axios.get(`/api/request/received/${userId}`);
     dispatch({
       type: CHECK_NEW_PEER_REQUEST,
       payload: res.data,
     });
 
-    if (res > 0) {
-      dispatch(setAlert(`You received ${res} new requests!`, "success"));
+    /*
+    if (res.data.new_request > 0){
+      dispatch(setAlert(`You received ${res.data.new_request} new requests!`, "success"));
     }
+    */
+
   } catch (err) {
     console.error(err);
     dispatch({
@@ -172,6 +173,55 @@ export const checkNewPeerRequest = (userId) => async (dispatch) => {
     });
   }
 };
+
+
+export const updateCheckTime = () => async (dispatch) => {
+  try {
+    const res = await axios.put("/api/request/checked");
+    console.log(res.data);
+    dispatch({
+      type: UPDATE_CHECK_TIME,
+      payload: res.data,
+    });
+    dispatch(setAlert("Checked all new requests...", "success"));
+
+  } catch (err) {
+    dispatch({
+      type: PEER_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+}
+
+
+export const updateTutorResponse = (response, id) => async (dispatch) => {
+  if (
+    window.confirm(
+      `You want to ${response} this request, are you sure?`
+    )
+  ) {
+    try {
+      const res = await axios.put(`/api/request/tutor/response`, {response: response, _id: id});
+      //console.log(res.data);
+      
+      dispatch({
+        type: REQUEST_RESPONSE,
+        payload: res.data,
+      });
+      
+  
+      dispatch(setAlert(`${response} the request...`, "success"));
+  
+    } catch (err) {
+      dispatch({
+        type: PEER_REQUEST_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  }
+}
+
+
 export const disperseToTutors =
   (chosen_tutors, request_id) => async (dispatch) => {
     //add to request field in tutors; chosen_tutors should be list of id's
@@ -196,6 +246,9 @@ export const disperseToTutors =
         type: DISPERSE_REQUESTS,
         payload: res.data,
       });
+
+      dispatch(setAlert(`Your request has been dispatched to selected tutors!`, "success"));
+
     } catch (err) {
       console.error(err);
       dispatch({
