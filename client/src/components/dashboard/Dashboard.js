@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { getCurrentProfile, deleteAccount } from "../../actions/profile";
 import { getRequestHistory } from "../../actions/request";
 
-import { checkNewPeerRequest } from "../../actions/request";
+import { checkNewPeerRequest, getConfirmedTutors } from "../../actions/request";
 
 import DashboardActions from "./DashboardActions";
 import Spinner from "../layout/Spinner";
@@ -20,6 +20,7 @@ const Dashboard = ({
   getRequestHistory,
   deleteAccount,
   checkNewPeerRequest,
+  getConfirmedTutors,
 
   auth: { user },
   profile: { profile, loading },
@@ -32,13 +33,20 @@ const Dashboard = ({
 
   useEffect(() => {
     user && getRequestHistory(user._id);
+    if (user_requests && user_requests.request_history.length > 0) {
+      console.log(user_requests.request_history.map((request) => request._id));
+      getConfirmedTutors(
+        user_requests.request_history.map((request) => request._id)
+      );
+    }
   }, [user, user_requests.loading]);
 
   // Only for non-student-user: check their peered requests
   useEffect(() => {
-    user && profile 
-    && profile.role !== "Student" 
-    && checkNewPeerRequest(user._id);
+    user &&
+      profile &&
+      profile.role !== "Student" &&
+      checkNewPeerRequest(user._id);
   }, [user, profile, peer_requests.loading]);
 
   return loading ? (
@@ -57,10 +65,15 @@ const Dashboard = ({
                 <i> {" " + profile.role} </i>
               )}
             </Fragment>
-            {user && user.name + '. '}
+            {user && user.name + ". "}
             <Fragment>
-              {peer_requests&&peer_requests.num_new_request > 0 && (
-                <i className="text-primary"> {"You got "  + peer_requests.num_new_request + " new requests from others."}</i> 
+              {peer_requests && peer_requests.num_new_request > 0 && (
+                <i className="text-primary">
+                  {" "}
+                  {"You got " +
+                    peer_requests.num_new_request +
+                    " new requests from others."}
+                </i>
               )}
             </Fragment>
           </p>
@@ -102,6 +115,7 @@ Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   getRequestHistory: PropTypes.func.isRequired,
   checkNewPeerRequest: PropTypes.func.isRequired,
+  getConfirmedTutors: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -121,4 +135,5 @@ export default connect(mapStateToProps, {
   deleteAccount,
   getRequestHistory,
   checkNewPeerRequest,
+  getConfirmedTutors,
 })(Dashboard);

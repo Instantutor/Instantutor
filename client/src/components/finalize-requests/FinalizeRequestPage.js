@@ -3,36 +3,44 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../layout/Spinner";
 import { connect } from "react-redux";
-import { getRequestHistory, disperseToTutors } from "../../actions/request";
-import MatchedTutorItem from "./MatchedTutorItem";
+import { getRequestHistory, disperseToTutorFinal } from "../../actions/request";
+import AcceptedTutorItem from "./AcceptedTutorItem";
 
-const UserRequestMatchedTutor = ({
+const UserRequestAcceptedTutor = ({
   user,
   match,
-  requests: { request_history, loading, confirmed_tutors },
+  requests: { request_history, loading },
   getRequestHistory,
-  disperseToTutors,
+  disperseToTutorFinal,
 }) => {
   let request_id = match.params.id;
   const [tutors, setTutorsData] = useState(null);
   const [requestId, setRequestId] = useState(null);
-
   useEffect(async () => {
     (await user) && getRequestHistory(user._id);
   }, [getRequestHistory, user]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (request_id) {
       if (request_history && !loading) {
         const request_index = request_history
           .map((item) => item._id)
           .indexOf(request_id);
-        setTutorsData(request_history[request_index].potential_tutors);
+        //only get tutors for this request with "ACCEPT" state
+        var acceptedTutors = [];
+        const potentialTutors = request_history[request_index].potential_tutors;
+        for (var i in potentialTutors) {
+          const potential_tutor = potentialTutors[i];
+          if (potential_tutor.state == "ACCEPT") {
+            acceptedTutors.push(potential_tutor);
+          }
+        }
+        setTutorsData(acceptedTutors);
         setRequestId(request_history[request_index]._id);
       }
     }
   }, [loading, request_history]);
-  if (loading) {
+  if (tutors == null) {
     return (
       <Fragment>
         <Spinner />
@@ -44,21 +52,21 @@ const UserRequestMatchedTutor = ({
         </button>
       </Fragment>
     );
-  } else if (tutors == null || tutors.length < 1) {
+  } else if (tutors.length < 1) {
     return (
       <Fragment>
         <div>
           <h1 className="large text-primary">Oops!</h1>
-          <h1 className="text-primary">No matched tutor...</h1>
+          <h1 className="text-primary">
+            It looks like no tutors have accepted your request.
+          </h1>
         </div>
-        ;
         <button
           onClick={() => window.history.back(-1)}
           className="btn btn-dark"
         >
           Go Back
         </button>
-        ;
       </Fragment>
     );
   } else {
@@ -72,21 +80,8 @@ const UserRequestMatchedTutor = ({
     var tutorsComponent = [];
     tutors.forEach((tutor) => {
       const tutorRef = tutorRefs[i];
-      var isConfirmed = false;
-      //check confirmed tutors for this requests using confirmed_tutors object
-      if (
-        confirmed_tutors &&
-        confirmed_tutors[request_id].includes(tutor._id)
-      ) {
-        isConfirmed = true;
-      }
       const component = (
-        <MatchedTutorItem
-          ref={tutorRef}
-          key={tutor._id}
-          item={tutor}
-          confirmed={isConfirmed}
-        />
+        <AcceptedTutorItem ref={tutorRef} key={tutor._id} item={tutor} />
       );
       tutorsComponent.push(component);
       i++;
@@ -95,7 +90,13 @@ const UserRequestMatchedTutor = ({
     return (
       <Fragment>
         <div className="profiles">
-          <h1 className="large text-primary">Check your tutors!</h1>
+          <h1 className="large text-primary">Responses</h1>
+          <h2
+            classname="large text-primary"
+            style={{ "padding-bottom": "10px" }}
+          >
+            The following tutors have accepted your request.
+          </h2>
           {tutorsComponent}
         </div>
         <button
@@ -109,27 +110,27 @@ const UserRequestMatchedTutor = ({
         </Link>
         <Link
           onClick={() => {
-            var tutor_ids = {};
-            //true => tutor confirmed
+            var tutor_ids = [];
             for (var i in tutorRefs) {
-              const tutor_id = tutorRefs[i].current.props.item._id;
-              tutor_ids[tutor_id] = tutorRefs[i].current.isConfirmed();
+              if (tutorRefs[i].current.isConfirmed()) {
+                tutor_ids.push(tutorRefs[i].current.props.item._id);
+              }
             }
-            disperseToTutors(tutor_ids, requestId);
+            disperseToTutorFinal(tutor_ids, requestId);
           }}
           className="btn btn-primary"
           style={{ float: "right" }}
         >
-          Submit
+          Finalize Selection
         </Link>
       </Fragment>
     );
   }
 };
 
-UserRequestMatchedTutor.propTypes = {
+UserRequestAcceptedTutor.propTypes = {
   getRequestHistory: PropTypes.func.isRequired,
-  disperseToTutors: PropTypes.func.isRequired,
+  disperseToTutorFinal: PropTypes.func.isRequired,
   user: PropTypes.object,
 };
 
@@ -140,5 +141,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getRequestHistory,
-  disperseToTutors,
-})(UserRequestMatchedTutor);
+  disperseToTutorFinal,
+})(UserRequestAcceptedTutor);

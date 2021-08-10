@@ -184,21 +184,27 @@ router.get("/received/:user_id", auth, async (req, res) => {
 
       // Remove some unnessary information for user, add the tutor's response.
       //console.log(Tutor.received_requests[i]);
-      copy.state = Tutor.received_requests[i].state ? Tutor.received_requests[i].state : "CHECKING";
+      copy.state = Tutor.received_requests[i].state
+        ? Tutor.received_requests[i].state
+        : "CHECKING";
       delete copy.potential_tutors;
 
-      if (new Date(copy.last_edit_time) > new Date(Tutor.last_check_time)){
+      if (new Date(copy.last_edit_time) > new Date(Tutor.last_check_time)) {
         num_new_request += 1;
       }
       reqs.push(copy);
     }
 
     // Sort the peered requests such that the newest one be the first
-    reqs.sort(function(a,b){
+    reqs.sort(function (a, b) {
       return b.last_edit_time - a.last_edit_time;
-    })
+    });
 
-    res.json({peer_requests: reqs, new_request : num_new_request, last_checked : Tutor.last_check_time});
+    res.json({
+      peer_requests: reqs,
+      new_request: num_new_request,
+      last_checked: Tutor.last_check_time,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -247,15 +253,14 @@ router.put("/edit/:request_id", auth, async (req, res) => {
 // @access Private
 router.post("/disperse", auth, async (req, res) => {
   try {
-    const tutor_ids = req.body.tutor_ids;
+    //TODO: tutor_ids now an object {id: bool}
+    const tutor_choices = req.body.tutor_ids;
     const request_id = req.body.request_id;
-
-    for (var i in tutor_ids) {
-      const tutor_id = tutor_ids[i];
+    for (const [tutor_id, wasConfirmed] of Object.entries(tutor_choices)) {
       var tutor = await RequestRelate.findOne({
         user: tutor_id,
       });
-      if (!tutor) {
+      if (!tutor && wasConfirmed) {
         console.log("new tutor");
         tutor = new RequestRelate({
           user: tutor_id,
@@ -263,18 +268,37 @@ router.post("/disperse", auth, async (req, res) => {
         });
       } else {
         // Prevent multi sending
-
-        if (
-          tutor.received_requests.findIndex(
-            item => item._id == request_id
-          ) === -1
-        )
+        const index = tutor.received_requests.findIndex(
+          (item) => item._id == request_id
+        );
+        if (index < 0 && wasConfirmed) {
           tutor.received_requests.push(request_id);
+        } else if (!wasConfirmed) {
+          tutor.received_requests.splice(index, 1);
+        }
       }
       await tutor.save();
     }
     res.json({
-      tutors: tutor_ids,
+      tutor_statuses: tutor_choices,
+      request: request_id,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+});
+router.post("/disperseFinal", auth, async (req, res) => {
+  try {
+    const tutor_id = req.body.tutor_id;
+    const request_id = req.body.request_id;
+
+    const request = await Request.findOne({ _id: request_id });
+    request.selected_tutor = tutor_id;
+    request.status = "tutoring";
+    await request.save();
+    res.json({
+      tutor: tutor_id,
       request: request_id,
     });
   } catch (err) {
@@ -322,25 +346,25 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
   }
 });
 
-
 // @route: PUT api/request/checked
 // @desc:  Update the last check time when a user check his peer requests.
 // @access Private
 router.put("/checked", auth, async (req, res) => {
-
   try {
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
 
     if (requestUser) {
-      if (req.body.last_check_time){
+      if (req.body.last_check_time) {
         requestUser.last_check_time = req.body.last_check_time;
-      }
-      else{
+      } else {
         requestUser.last_check_time = Date.now();
       }
       requestUser.save();
 
-      res.json({ msg: "Request check time updated!", last_check_time: requestUser.last_check_time });
+      res.json({
+        msg: "Request check time updated!",
+        last_check_time: requestUser.last_check_time,
+      });
     } else {
       res.status(400).json({ error: "User ID is invalid" });
     }
@@ -350,43 +374,76 @@ router.put("/checked", auth, async (req, res) => {
   }
 });
 
-
-
 // @route: PUT api/request/tutor/response
 // @desc:  Update tutor's response about one request: Accept or Deny
 // @access Private
 router.put("/tutor/response", auth, async (req, res) => {
-
   try {
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     const request = await Request.findOne({ _id: req.body._id });
 
     if (requestUser && req.body.response && req.body._id) {
-
       console.log(req.body._id);
       // Update the tutor's request-relate information
       let updateIndex = requestUser.received_requests.findIndex(
-        item => item._id == req.body._id
-      )
+        (item) => item._id == req.body._id
+      );
       requestUser.received_requests[updateIndex].state = req.body.response;
       requestUser.save();
-      
+
       // Update the request information
       updateIndex = request.potential_tutors.findIndex(
-        item => item._id == req.user.id 
-      )
+        (item) => item._id == req.user.id
+      );
 
       request.potential_tutors[updateIndex].state = req.body.response;
       request.save();
 
-      res.json({  msg: "Tutor response saved!", 
-                  request: request, 
-                  response: request.potential_tutors[updateIndex].state}
-      );
-
+      res.json({
+        msg: "Tutor response saved!",
+        request: request,
+        response: request.potential_tutors[updateIndex].state,
+      });
     } else {
-      res.status(400).json({ error: "Tutor/Response: tutor not find or input incorrect: usage {response, _id}" });
+      res.status(400).json({
+        error:
+          "Tutor/Response: tutor not find or input incorrect: usage {response, _id}",
+      });
     }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: GET api/request/confirmedTutors/
+// @desc:  Get all tutors to whom this request has been sent
+// @access Private
+
+router.post("/tutors/confirmed", auth, async (req, res) => {
+  const request_ids = req.body.request_ids;
+  var requestsToConfirmedTutors = {};
+  try {
+    for (var i in request_ids) {
+      const request_id = request_ids[i];
+      const tutorsSelectedForRequest = await RequestRelate.find(
+        {
+          received_requests: {
+            $elemMatch: { _id: mongoose.Types.ObjectId(request_id) },
+          },
+        },
+        { user: 1 }
+      );
+      var confirmed_tutors = [];
+      if (!tutorsSelectedForRequest) {
+        return res.json(confirmed_tutors);
+      }
+      for (var i in tutorsSelectedForRequest) {
+        confirmed_tutors.push(tutorsSelectedForRequest[i].user);
+      }
+      requestsToConfirmedTutors[request_id] = confirmed_tutors;
+    }
+    res.json(requestsToConfirmedTutors);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

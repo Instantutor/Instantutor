@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const defaultConfirm = {
-  "backgroundColor": "#f2f2f2",
+  backgroundColor: "#f2f2f2",
   color: "black",
 };
 const clickedConfirm = {
-  "backgroundColor": "#17a2b8",
+  backgroundColor: "#17a2b8",
   color: "white",
 };
 
@@ -16,8 +16,8 @@ class MatchedTutorItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentStyle: this.props.confirmed ? clickedConfirm: defaultConfirm,
-      clicked: this.props.confirmed,
+      currentStyle: defaultConfirm,
+      clicked: false,
     };
   }
   render() {
@@ -57,7 +57,7 @@ class MatchedTutorItem extends React.Component {
           style={this.state.currentStyle}
           onClick={confirmButtonClicked}
         >
-          {this.state.clicked ? "Unconfirm" : "Confirm"}
+          {this.state.clicked ? "Deselect Tutor" : "Select Tutor"}
         </button>
       </div>
     );

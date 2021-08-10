@@ -2,6 +2,7 @@ import {
   CHECK_NEW_PEER_REQUEST,
   PEER_REQUEST_ERROR,
   DISPERSE_REQUESTS,
+  DISPERSE_FINAL_REQUEST,
   DISPERSE_REQUEST_ERROR,
   UPDATE_PROFILE,
   LOGOUT,
@@ -47,6 +48,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         chosen_tutors: payload.tutors,
+        request: payload.request,
+      };
+case DISPERSE_FINAL_REQUEST:
+      return {
+        ...state,
+        chosen_tutor: payload.tutor,
         request: payload.request,
       };
     
