@@ -126,6 +126,7 @@ const UserRequestAcceptedTutor = ({
           Back To Dashboard
         </Link>
         <Link
+          to="/dashboard"
           onClick={() => {
             disperseToTutorFinal(selected_tutor_id, requestId);
           }}
