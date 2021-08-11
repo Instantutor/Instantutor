@@ -92,7 +92,11 @@ const UserRequestAcceptedTutor = ({
                 tutorRefs[i].current.setToDefault();
               }
             }
-            selectTutor(tutor._id);
+            if (!tutorRef.current.isConfirmed()) {
+              selectTutor(tutor._id);
+            } else {
+              selectTutor(null);
+            }
           }}
         />
       );

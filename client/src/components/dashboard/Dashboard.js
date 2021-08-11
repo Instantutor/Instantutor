@@ -34,7 +34,6 @@ const Dashboard = ({
   useEffect(() => {
     user && getRequestHistory(user._id);
     if (user_requests && user_requests.request_history.length > 0) {
-      console.log(user_requests.request_history.map((request) => request._id));
       getConfirmedTutors(
         user_requests.request_history.map((request) => request._id)
       );

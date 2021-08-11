@@ -16,6 +16,8 @@ import {
   DISPERSE_FINAL_REQUEST,
   DISPERSE_REQUEST_ERROR,
   REQUEST_RESPONSE,
+  CLOSE_REQUEST,
+  CLOSE_REQUEST_ERROR,
   CANCEL_REQUEST,
   CANCEL_REQUEST_ERROR,
 } from "./types";
@@ -269,6 +271,15 @@ export const disperseToTutorFinal =
         });
         throw Error("Unauthorized request.");
       }
+      if (chosen_tutor == null) {
+        dispatch(
+          setAlert(
+            `You must select a tutor before finalizing your request.`,
+            "danger"
+          )
+        );
+        return;
+      }
       var res = await axios.post(
         "/api/request/disperseFinal",
         { tutor_id: chosen_tutor, request_id: request_id },
@@ -320,7 +331,7 @@ export const getConfirmedTutors = (request_ids) => async (dispatch) => {
 };
 export const cancelRequest = (request_id) => async (dispatch) => {
   try {
-    const res = await axios.delete(`/api/request/cancel/${request_id}`);
+    const res = await axios.put(`/api/request/cancel/${request_id}`);
     //get tutors that have received confirmation for each request
     //console.log(res.data);
     dispatch({
@@ -333,10 +344,31 @@ export const cancelRequest = (request_id) => async (dispatch) => {
         "success"
       )
     );
+    return true;
   } catch (err) {
     dispatch({
       type: CANCEL_REQUEST_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
+    return false;
+  }
+};
+export const closeRequest = (request_id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/request/close/${request_id}`);
+    //get tutors that have received confirmation for each request
+    //console.log(res.data);
+    dispatch({
+      type: CLOSE_REQUEST,
+      payload: res.data,
+    });
+    dispatch(setAlert(`You have successfully closed that request.`, "success"));
+    return true;
+  } catch (err) {
+    dispatch({
+      type: CLOSE_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+    return false;
   }
 };

@@ -297,7 +297,7 @@ router.post("/disperse", auth, async (req, res) => {
         );
         if (index < 0 && wasConfirmed) {
           tutor.received_requests.push(request_id);
-        } else if (!wasConfirmed) {
+        } else if (index > -1 && !wasConfirmed) {
           tutor.received_requests.splice(index, 1);
         }
       }
@@ -381,14 +381,17 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
   }
 });
 
-// @route: DELETE api/request/cancel/:request_id
+// @route: PUT api/request/cancel/:request_id
 // @desc:  Update the last check time when a user check his peer requests.
 // @access Private
-router.delete("/cancel/:request_id", auth, async (req, res) => {
+router.put("/cancel/:request_id", auth, async (req, res) => {
   //cancel a request that has active instruction
   try {
     const request_id = req.params.request_id;
     var request = await Request.findOne({ _id: request_id });
+    if (!request) {
+      res.json({ error: { msg: "No request found with that id." } });
+    }
     request.status = "canceled";
     await request.save();
     //remove from active_requests if present
@@ -404,6 +407,34 @@ router.delete("/cancel/:request_id", auth, async (req, res) => {
     res.json({ msg: `Request ${request_id} has been canceled successfully.` });
   } catch (err) {
     console.error("Error canceling request: ", err.message);
+    res.status(500).send("Server error");
+  }
+
+  //remove request from tutors received requests
+});
+router.put("/close/:request_id", auth, async (req, res) => {
+  //close a request that has active instruction
+  try {
+    const request_id = req.params.request_id;
+    var request = await Request.findOne({ _id: request_id });
+    if (!request) {
+      res.json({ error: { msg: "No request found with that id." } });
+    }
+    request.status = "closed";
+    await request.save();
+    //remove from active_requests if present
+    var requestByUser = await RequestRelate.findOne({ user: request.user });
+    const removeIndex = requestByUser.tutoring_requests.findIndex(
+      (item) => item._id == request_id
+    );
+    if (removeIndex > -1) {
+      requestByUser.tutoring_requests.splice(removeIndex, 1);
+    }
+    requestByUser.closed_requests.push(request_id);
+    await requestByUser.save();
+    res.json({ msg: `Request ${request_id} has been closed successfully.` });
+  } catch (err) {
+    console.error("Error closing request: ", err.message);
     res.status(500).send("Server error");
   }
 
