@@ -105,7 +105,6 @@ router.post(
 
       //Create
       profile = new Profile(profileFields);
-      await profile.save(); //save it
       var spawn = require("child_process").spawn;
       const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
       process.on("exit", function (code, signal) {
@@ -113,6 +112,7 @@ router.post(
           "child process exited with " + `code ${code} and signal ${signal}`
         );
       });
+      await profile.save(); //save it
       res.json(profile); //send back to the profile
     } catch (err) {
       console.error(err.message);

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+// import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
 
 const initialState = {

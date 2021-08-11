@@ -16,6 +16,7 @@ app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/request', require('./routes/api/request'));
 app.use('/api/searchbar', require('./routes/api/searchbar'));
+// app.use('/api/request_times', require('.routes/api/request_times'));
 
 // Check if the slack channel is workingfsdsdfsdkhfajksdfhjklashfajklsd
 
