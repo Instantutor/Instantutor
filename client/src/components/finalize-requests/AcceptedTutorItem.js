@@ -11,8 +11,11 @@ const clickedConfirm = {
   color: "white",
 };
 
-class MatchedTutorItem extends React.Component {
+class AcceptedTutorItem extends React.Component {
   isConfirmed = () => this.state.clicked;
+  setToDefault = () => {
+    this.setState({ currentStyle: defaultConfirm, clicked: false });
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -23,6 +26,7 @@ class MatchedTutorItem extends React.Component {
   render() {
     const tutor = this.props;
     const confirmButtonClicked = () => {
+      this.props.onSelection();
       const newStyle =
         this.state.currentStyle === defaultConfirm
           ? clickedConfirm
@@ -64,8 +68,8 @@ class MatchedTutorItem extends React.Component {
   }
 }
 
-MatchedTutorItem.propTypes = {
+AcceptedTutorItem.propTypes = {
   tutor: PropTypes.object,
 };
 
-export default MatchedTutorItem;
+export default AcceptedTutorItem;

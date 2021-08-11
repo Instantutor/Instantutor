@@ -16,6 +16,8 @@ import {
   DISPERSE_FINAL_REQUEST,
   DISPERSE_REQUEST_ERROR,
   REQUEST_RESPONSE,
+  CANCEL_REQUEST,
+  CANCEL_REQUEST_ERROR,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -282,10 +284,7 @@ export const disperseToTutorFinal =
       });
 
       dispatch(
-        setAlert(
-          `Your request has been dispatched to selected tutors!`,
-          "success"
-        )
+        setAlert(`Your request has been set for that tutor!`, "success")
       );
     } catch (err) {
       console.error(err);
@@ -315,6 +314,28 @@ export const getConfirmedTutors = (request_ids) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: GET_CONFIRMED_TUTORS_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+export const cancelRequest = (request_id) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/api/request/cancel/${request_id}`);
+    //get tutors that have received confirmation for each request
+    //console.log(res.data);
+    dispatch({
+      type: CANCEL_REQUEST,
+      payload: res.data,
+    });
+    dispatch(
+      setAlert(
+        `You have canceled session(s) for that request successfully.`,
+        "success"
+      )
+    );
+  } catch (err) {
+    dispatch({
+      type: CANCEL_REQUEST_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }

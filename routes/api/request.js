@@ -63,10 +63,11 @@ router.post(
       if (!requestByUser) {
         requestByUser = new RequestRelate({
           user: req.user.id,
-          posted_requests: [{ _id: new_request._id }],
+          active_requests: [{ _id: new_request._id }],
         });
       } else {
-        if (requestByUser.posted_requests.length >= 3)
+        //TODO: Only for those that are open => active_requests
+        if (requestByUser.active_requests.length >= 3) {
           return res.status(400).json({
             errors: [
               {
@@ -74,8 +75,9 @@ router.post(
               },
             ],
           });
+        }
 
-        requestByUser.posted_requests.push(new_request._id);
+        requestByUser.active_requests.push(new_request._id);
       }
       await requestByUser.save();
       return res.json({
@@ -138,13 +140,35 @@ router.get("/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
-    for (i in requestUser.posted_requests) {
+    for (i in requestUser.active_requests) {
       temp = await Request.findOne({
-        _id: requestUser.posted_requests[i].id,
+        _id: requestUser.active_requests[i].id,
       });
       if (!temp) {
         return res.status(400).json({
-          msg: `request of the _id ${requestUser.posted_requests[i].id} not found`,
+          msg: `request of the _id ${requestUser.active_requests[i].id} not found`,
+        });
+      }
+      reqs.push(temp);
+    }
+    for (i in requestUser.tutoring_requests) {
+      temp = await Request.findOne({
+        _id: requestUser.tutoring_requests[i].id,
+      });
+      if (!temp) {
+        return res.status(400).json({
+          msg: `request of the _id ${requestUser.tutoring_requests[i].id} not found`,
+        });
+      }
+      reqs.push(temp);
+    }
+    for (i in requestUser.closed_requests) {
+      temp = await Request.findOne({
+        _id: requestUser.closed_requests[i].id,
+      });
+      if (!temp) {
+        return res.status(400).json({
+          msg: `request of the _id ${requestUser.closed_requests[i].id} not found`,
         });
       }
       reqs.push(temp);
@@ -294,9 +318,18 @@ router.post("/disperseFinal", auth, async (req, res) => {
     const request_id = req.body.request_id;
 
     const request = await Request.findOne({ _id: request_id });
-    request.selected_tutor = tutor_id;
     request.status = "tutoring";
+    request.selected_tutor = tutor_id;
     await request.save();
+    const requestByUser = await RequestRelate.findOne({ user: request.user });
+    const removeIndex = requestByUser.active_requests.findIndex(
+      (item) => item._id == request_id
+    );
+    if (removeIndex > -1) {
+      requestByUser.active_requests.splice(removeIndex, 1);
+    }
+    requestByUser.tutoring_requests.push(request_id);
+    await requestByUser.save();
     res.json({
       tutor: tutor_id,
       request: request_id,
@@ -315,11 +348,13 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
     await Request.findOneAndRemove({ _id: req.params.request_id });
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     //need to remove this request from all tutors received_request
-    const removeIndex = requestUser.posted_requests
+    const removeIndex = requestUser.active_requests
       .map((item) => item.id)
       .indexOf(req.params.request_id);
 
-    requestUser.posted_requests.splice(removeIndex, 1);
+    if (removeIndex > -1) {
+      requestUser.active_requests.splice(removeIndex, 1);
+    }
     await requestUser.save();
     const tutorsWithRequest = await RequestRelate.find({
       received_requests: {
@@ -344,6 +379,35 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+});
+
+// @route: DELETE api/request/cancel/:request_id
+// @desc:  Update the last check time when a user check his peer requests.
+// @access Private
+router.delete("/cancel/:request_id", auth, async (req, res) => {
+  //cancel a request that has active instruction
+  try {
+    const request_id = req.params.request_id;
+    var request = await Request.findOne({ _id: request_id });
+    request.status = "canceled";
+    await request.save();
+    //remove from active_requests if present
+    var requestByUser = await RequestRelate.findOne({ user: request.user });
+    const removeIndex = requestByUser.tutoring_requests.findIndex(
+      (item) => item._id == request_id
+    );
+    if (removeIndex > -1) {
+      requestByUser.tutoring_requests.splice(removeIndex, 1);
+    }
+    requestByUser.closed_requests.push(request_id);
+    await requestByUser.save();
+    res.json({ msg: `Request ${request_id} has been canceled successfully.` });
+  } catch (err) {
+    console.error("Error canceling request: ", err.message);
+    res.status(500).send("Server error");
+  }
+
+  //remove request from tutors received requests
 });
 
 // @route: PUT api/request/checked

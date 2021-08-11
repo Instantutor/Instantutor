@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { deleteRequest, getRequestHistory } from "../../actions/request";
+import {
+  deleteRequest,
+  getRequestHistory,
+  cancelRequest,
+} from "../../actions/request";
 
 const UserRequestItem = ({
   item: {
@@ -18,12 +22,14 @@ const UserRequestItem = ({
   },
   deleteRequest,
   getRequestHistory,
+  cancelRequest,
 }) => {
+  const [request_status, setStatus] = useState(status);
   return (
     <div className="profile-exp bg-white p-2">
       <div>
         <h3 className="text-dark request-header">Request: {request}</h3>
-        {status == "open" ? (
+        {request_status == "open" ? (
           <span className="request-header-right">
             <Link to={`/edit_request/${_id}`} className="btn btn-primary">
               Edit
@@ -42,11 +48,11 @@ const UserRequestItem = ({
         ) : (
           <i
             className="text-primary"
-            style={{ "padding-right": "5px", float: "right" }}
+            style={{ paddingRight: "5px", float: "right" }}
           >
-            {status == "tutoring"
+            {request_status == "tutoring"
               ? "INSTRUCTION IN PROGRESS"
-              : status.toUpperCase()}
+              : request_status.toUpperCase()}
           </i>
         )}
 
@@ -69,7 +75,7 @@ const UserRequestItem = ({
         </p>
         {/* TODO: add option to review session if status == "closed" */}
         {/* TODO: add option to chat with tutor here too if status == "tutoring" */}
-        {status == "open" ? (
+        {request_status == "open" ? (
           <Link
             to={`/finalize_request/${_id}`}
             className="btn btn-dark"
@@ -78,7 +84,21 @@ const UserRequestItem = ({
             Check Responses
           </Link>
         ) : (
-          <span className="request-header-right"></span>
+          <span className="request-header-right">
+            {request_status == "tutoring" ? (
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  cancelRequest(_id);
+                  setStatus("canceled");
+                }}
+              >
+                Cancel Session(s)
+              </button>
+            ) : (
+              <span></span>
+            )}
+          </span>
         )}
       </div>
     </div>
@@ -89,6 +109,8 @@ UserRequestItem.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
-export default connect(null, { deleteRequest, getRequestHistory })(
-  UserRequestItem
-);
+export default connect(null, {
+  deleteRequest,
+  getRequestHistory,
+  cancelRequest,
+})(UserRequestItem);

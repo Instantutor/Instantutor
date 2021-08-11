@@ -15,6 +15,7 @@ const UserRequestAcceptedTutor = ({
 }) => {
   let request_id = match.params.id;
   const [tutors, setTutorsData] = useState(null);
+  const [selected_tutor_id, selectTutor] = useState(null);
   const [requestId, setRequestId] = useState(null);
   useEffect(async () => {
     (await user) && getRequestHistory(user._id);
@@ -81,7 +82,19 @@ const UserRequestAcceptedTutor = ({
     tutors.forEach((tutor) => {
       const tutorRef = tutorRefs[i];
       const component = (
-        <AcceptedTutorItem ref={tutorRef} key={tutor._id} item={tutor} />
+        <AcceptedTutorItem
+          ref={tutorRef}
+          key={tutor._id}
+          item={tutor}
+          onSelection={() => {
+            for (var i in tutorRefs) {
+              if (tutorRefs[i] != tutorRef) {
+                tutorRefs[i].current.setToDefault();
+              }
+            }
+            selectTutor(tutor._id);
+          }}
+        />
       );
       tutorsComponent.push(component);
       i++;
@@ -110,13 +123,7 @@ const UserRequestAcceptedTutor = ({
         </Link>
         <Link
           onClick={() => {
-            var tutor_ids = [];
-            for (var i in tutorRefs) {
-              if (tutorRefs[i].current.isConfirmed()) {
-                tutor_ids.push(tutorRefs[i].current.props.item._id);
-              }
-            }
-            disperseToTutorFinal(tutor_ids, requestId);
+            disperseToTutorFinal(selected_tutor_id, requestId);
           }}
           className="btn btn-primary"
           style={{ float: "right" }}

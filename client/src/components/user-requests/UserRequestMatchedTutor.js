@@ -76,6 +76,7 @@ const UserRequestMatchedTutor = ({
       //check confirmed tutors for this requests using confirmed_tutors object
       if (
         confirmed_tutors &&
+        confirmed_tutors[request_id] &&
         confirmed_tutors[request_id].includes(tutor._id)
       ) {
         isConfirmed = true;
