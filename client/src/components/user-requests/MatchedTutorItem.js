@@ -12,6 +12,8 @@ const MatchedTutorItem = ({
   req_id,
   disperseToTutors,
 }) => {
+  const [RequestState, setRequestState] = useState(state)
+
   return (
     <div className="profile bg-white p-2">
       <img src={avatar} alt="" className="round-img" />
@@ -33,24 +35,25 @@ const MatchedTutorItem = ({
       </Link>
       
       <Fragment>
-        {state === "UNSEND" ? (
+        {RequestState === "UNSEND" ? (
           <button
             className="btn-confirm"
-            onClick={() => {
-              disperseToTutors([_id], req_id)}
-            }
+            onClick={function (){
+              disperseToTutors([_id], req_id);
+              setRequestState("CHECKING");
+            }}
           >
             Send request
           </button>
         ) : (
           <div>
-            <i> The tutor's state: </i>  
-            <i className="text-primary">  {state} </i>
+            <i> The tutor's feedback: </i>  
+            <i className="text-primary">  {RequestState} </i>
           </div>
         )}
         
         {
-          state === "ACCEPT" && (
+          RequestState === "ACCEPT" && (
             <button
               onClick={function () {
                 // To be implemented: Should call finalize method and dispatch to a new page for tutor.
