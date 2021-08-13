@@ -30,6 +30,9 @@ import PeerRequestPage from '../peer-requests/PeerRequestPage';
 // Search page
 import Search from '../search/Search';
 
+// Calendar
+import Calendar from '../calendar/Calendar'
+
 /*
 class SearchContainer extends Component {
     state = {
@@ -55,6 +58,8 @@ const Routes = () => {
                 <PrivateRoute exact path="/requests" component={UserRequestHistory} />
                 <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
+
+                <PrivateRoute exact path="/calendar" component={Calendar} />
 
                 <PrivateRoute exact path="/search" component={Search} />
 

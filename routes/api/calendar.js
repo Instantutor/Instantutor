@@ -6,6 +6,19 @@ const { check, validationResult } = require("express-validator");
 const Calendar = require("../../models/Calendar");
 const mongoose = require("mongoose");
 
+/*
+validators for start time must be before stop time
+times must be in divisions of 5
+you must have the timezone included
+
+add time zone to the schedule
+    - purge only things that happened the day before the previous weeks saturday to keep time zones
+    consistent
+    - add a route to conver time zones for all the events
+    - read more into it here https://stackoverflow.com/questions/15141762/how-to-initialize-a-javascript-date-to-a-particular-time-zone
+*/
+
+
 const event_checks = [auth, 
     [check("event", "event content is required").notEmpty()],
     [check("event.target")
@@ -14,12 +27,12 @@ const event_checks = [auth,
     [check("event.start_time")
         .notEmpty().withMessage("event must have a start time").bail()
         .isInt().withMessage("start time must be an integer").bail()
-        .custom(value => value < 2400 && value >= 0 && value % 100 < 60)
+        .custom(value => value < 2401 && value >= 0 && value % 100 < 60)
         .withMessage("start time must be an integerized format of military time")],
     [check("event.stop_time")
         .notEmpty().withMessage("event must have a stop time").bail()
         .isInt().withMessage("stop time must be an integer").bail()
-        .custom(value => value < 2400 && value >= 0 && value % 100 < 60)
+        .custom(value => value < 2401 && value >= 0 && value % 100 < 60)
         .withMessage("start time must be an integerized format of military time")],
     [check("event.days")
         .notEmpty().withMessage("event must have the days for which it is valid").bail()
@@ -119,11 +132,27 @@ router.get("/frontend/week", auth, async(req, res) => {
     try {
         const calendar = await Calendar.findOne({ user: req.user.id });
         const current_date = new Date();
+        const week_start = new Date(current_date.getFullYear(), current_date.getMonth(),
+            current_date.getDate()-current_date.getDay());
+        const week_end = new Date(week_start.getFullYear(), week_start.getMonth(), 
+            week_start.getDate() + 7)
+        
         if (calendar)
-            res.json(calendar.availability.filter(elem =>
-                (elem.start_date ? elem.start_date < current_date : true) &&
-                (elem.stop_date ? elem.stop_date > current_date : true)
-            ));
+            res.json(calendar.availability
+                .filter(elem =>
+                    (elem.start_date ? elem.start_date < current_date : true) &&
+                    (elem.stop_date ? elem.stop_date > current_date : true)
+                )
+                .map(elem => {
+                        elem.exceptions = elem.exceptions.filter(exception => {
+                            let exceptionDate = new Date(exception);
+                            console.log(exceptionDate)
+                            return exceptionDate > week_start && exceptionDate < week_end;
+                        }).sort()
+                        return elem;
+                    }
+                )
+            );
         else
             res.status(404).json({ error: "User has no calendar associated with account"});
     } catch (err) {

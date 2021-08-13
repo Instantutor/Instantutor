@@ -568,6 +568,46 @@ button {
   background-color: rgb(30, 144, 255);
 }
 
+/* Calendar Styles */
+.calendar {
+  display: grid;
+  grid-template-columns: auto repeat(7, 13.5%);
+  grid-template-rows: 100px 50px repeat(288, 5px);
+}
+
+.calendar-header {
+  grid-column: 1 / 9;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  flex-direction: row;
+}
+
+.week {
+  align-self: flex-end;
+  padding: 0.5rem;
+  font-size: 2em;
+}
+
+.weekday {
+  border-width: 0px 1px 1px 0px;
+  border-style: solid;
+  border-color: lightgray;
+}
+
+.event {
+  color: white;
+  border-radius: 5px;
+  font-size: 0.7em;
+}
+
+.event-form {
+  background-color: white;
+  box-shadow: 2px 4px;
+  border-radius: 5px;
+  z-index: 1;
+}
+
 /* Mobile Styles */
 @media (max-width: 750px) {
   .container {
