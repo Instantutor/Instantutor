@@ -46,7 +46,7 @@ const RequestSchema = new Schema({
       },
       state: {
         type: String,
-        default: "CHECKING",
+        default: "UNSEND",
       },
     },
   ],

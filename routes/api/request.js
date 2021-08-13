@@ -280,11 +280,13 @@ router.post("/disperse", auth, async (req, res) => {
     //TODO: tutor_ids now an object {id: bool}
     const tutor_choices = req.body.tutor_ids;
     const request_id = req.body.request_id;
-    for (const [tutor_id, wasConfirmed] of Object.entries(tutor_choices)) {
+    const request = await Request.findOne({ _id: request_id });
+
+    for (const tutor_id of tutor_choices) {
       var tutor = await RequestRelate.findOne({
         user: tutor_id,
       });
-      if (!tutor && wasConfirmed) {
+      if (!tutor) {
         console.log("new tutor");
         tutor = new RequestRelate({
           user: tutor_id,
@@ -293,15 +295,22 @@ router.post("/disperse", auth, async (req, res) => {
       } else {
         // Prevent multi sending
         const index = tutor.received_requests.findIndex(
-          (item) => item._id == request_id
+          (item) => item&&item._id == request_id
         );
-        if (index < 0 && wasConfirmed) {
+        console.log(request_id)
+        if (index < 0) {
           tutor.received_requests.push(request_id);
-        } else if (index > -1 && !wasConfirmed) {
-          tutor.received_requests.splice(index, 1);
         }
       }
       await tutor.save();
+
+      // Also update the request
+      const updateIndex = request.potential_tutors.findIndex(
+        (item) => item._id == tutor_id
+      );
+      
+      request.potential_tutors[updateIndex].state = "CHECKING";
+      await request.save();
     }
     res.json({
       tutor_statuses: tutor_choices,
