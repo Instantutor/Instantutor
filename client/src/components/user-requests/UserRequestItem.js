@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { isMongoId } from "../../utils/utilities";
 import {
   deleteRequest,
   getRequestHistory,
@@ -77,11 +78,13 @@ const UserRequestItem = ({
         {/* TODO: add option to chat with tutor here too if status == "tutoring" */}
         {request_status == "open" ? (
           <Link
-            to={`/finalize_request/${_id}`}
+            to={`/request_matched_tutors/${_id}`}
             className="btn btn-dark"
             style={{ float: "right" }}
           >
-            Check Responses
+            {request.selected_tutor == undefined
+              ? "Check Tutors"
+              : "Your Tutor"}
           </Link>
         ) : (
           <span className="request-header-right">
@@ -89,8 +92,7 @@ const UserRequestItem = ({
               <button
                 className="btn btn-danger"
                 onClick={() => {
-                  cancelRequest(_id);
-                  setStatus("canceled");
+                  cancelRequest(_id, setStatus);
                 }}
               >
                 Cancel Session(s)

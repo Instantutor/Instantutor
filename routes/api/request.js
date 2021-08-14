@@ -297,8 +297,23 @@ router.post("/disperse", auth, async (req, res) => {
         );
         if (index < 0 && wasConfirmed) {
           tutor.received_requests.push(request_id);
+          //change state in potential tutors
+          var request = await Request.findOne({ _id: request_id });
+          const index = request.potential_tutors.findIndex(
+            (item) => item._id == tutor_id
+          );
+          request.potential_tutors[index].state = "CHECKING";
+          await request.save();
         } else if (index > -1 && !wasConfirmed) {
           tutor.received_requests.splice(index, 1);
+          var request = await Request.findOne({
+            potential_tutors: { $elemMatch: { _id: tutor_id } },
+          });
+          const index = request.potential_tutors.findIndex(
+            (item) => item._id == tutor_id
+          );
+          request.potential_tutors[index].state = "UNSEND";
+          await request.save();
         }
       }
       await tutor.save();
@@ -319,6 +334,11 @@ router.post("/disperseFinal", auth, async (req, res) => {
 
     const request = await Request.findOne({ _id: request_id });
     request.status = "tutoring";
+    //also need ot make state of potnetial_tutor == selected
+    const tutor_index = request.potential_tutors.findIndex(
+      (item) => item._id == tutor_id
+    );
+    request.potential_tutors[tutor_index].state = "SELECTED";
     request.selected_tutor = tutor_id;
     await request.save();
     const requestByUser = await RequestRelate.findOne({ user: request.user });

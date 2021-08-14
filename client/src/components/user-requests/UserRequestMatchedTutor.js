@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../layout/Spinner";
 import { connect } from "react-redux";
-import { getRequestHistory, disperseToTutors } from "../../actions/request";
+import { getRequestHistory } from "../../actions/request";
 import MatchedTutorItem from "./MatchedTutorItem";
 
 const UserRequestMatchedTutor = ({
@@ -11,12 +11,13 @@ const UserRequestMatchedTutor = ({
   match,
   requests: { request_history, loading, confirmed_tutors },
   getRequestHistory,
-  disperseToTutors,
 }) => {
   let request_id = match.params.id;
+  const [final_tutor, setFinalTutor] = useState(null);
   const [tutors, setTutorsData] = useState(null);
-  const [requestId, setRequestId] = useState(null);
-
+  const finalize_callback = () => {
+    window.location.reload(false);
+  };
   useEffect(async () => {
     (await user) && getRequestHistory(user._id);
   }, [getRequestHistory, user]);
@@ -28,7 +29,9 @@ const UserRequestMatchedTutor = ({
           .map((item) => item._id)
           .indexOf(request_id);
         setTutorsData(request_history[request_index].potential_tutors);
-        setRequestId(request_history[request_index]._id);
+        if (request_history[request_index].selected_tutor != undefined) {
+          setFinalTutor(request_history[request_index].selected_tutor);
+        }
       }
     }
   }, [loading, request_history]);
@@ -62,41 +65,64 @@ const UserRequestMatchedTutor = ({
       </Fragment>
     );
   } else {
-    const tutorRefs = [];
-    for (var i in tutors) {
-      var ref = React.createRef();
-      tutorRefs.push(ref);
-    }
-    var i = 0;
-    //set up references to components
     var tutorsComponent = [];
-    tutors.forEach((tutor) => {
-      const tutorRef = tutorRefs[i];
-      var isConfirmed = false;
-      //check confirmed tutors for this requests using confirmed_tutors object
-      if (
-        confirmed_tutors &&
-        confirmed_tutors[request_id] &&
-        confirmed_tutors[request_id].includes(tutor._id)
-      ) {
-        isConfirmed = true;
+    if (final_tutor == null) {
+      var tutorRefs = [];
+      for (var i in tutors) {
+        var ref = React.createRef();
+        tutorRefs.push(ref);
       }
+      var i = 0;
+      //set up references to components
+      tutors.forEach((tutor) => {
+        const tutorRef = tutorRefs[i];
+        var isConfirmed = false;
+        //check confirmed tutors for this requests using confirmed_tutors object
+        if (
+          confirmed_tutors &&
+          confirmed_tutors[request_id] &&
+          confirmed_tutors[request_id].includes(tutor._id)
+        ) {
+          isConfirmed = true;
+        }
+        const component = (
+          <MatchedTutorItem
+            request_id={request_id}
+            ref={tutorRef}
+            key={tutor._id}
+            item={tutor}
+            confirmed={isConfirmed}
+            finalize_callback={finalize_callback}
+          />
+        );
+        tutorsComponent.push(component);
+        i++;
+      });
+    } else {
+      const final_tutor_index = tutors.findIndex(
+        (item) => item._id == final_tutor
+      );
+      const tutor = tutors[final_tutor_index];
       const component = (
         <MatchedTutorItem
-          ref={tutorRef}
+          request_id={request_id}
           key={tutor._id}
           item={tutor}
-          confirmed={isConfirmed}
+          confirmed={true}
         />
       );
       tutorsComponent.push(component);
-      i++;
-    });
-
+    }
+    const selection_finalized = final_tutor != null;
+    console.log("SELECTION FINALZIED:", selection_finalized);
     return (
       <Fragment>
         <div className="profiles">
-          <h1 className="large text-primary">Check your tutors!</h1>
+          <h1 className="large text-primary">
+            {selection_finalized
+              ? "Your Selection for This Request"
+              : "Check your tutors!"}
+          </h1>
           {tutorsComponent}
         </div>
         <button
@@ -107,21 +133,6 @@ const UserRequestMatchedTutor = ({
         </button>
         <Link to="/dashboard" className="btn btn-light">
           Back To Dashboard
-        </Link>
-        <Link
-          onClick={() => {
-            var tutor_ids = {};
-            //true => tutor confirmed
-            for (var i in tutorRefs) {
-              const tutor_id = tutorRefs[i].current.props.item._id;
-              tutor_ids[tutor_id] = tutorRefs[i].current.isConfirmed();
-            }
-            disperseToTutors(tutor_ids, requestId);
-          }}
-          className="btn btn-primary"
-          style={{ float: "right" }}
-        >
-          Submit
         </Link>
       </Fragment>
     );
@@ -141,5 +152,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getRequestHistory,
-  disperseToTutors,
 })(UserRequestMatchedTutor);

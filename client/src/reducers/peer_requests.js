@@ -26,17 +26,17 @@ export default function (state = initialState, action) {
       return {
         ...state,
         peer_requests: payload.peer_requests,
-        num_new_request : payload.new_request,
-        last_check_time : payload.last_checked,
+        num_new_request: payload.new_request,
+        last_check_time: payload.last_checked,
         loading: false,
       };
 
     case UPDATE_CHECK_TIME:
-      return{
+      return {
         ...state,
-        last_check_time : payload.last_check_time
-      }
-      
+        last_check_time: payload.last_check_time,
+      };
+
     case PEER_REQUEST_ERROR:
     case DISPERSE_REQUEST_ERROR:
       return {
@@ -50,18 +50,12 @@ export default function (state = initialState, action) {
         chosen_tutors: payload.tutors,
         request: payload.request,
       };
-case DISPERSE_FINAL_REQUEST:
-      return {
-        ...state,
-        chosen_tutor: payload.tutor,
-        request: payload.request,
-      };
-    
+
     case REQUEST_RESPONSE:
       return {
         ...state,
         loading: true,
-      }
+      };
     case UPDATE_PROFILE:
     case LOGOUT:
     case ACCOUNT_DELETED:
