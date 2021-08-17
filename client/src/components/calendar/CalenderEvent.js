@@ -1,23 +1,32 @@
 import React, { useState, Fragment } from 'react';
-import Calendar from './Calendar';
 import CalendarEventForm from './CalendarEventForm';
 
 const CalenderEvent = ({
         event,
         weekStart,
         createMode,
-        editMode, 
-        editModes,
-        setEditModes,
-        setCreateMode
+        setCreateMode,
+        setTempEvent
     }) => {
 
         var exceptionsIndex = 0;
+        let startHour = event.start_time < 100 ? 12 : parseInt(event.start_time / 100);
+        let stopHour = event.stop_time < 100 ? 12 : parseInt(event.stop_time / 100);
 
         let gridRowStart = parseInt(event.start_time / 100) * 12 
             + (event.start_time % 100) / 5 + 3;
         let gridRowEnd = parseInt(event.stop_time / 100) * 12
             + (event.stop_time % 100) / 5 + 3;
+
+        const onClick = () => {
+            if (createMode === true) {
+                setTempEvent({ _id: 1, target: 2, days: new Array(7).fill(false) });
+                setCreateMode(false);
+            } else {
+                setTempEvent(event);
+                setCreateMode(true);
+            }
+        }
         
         var parsedEvents = createMode !== false && event.days
             .map( (elem, index) => {
@@ -37,35 +46,21 @@ const CalenderEvent = ({
                             backgroundColor: event.target === 2 ? "darkviolet"
                                 : event.target === 1 ? "#17a2b8"
                                 : "#c4302b",
-                            opacity: createMode || editMode.edit ? 0.75 : 1,
+                            opacity: createMode === true ? 0.75 : 1,
                             gridColumnStart: index+2,
                             gridColumnEnd: index+3,
                             gridRowStart: gridRowStart,
                             gridRowEnd: gridRowEnd
                         }}
-                        onClick={() => {
-                            if(!createMode) {
-                                setEditModes(
-                                    editModes.map(elem =>
-                                        elem.id === editMode.id 
-                                        ? { id: elem.id, edit: true}
-                                        : { id: elem.id, edit: false}
-                                    )
-                                )
-                                setCreateMode(false);
-                            }
-                            // else
-                            //     console.log("on create mode")
-                            }
-                        }
+                        onClick={onClick}
                     >
-                        {parseInt(event.start_time / 100)}
+                        {startHour < 13 ? startHour : startHour === 24 ? 12 : startHour % 12}
                         :{event.start_time % 100 < 10 && "0"}{event.start_time % 100}
-                        {event.start_time / 100 < 12  ? "am" : "pm"}
+                        {startHour < 12 || event.start_time < 100 ? "am" : "pm"}
                         {" - "}
-                        {parseInt(event.stop_time / 100)}
+                        {stopHour < 13 ? stopHour : stopHour === 24 ? 12 : stopHour % 12}
                         :{event.stop_time % 100 < 10 && "0"}{event.stop_time % 100}
-                        {event.stop_time / 100 < 12  ? "am" : "pm"}
+                        {stopHour < 12 || stopHour === 24 ? "am" : "pm"}
                     </div>
                 )
             })
@@ -87,12 +82,18 @@ const CalenderEvent = ({
             <Fragment>
                 {parsedEvents}
 
-                {createMode || (editMode && editMode.edit) ?
+                {createMode ?
                     <CalendarEventForm
                         event={event}
                         gridRowStart={gridRowStart}
-                        firstEvent={parsedEvents && parsedEvents[0].props.value.getDay()}
-                    /> 
+                        firstEvent={
+                            parsedEvents &&
+                            parsedEvents.length > 0 &&
+                            parsedEvents[0].props.value.getDay()
+                        }
+                        setTempEvent={setTempEvent}
+                        onClick={onClick}
+                    />
                     : null
                 }
             </Fragment>

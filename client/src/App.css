@@ -606,7 +606,36 @@ button {
   box-shadow: 2px 4px;
   border-radius: 5px;
   z-index: 1;
+  display: grid;
+  grid-template-rows: 25px auto 40px;
 }
+
+.event-form-header {
+  background-color: rgb(190, 188, 204);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.event-form-header > i {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.event-form {
+  overflow: auto;
+}
+
+.event-form-footer {
+  background-color: rgb(214, 224, 228);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 
 /* Mobile Styles */
 @media (max-width: 750px) {

@@ -16,6 +16,8 @@ add time zone to the schedule
     consistent
     - add a route to conver time zones for all the events
     - read more into it here https://stackoverflow.com/questions/15141762/how-to-initialize-a-javascript-date-to-a-particular-time-zone
+
+Make it so you can't post if there is a conflict with the week schedule
 */
 
 
@@ -146,7 +148,6 @@ router.get("/frontend/week", auth, async(req, res) => {
                 .map(elem => {
                         elem.exceptions = elem.exceptions.filter(exception => {
                             let exceptionDate = new Date(exception);
-                            console.log(exceptionDate)
                             return exceptionDate > week_start && exceptionDate < week_end;
                         }).sort()
                         return elem;

@@ -24,8 +24,7 @@ const testEvents = [
             false
         ],
         exceptions: [
-            "2021-08-09T00:00:00.000Z",
-            "2021-08-13T00:00:00.000Z",
+            "2021-08-19T00:00:00.000Z",
         ],
         _id: "61117dcf1f2bc907586b35da",
         target: 0,
@@ -45,7 +44,7 @@ const testEvents = [
             false
         ],
         exceptions: [
-            "2021-08-12T00:00:00.000Z"
+            "2021-08-16T00:00:00.000Z"
         ],
         _id: "61117dcf1f2bc907586b35db",
         target: 1,
@@ -71,12 +70,9 @@ const Calendar = () => {
 
     const [weekStart, setWeekStart] = useState(currentWeekStart);
     const [weekEnd, setWeekEnd] = useState(currentWeekEnd);
-    const [editModes, setEditModes] = useState(testEvents.map(elem => {
-            return { 
-                id: elem._id,
-                edit: false
-        }}));
-    const [newEvent, setNewEvent] = useState({ _id: 1, target: 2, days: new Array(7).fill(false) });
+    const [tempEvent, setTempEvent] = useState(
+        { _id: 1, target: 2, days: new Array(7).fill(false) }
+    );
     const [createMode, setCreateMode] = useState(false);
 
     /*
@@ -86,6 +82,7 @@ const Calendar = () => {
     const handleToday = () => {
         setWeekStart(currentWeekStart);
         setWeekEnd(currentWeekEnd);
+        setCreateMode(false);
     }
 
     const handleNext = () => {
@@ -115,15 +112,17 @@ const Calendar = () => {
                 weekEnd.getDate() - 7
             )));
         }
+        setCreateMode(false);
     }
 
     /* edge case what happens if you click at 23:30 */
     const clickPanel = (day, timeSection) => {
-        setEditModes(editModes.map(elem => { return { id: elem.id, edit: false } }));
 
-        setNewEvent({
-            ...newEvent,
-            days: newEvent.days.map((elem, index) => index === day ? true : false),
+        setTempEvent({
+            ...tempEvent,
+            _id: 1,
+            target: 2,
+            days: tempEvent.days.map((elem, index) => index === day ? true : false),
             start_time: parseInt(timeSection / 2) * 100 + timeSection % 2 * 30,
             stop_time: parseInt(timeSection / 2) * 100 + timeSection % 2 * 30 + 
                 (timeSection !== 47 ? 100 : 70) 
@@ -195,7 +194,7 @@ const Calendar = () => {
                     fontSize: "0.6em"
                 }}
             >
-                {i < 13 ? i : i %12}:00 {i < 12 || i === 24 ? "am" : "pm"}
+                {i < 13 ? i : i === 24 ? 12 : i % 12}:00 {i < 12 || i === 24 ? "am" : "pm"}
             </div>
         );
 
@@ -238,22 +237,23 @@ const Calendar = () => {
 
             {timeHeaderDivs}
 
-            {testEvents.map( (elem, index) => 
+            {testEvents.map( (elem, index) =>
+                elem._id !== tempEvent._id ?
                 <CalendarEvent
                     event={testEvents[index]}
                     weekStart={weekStart}
-                    editMode={editModes[index]}
-                    editModes={editModes}
-                    setEditModes={setEditModes}
                     setCreateMode={setCreateMode}
-                />
+                    setTempEvent={setTempEvent}
+                /> :
+                null
             )}
 
             <CalendarEvent
-                event={newEvent}
+                event={tempEvent}
                 weekStart={weekStart}
                 createMode={createMode}
                 setCreateMode={setCreateMode}
+                setTempEvent={setTempEvent}
             />
 
         </div>
