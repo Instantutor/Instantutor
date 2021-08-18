@@ -122,6 +122,7 @@ const Calendar = () => {
             ...tempEvent,
             _id: 1,
             target: 2,
+            exceptions: [],
             days: tempEvent.days.map((elem, index) => index === day ? true : false),
             start_time: parseInt(timeSection / 2) * 100 + timeSection % 2 * 30,
             stop_time: parseInt(timeSection / 2) * 100 + timeSection % 2 * 30 + 

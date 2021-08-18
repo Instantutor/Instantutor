@@ -124,6 +124,7 @@ const CalendarEventForm = ({
                             }
                         </select>
                     </div>
+
                     <div className="time-input">
                         {"Stop Time: "}
 
@@ -186,10 +187,36 @@ const CalendarEventForm = ({
                             }
                         </select>
                     </div>
+
+                    <div className="days-input">
+                        {["U", "M", "T", "W", "R", "F", "S"].map( (elem, index) => 
+                            <button
+                                className={"day-input" +
+                                    (event.days[index] ? " selected" : "")
+                                }
+                                onClick={() => setTempEvent({ ...event, 
+                                    days: event.days.map((day, dayi) => 
+                                        dayi === index 
+                                        ? day === true ? false : true 
+                                        : day
+                                    )
+                                })}
+                                key={"Day " + elem}
+                            >
+                                {elem}
+                            </button>
+                        )}
+
+                    </div>
                 </div>
 
                 <div className="event-form-footer">
-                    <button className="btn btn-primary">Submit</button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => console.log("submit")}
+                    >
+                        Submit
+                    </button>
                 </div>
             </div>
         )

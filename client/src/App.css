@@ -637,6 +637,21 @@ button {
 }
 
 
+.day-input {
+  border: 0px;
+  margin: 0.3rem;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  text-align:center;
+}
+
+.selected {
+  background-color: rgb(30, 144, 255);
+  color: white;
+}
+
+
 /* Mobile Styles */
 @media (max-width: 750px) {
   .container {
