@@ -15,6 +15,14 @@ export const CLEAR_PROFILE = "CLEAR_PROFILE";
 export const PROFILE_ERROR = "PROFILE_ERROR";
 export const ACCOUNT_DELETED = "ACCOUNT_DELETED ";
 
+//calendar
+export const GET_WEEK_EVENTS = "GET_WEEK_EVENTS";
+export const CLEAN_CALENDAR = "CLEAN_CALENDAR";
+export const CREATE_EVENT = "CREATE_EVENT";
+export const EDIT_EVENT = "EDIT_EVENT";
+export const DELETE_EVENT = "DELETE_EVENT";
+export const CALENDAR_ERROR = "CALENDAR_ERROR";
+
 //search
 export const GET_SEARCH = "GET_SEARCH";
 export const SEARCH_ERROR = "SEARCH_ERROR";

@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { getEvents } from '../../actions/calendar';
+import { getCurrentProfile } from '../../actions/profile';
 import CalendarEvent from './CalenderEvent';
 
 const weekdays = [
@@ -55,7 +58,11 @@ const testEvents = [
     }
 ];
 
-const Calendar = () => {
+const Calendar = ({
+    profile: { profile , loading},
+    availability,
+    user
+}) => {
     const currentDate = new Date();
     const currentWeekStart = new Date(
         currentDate.getFullYear(),
@@ -75,14 +82,17 @@ const Calendar = () => {
     );
     const [createMode, setCreateMode] = useState(false);
 
-    /*
-    Add a use effect to edit the edit array on api get call
-    */
+    useEffect(() => {
+        getCurrentProfile();
+        getEvents();
+    }, []);
 
     const handleToday = () => {
         setWeekStart(currentWeekStart);
         setWeekEnd(currentWeekEnd);
         setCreateMode(false);
+        getEvents();
+        console.log("events");
     }
 
     const handleNext = () => {
@@ -115,7 +125,6 @@ const Calendar = () => {
         setCreateMode(false);
     }
 
-    /* edge case what happens if you click at 23:30 */
     const clickPanel = (day, timeSection) => {
 
         setTempEvent({
@@ -159,7 +168,7 @@ const Calendar = () => {
                         borderStyle: "solid",
                         borderColor: "lightgray"
                     }}
-                    onClick={(event) => clickPanel(day, timeSection)}
+                    onClick={() => clickPanel(day, timeSection)}
                 />
             );
 
@@ -213,7 +222,7 @@ const Calendar = () => {
                         <i className="fas fa-arrow-left" />
                     </button>
                     <button className="btn" onClick={handleNext}>
-                    <i className="fas fa-arrow-right" />
+                        <i className="fas fa-arrow-right" />
                     </button>
                 </div>
             </div>
@@ -261,4 +270,10 @@ const Calendar = () => {
     )
 }
 
-export default Calendar
+const mapStateToProps = state => ({
+    user: state.auth.user,
+    profile: state.profile,
+    availability: state.calendar.availability
+});
+
+export default connect(mapStateToProps, {getEvents, getCurrentProfile})(Calendar)
