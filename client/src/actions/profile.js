@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
+import { createCalendar, deleteCalendar } from "./calendar";
 
 import {
   GET_PROFILE,
@@ -53,6 +54,7 @@ export const createProfile =
       };
 
       const res = await axios.post("/api/profile", formData, config);
+      await createCalendar();
 
       dispatch({
         type: GET_PROFILE,
@@ -129,6 +131,7 @@ export const deleteExpertise = (id) => async (dispatch) => {
   ) {
     try {
       const res = await axios.delete(`/api/profile/expertise/${id}`);
+      await deleteCalendar();
       dispatch({
         type: UPDATE_PROFILE,
         payload: res.data,

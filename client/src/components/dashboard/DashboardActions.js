@@ -32,6 +32,10 @@ const DashboardActions = ({ role }) => {
                 : <Fragment />
             }
 
+            <Link to="/calendar" className="btn btn-light">
+                <i className="fas fa-calendar text-primary" /> Your calendar
+            </Link>
+
         </div>
     )
 }
