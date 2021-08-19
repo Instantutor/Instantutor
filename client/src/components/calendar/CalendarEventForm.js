@@ -1,16 +1,24 @@
-import React from 'react'
+import React from 'react';
+import { connect } from 'react-redux';
+import { createEvent, editEvent, deleteEvent } from '../../actions/calendar';
 
 const Hours = new Array(12).fill(0).map((elem, index) => (index + 1).toString());
 const Minutes = new Array(12).fill(0).map((elem, index) => 
     index < 2 ? "0" + (index * 5).toString() : (index * 5).toString()
 );
+const Roles = {"Both": 2, "Student": 1, "Tutor": 0};
 
 const CalendarEventForm = ({
     event,
+    role,
+    editMode,
     gridRowStart,
     firstEvent,
     setTempEvent,
-    onClick
+    closeTempEvent,
+    createEvent,
+    editEvent,
+    deleteEvent
 }) => {
 
     const gridColumnStart = firstEvent < 3 ? firstEvent + 3 : firstEvent - 1;
@@ -45,6 +53,21 @@ const CalendarEventForm = ({
         })
     }
 
+    const createClick = () => {
+        closeTempEvent();
+        createEvent(event);
+    }
+
+    const editClick = () => {
+        closeTempEvent();
+        editEvent(event);
+    }
+
+    const deleteClick = () => {
+        closeTempEvent();
+        deleteEvent(event._id);
+    }
+
     return (
         <div
             className="event-form"
@@ -61,11 +84,13 @@ const CalendarEventForm = ({
             >
                 <i
                     className="fas fa-times"
-                    onClick={onClick}
+                    onClick={closeTempEvent}
                 />
             </div>
 
             <div className="event-form-body">
+                { /* role === "Both" ? display component(default={Roles[role]}) : null*/ }
+
                 <div className="time-input">
                     {"Start Time: "}
 
@@ -213,13 +238,22 @@ const CalendarEventForm = ({
             <div className="event-form-footer">
                 <button
                     className="btn btn-primary"
-                    onClick={() => console.log("submit")}
+                    onClick={() => editMode === true ? editClick() : createClick()}
                 >
-                    Submit
+                    {editMode ? "Edit" : "Create"}
                 </button>
+
+                {editMode &&
+                    <button
+                        className="btn btn-danger"
+                        onClick={() => deleteClick()}
+                    >
+                        Delete
+                    </button>
+                }
             </div>
         </div>
     )
 }
 
-export default CalendarEventForm
+export default connect(null, {createEvent, editEvent, deleteEvent})(CalendarEventForm)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getEvents } from '../../actions/calendar';
 import { getCurrentProfile } from '../../actions/profile';
@@ -14,54 +14,11 @@ const weekdays = [
     "Sat"
 ];
 
-// Sample event with current model
-const testEvents = [
-    {
-        days: [
-            true,
-            false,
-            false,
-            true,
-            true,
-            false,
-            false
-        ],
-        exceptions: [
-            "2021-08-19T00:00:00.000Z",
-        ],
-        _id: "61117dcf1f2bc907586b35da",
-        target: 0,
-        start_time: 1000,
-        stop_time: 1030,
-        start_date: "2021-08-04T00:00:00.000Z",
-        stop_date: "2021-08-16T00:00:00.000Z"
-    },
-    {
-        days: [
-            true,
-            false,
-            false,
-            true,
-            true,
-            false,
-            false
-        ],
-        exceptions: [
-            "2021-08-16T00:00:00.000Z"
-        ],
-        _id: "61117dcf1f2bc907586b35db",
-        target: 1,
-        start_time: 1155,
-        stop_time: 1230,
-        start_date: "2021-08-04T00:00:00.000Z",
-        stop_date: "2021-08-16T00:00:00.000Z"
-    }
-];
-
 const Calendar = ({
-    profile: { profile , loading},
+    getCurrentProfile,
+    getEvents,
     availability,
-    user
+    role
 }) => {
     const currentDate = new Date();
     const currentWeekStart = new Date(
@@ -84,15 +41,16 @@ const Calendar = ({
 
     useEffect(() => {
         getCurrentProfile();
-        getEvents();
     }, []);
+
+    useEffect(() => {
+        getEvents(new Date(weekStart));
+    }, [weekStart])
 
     const handleToday = () => {
         setWeekStart(currentWeekStart);
         setWeekEnd(currentWeekEnd);
         setCreateMode(false);
-        getEvents();
-        console.log("events");
     }
 
     const handleNext = () => {
@@ -128,7 +86,6 @@ const Calendar = ({
     const clickPanel = (day, timeSection) => {
 
         setTempEvent({
-            ...tempEvent,
             _id: 1,
             target: 2,
             exceptions: [],
@@ -215,13 +172,13 @@ const Calendar = ({
                     {weekStart.toDateString() + " - " + weekEnd.toDateString()}
                 </h1>
                 <div className="navigation">
-                    <button className="btn" onClick={handleToday}>
+                    <button className="btn btn-light" onClick={handleToday}>
                         Today
                     </button>
-                    <button className="btn" onClick={handlePrevious}>
+                    <button className="btn btn-light" onClick={handlePrevious}>
                         <i className="fas fa-arrow-left" />
                     </button>
-                    <button className="btn" onClick={handleNext}>
+                    <button className="btn btn-light" onClick={handleNext}>
                         <i className="fas fa-arrow-right" />
                     </button>
                 </div>
@@ -247,10 +204,10 @@ const Calendar = ({
 
             {timeHeaderDivs}
 
-            {testEvents.map( (elem, index) =>
+            {availability.map( (elem, index) =>
                 elem._id !== tempEvent._id ?
                 <CalendarEvent
-                    event={testEvents[index]}
+                    event={availability[index]}
                     weekStart={weekStart}
                     setCreateMode={setCreateMode}
                     setTempEvent={setTempEvent}
@@ -261,7 +218,12 @@ const Calendar = ({
             <CalendarEvent
                 event={tempEvent}
                 weekStart={weekStart}
+                role={role}
                 createMode={createMode}
+                editMode={
+                    availability.length > 0 
+                    && availability.find(elem => elem._id === tempEvent._id) ? true : false
+                }
                 setCreateMode={setCreateMode}
                 setTempEvent={setTempEvent}
             />
@@ -271,9 +233,8 @@ const Calendar = ({
 }
 
 const mapStateToProps = state => ({
-    user: state.auth.user,
-    profile: state.profile,
-    availability: state.calendar.availability
+    availability: state.calendar.availability,
+    role: state.profile.profile ? state.profile.profile.role : null
 });
 
 export default connect(mapStateToProps, {getEvents, getCurrentProfile})(Calendar)

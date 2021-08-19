@@ -1,6 +1,9 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import {
+    CONFIRM_CALENDAR_CREATION,
+    CREATE_CALENDAR,
+    DELETE_CALENDAR,
     GET_WEEK_EVENTS,
     CLEAN_CALENDAR,
     CREATE_EVENT,
@@ -9,9 +12,63 @@ import {
     CALENDAR_ERROR
 } from "./types";
 
-export const getEvents = () => async (dispatch) => {
+export const confirmCalendar = () => async (dispatch) => {
     try {
-        const res = await axios.get("/api/calendar/front/week");
+        await axios.get("/api/calendar/frontend");
+
+        dispatch ({
+            type: CONFIRM_CALENDAR_CREATION
+        })
+    } catch(err) {
+        dispatch({
+            type: CALENDAR_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status },
+        });
+    }
+};
+
+export const createCalendar = () => async (dispatch) => {
+    try {
+        const res = await axios.post("/api/calendar/frontend");
+
+        dispatch({
+            type: CREATE_CALENDAR
+        });
+    } catch (err) {
+        dispatch({
+            type: CALENDAR_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status },
+        });
+    }
+};
+
+export const deleteCalendar = () => async (dispatch) => {
+    try {
+        const res = await axios.delete("/api/calendar/frontend");
+
+        dispatch({
+            type: DELETE_CALENDAR
+        });
+    } catch (err) {
+        dispatch({
+            type: CALENDAR_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status },
+        });
+    }
+};
+
+export const getEvents = (week_start) => async (dispatch) => {
+    try {
+        const config = {
+            headers: {
+              "Content-Type": "application/json",
+            },
+        };
+
+        const res = await axios.post("/api/calendar/frontend/week",
+            {"week_start": week_start},
+            config
+        );
 
         dispatch({
             type: GET_WEEK_EVENTS,
@@ -25,6 +82,22 @@ export const getEvents = () => async (dispatch) => {
     }
 };
 
+export const cleanCalendar = () => async (dispatch) => {
+    try {
+        const res = await axios.patch("/api/calendar/frontend/clean");
+
+        dispatch({
+            type: CLEAN_CALENDAR,
+            payload: res.data,
+        });
+    } catch(err) {
+        dispatch({
+            type: CALENDAR_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status },
+        });
+    }
+}
+
 export const createEvent = (event) => async (dispatch) => {
     try {
         const config = {
@@ -33,16 +106,12 @@ export const createEvent = (event) => async (dispatch) => {
             },
         };
 
-        const { _id, ...eventData } = event;
+        const res = await axios.post("/api/calendar/frontend/event", event, config);
 
-        console.log(eventData);
-
-        //const res = await axios.post("/api/calendar/frontend/event", event, config)
-
-        // dispatch({
-        //     type: CREATE_EVENT,
-        //     payload: res.data.new_event,
-        // });
+        dispatch({
+             type: CREATE_EVENT,
+             payload: res.data.new_event,
+        });
     } catch (err) {
         dispatch({
             type: CALENDAR_ERROR,
@@ -51,7 +120,7 @@ export const createEvent = (event) => async (dispatch) => {
     }
 };
 
-export const editEvent = (event, event_id) => async (dispatch) => {
+export const editEvent = (event) => async (dispatch) => {
     try {
         const config = {
             headers: {
@@ -59,12 +128,12 @@ export const editEvent = (event, event_id) => async (dispatch) => {
             },
         };
 
-        //const res = await axios.put(`/api/calendar/frontend/event/${event_id}`, event, config)
+        const res = await axios.put("/api/calendar/frontend/event", event, config)
 
-        // dispatch({
-        //     type: EDIT_EVENT,
-        //     payload: res.data.edited_event,
-        // });
+        dispatch({
+            type: EDIT_EVENT,
+            payload: res.data.edited_event,
+        });
     } catch (err) {
         dispatch({
             type: CALENDAR_ERROR,
@@ -73,20 +142,14 @@ export const editEvent = (event, event_id) => async (dispatch) => {
     }
 };
 
-export const deleteEvent = (event, event_id) => async (dispatch) => {
+export const deleteEvent = (event_id) => async (dispatch) => {
     try {
-        const config = {
-            headers: {
-              "Content-Type": "application/json",
-            },
-        };
+        const res = await axios.delete(`/api/calendar/frontend/event/${event_id}`);
 
-        //const res = await axios.delete(`/api/calendar/frontend/event/${event_id}`, event, config)
-
-        // dispatch({
-        //     type: DELETE_EVENT,
-        //     payload: res.data.deleted_event,
-        // });
+        dispatch({
+            type: DELETE_EVENT,
+            payload: res.data.deleted_event,
+        });
     } catch (err) {
         dispatch({
             type: CALENDAR_ERROR,

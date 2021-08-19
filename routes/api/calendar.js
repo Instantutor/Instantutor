@@ -20,30 +20,28 @@ add time zone to the schedule
 Make it so you can't post if there is a conflict with the week schedule
 */
 
-
 const event_checks = [auth, 
-    [check("event", "event content is required").notEmpty()],
-    [check("event.target")
+    [check("target")
         .notEmpty().withMessage("event must have a target").bail()
         .isInt({min: 0, max: 2}).withMessage("target must be of value 0, 1, or 2")],
-    [check("event.start_time")
+    [check("start_time")
         .notEmpty().withMessage("event must have a start time").bail()
         .isInt().withMessage("start time must be an integer").bail()
         .custom(value => value < 2401 && value >= 0 && value % 100 < 60)
         .withMessage("start time must be an integerized format of military time")],
-    [check("event.stop_time")
+    [check("stop_time")
         .notEmpty().withMessage("event must have a stop time").bail()
         .isInt().withMessage("stop time must be an integer").bail()
         .custom(value => value < 2401 && value >= 0 && value % 100 < 60)
         .withMessage("start time must be an integerized format of military time")],
-    [check("event.days")
+    [check("days")
         .notEmpty().withMessage("event must have the days for which it is valid").bail()
         .isArray().withMessage("days must be an array").bail()
         .custom(value => value.length === 7).withMessage("array must be of length 7")],
-    [check("event.days.*", "event values must be booleans").isBoolean()],
-    [check("event.start_date").optional({nullable: true})
+    [check("days.*", "event values must be booleans").isBoolean()],
+    [check("start_date").optional({nullable: true})
         .isDate().withMessage("start date must be in a valid date format")],
-    [check("event.stop_date").optional({nullable: true})
+    [check("stop_date").optional({nullable: true})
         .isDate().withMessage("stop date must be in a valid date format")]
 ];
 
@@ -94,8 +92,7 @@ router.get("/frontend", auth, async(req, res) => {
 // @access Private
 router.post("/frontend/event",
     event_checks.concat(
-        [check("event.exceptions", "you can not pass exceptions when making event").isEmpty()],
-        [check("new_exception", "you can not pass exceptions when making event").isEmpty()]
+        [check("exceptions", "you can not pass exceptions when making event").isEmpty()]
     ),
     
     async (req, res) => {
@@ -107,8 +104,22 @@ router.post("/frontend/event",
         }
 
         const {
-            event
+            target,
+            start_time,
+            stop_time,
+            days,
+            start_date,
+            stop_date
         } = req.body;
+
+        const event = {
+            target: target,
+            start_time: start_time,
+            stop_time: stop_time,
+            days: days,
+        }
+        if (start_date) event.start_date = start_date;
+        if (stop_date) event.stop_date = stop_date;
 
         try {
             let new_event = await Calendar.findOne({ user: req.user.id });
@@ -116,7 +127,9 @@ router.post("/frontend/event",
                 new_event["availability"].push(event);
                 new_event.save();
 
-                res.json({ msg: "New event created", new_event: event });
+                let posted_event = new_event["availability"][new_event["availability"].length - 1];
+
+                res.json({ msg: "New event created", new_event: posted_event });
             } else {
                 res.status(404).json({ error: "User has no calendar associated with account"});
             }
@@ -127,45 +140,75 @@ router.post("/frontend/event",
     }
 );
 
-// @route: GET api/calendar/frontend/week
+// @route: POST api/calendar/frontend/week
 // @desc:  Get a list of all the events for a week
 // @access Private
-router.get("/frontend/week", auth, async(req, res) => {
-    try {
-        const calendar = await Calendar.findOne({ user: req.user.id });
-        const current_date = new Date();
-        const week_start = new Date(current_date.getFullYear(), current_date.getMonth(),
-            current_date.getDate()-current_date.getDay());
-        const week_end = new Date(week_start.getFullYear(), week_start.getMonth(), 
-            week_start.getDate() + 7)
-        
-        if (calendar)
-            res.json(calendar.availability
-                .filter(elem =>
-                    (elem.start_date ? elem.start_date < current_date : true) &&
-                    (elem.stop_date ? elem.stop_date > current_date : true)
-                )
-                .map(elem => {
-                        elem.exceptions = elem.exceptions.filter(exception => {
-                            let exceptionDate = new Date(exception);
-                            return exceptionDate > week_start && exceptionDate < week_end;
-                        }).sort()
-                        return elem;
-                    }
-                )
-            );
-        else
-            res.status(404).json({ error: "User has no calendar associated with account"});
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
-    }
-});
+router.post("/frontend/week",
+    [auth, [
+        check("week_start")
+            .notEmpty().withMessage("The start of the current week to get must be input")
+            .custom(date => !isNaN(new Date(date).getDate()))
+            .withMessage("Week start must be a date").bail()
+            .custom(date => new Date(date).getDay() === 0)
+            .withMessage("Week start must be a Sunday")
+            .custom(date => {
+                today = new Date()
+                return new Date(date) > new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate() - 7)
+            })
+            .withMessage("Week start can not be before the start of the current week")
+    ]],
+    
+    async(req, res) => {
 
-// @route: PUT api/calendar/frontend/clean
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {
+            week_start
+        } = req.body;
+
+        try {
+            const calendar = await Calendar.findOne({ user: req.user.id });
+
+            // ensuring time zones are adjusted for
+            let week_start_date = new Date(week_start)
+            let week_end = new Date(week_start);
+            week_end.setDate(week_end.getDate() + 7)
+            
+            if (calendar)
+                res.json(calendar.availability
+                    .filter(elem =>
+                        (elem.start_date ? elem.start_date <= week_end : true) &&
+                        (elem.stop_date ? elem.stop_date >= week_start_date : true)
+                    )
+                    .map(elem => {
+                            elem.exceptions = elem.exceptions.filter(exception => {
+                                let exceptionDate = new Date(exception);
+                                return exceptionDate > week_start_date && exceptionDate < week_end;
+                            }).sort()
+                            return elem;
+                        }
+                    )
+                );
+            else
+                res.status(404).json({ error: "User has no calendar associated with account"});
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
+// @route: PATCH api/calendar/frontend/clean
 // @desc:  Get rids of events that are expired
 // @access Private
-router.put("/frontend/clean", auth, async(req, res) => {
+router.patch("/frontend/clean", auth, async(req, res) => {
     try {
         let edit_calendar = await Calendar.findOne({ user: req.user.id });
 
@@ -194,13 +237,15 @@ router.put("/frontend/clean", auth, async(req, res) => {
     }
 });
 
-// @route: PUT api/calendar/frontend/event/:event_id
+// @route: PUT api/calendar/frontend/event/
 // @desc:  Edit events for a calendar
 // @access Private
-router.put("/frontend/event/:event_id",
+router.put("/frontend/event/",
     event_checks.concat(
-        [check("event.exceptions.*", 
-            "exceptions must be in valid date format").isDate()],
+        [check("_id")
+            .notEmpty().withMessage("event id must be present")
+            .custom(id => mongoose.Types.ObjectId.isValid(id))
+            .withMessage("event id must be a valid mongoDB id")],
         [check("new_exception", "an exception must be in a date format")
             .optional({nullable: true}).isDate()]
     ),
@@ -209,45 +254,51 @@ router.put("/frontend/event/:event_id",
 
         const errors = validationResult(req);
 
-        if (!errors.isEmpty() && !mongoose.Types.ObjectId.isValid(req.params.event_id))
-            return res.status(400).json( {
-                errors: errors.array().concat({ msg: "Event ID is invalid", param: "/:event_id" })
-            });
-        else if (!errors.isEmpty())
+        if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
-        else if (!mongoose.Types.ObjectId.isValid(req.params.event_id))
-            return res.status(400).json({
-                errors: [{ msg: "Event ID is invalid", param: "/:event_id" }]
-            });
+        }
 
-        var {
-            event,
+        const {
+            _id,
+            target,
+            start_time,
+            stop_time,
+            days,
+            start_date,
+            stop_date,
             new_exception
         } = req.body;
+
+        const event = {
+            _id: _id,
+            target: target,
+            start_time: start_time,
+            stop_time: stop_time,
+            days: days,
+        }
+        if (start_date) event.start_date = start_date;
+        if (stop_date) event.stop_date = stop_date;
 
         try {
             let edit_event = await Calendar.findOne({
                 user: req.user.id,
-                "availability._id": mongoose.Types.ObjectId(req.params.event_id)
+                "availability._id": mongoose.Types.ObjectId(_id)
             });
             
             if (edit_event) {
-                event._id = req.params.event_id;
                 edit_event["availability"] = edit_event["availability"].map(
-                    elem => elem._id == req.params.event_id ?
-                    (new_exception ? 
-                        { ...event, exceptions: event.exceptions && event.exceptions.length !== 0 ?
-                            event.exceptions.concat(new_exception) :
-                            event.exceptions
-                        } :
-                        event
-                    ) :
-                    elem
+                    elem => elem._id == _id
+                        ? new_exception
+                            ? elem.exceptions
+                                ? { ...event, exceptions: elem.exceptions.concat(new_exception)}
+                                : { ...event, exceptions: [new_exception] }
+                            : event
+                        : elem
                 );
                 edit_event.save();
 
                 let edited_event = edit_event["availability"].find(
-                    elem => elem._id == req.params.event_id
+                    elem => elem._id == _id
                 );
 
                 res.json({msg: "Event edited", edited_event: edited_event});

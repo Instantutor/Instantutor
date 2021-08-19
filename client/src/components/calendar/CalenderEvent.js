@@ -1,10 +1,14 @@
 import React, { useState, Fragment } from 'react';
 import CalendarEventForm from './CalendarEventForm';
 
+const Roles = {"Both": 2, "Student": 1, "Tutor": 0};
+
 const CalenderEvent = ({
     event,
     weekStart,
+    role,
     createMode,
+    editMode,
     setCreateMode,
     setTempEvent
 }) => {
@@ -18,7 +22,7 @@ const CalenderEvent = ({
     let gridRowEnd = parseInt(event.stop_time / 100) * 12
         + (event.stop_time % 100) / 5 + 3;
 
-    const onClick = () => {
+    const closeTempEvent = () => {
         if (createMode === true) {
             setTempEvent({ _id: 1, target: 2, days: new Array(7).fill(false) });
             setCreateMode(false);
@@ -52,7 +56,7 @@ const CalenderEvent = ({
                         gridRowStart: gridRowStart,
                         gridRowEnd: gridRowEnd
                     }}
-                    onClick={onClick}
+                    onClick={closeTempEvent}
                 >
                     {startHour < 13 ? startHour : startHour === 24 ? 12 : startHour % 12}
                     :{event.start_time % 100 < 10 && "0"}{event.start_time % 100}
@@ -85,14 +89,15 @@ const CalenderEvent = ({
             {createMode ?
                 <CalendarEventForm
                     event={event}
+                    role={role}
+                    editMode={editMode}
                     gridRowStart={gridRowStart}
                     firstEvent={
-                        parsedEvents &&
-                        parsedEvents.length > 0 &&
+                        parsedEvents && parsedEvents.length > 0 &&
                         parsedEvents[0].props.value.getDay()
                     }
                     setTempEvent={setTempEvent}
-                    onClick={onClick}
+                    closeTempEvent={closeTempEvent}
                 />
                 : null
             }
