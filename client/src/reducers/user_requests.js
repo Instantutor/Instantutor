@@ -5,6 +5,10 @@ import {
   EDIT_USER_REQUEST,
   DELETE_USER_REQUEST,
   CLEAR_USER_REQUEST,
+  GET_CONFIRMED_TUTORS,
+  GET_CONFIRMED_TUTORS_ERROR,
+  DISPERSE_FINAL_REQUEST,
+  DISPERSE_REQUEST_ERROR,
   LOGOUT,
   ACCOUNT_DELETED,
 } from "../actions/types";
@@ -30,6 +34,12 @@ export default function (state = initialState, action) {
         request_history: payload,
         loading: false,
       };
+    case GET_CONFIRMED_TUTORS:
+      return {
+        ...state,
+        confirmed_tutors: payload,
+        loading: false,
+      };
 
     case USER_REQUEST_ERROR:
       return {
@@ -37,7 +47,16 @@ export default function (state = initialState, action) {
         error: payload,
         loading: false,
       };
+    case DISPERSE_FINAL_REQUEST:
+      return {
+        ...state,
+        chosen_tutor: payload.tutor,
+        request: payload.request,
+        loading: true,
+      };
 
+    case DISPERSE_REQUEST_ERROR:
+    case GET_CONFIRMED_TUTORS_ERROR:
     case EDIT_USER_REQUEST:
     case DELETE_USER_REQUEST:
     case LOGOUT:

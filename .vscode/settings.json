@@ -3,5 +3,7 @@
         "server.h": "c",
         "socket.h": "c",
         "in.h": "c"
-    }
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
 }

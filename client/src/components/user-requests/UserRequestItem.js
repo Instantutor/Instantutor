@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { deleteRequest, getRequestHistory } from "../../actions/request";
+import { isMongoId } from "../../utils/utilities";
+import {
+  deleteRequest,
+  getRequestHistory,
+  cancelRequest,
+} from "../../actions/request";
 
 const UserRequestItem = ({
   item: {
     _id,
     request,
+    status,
     course,
     grade,
     topic,
@@ -17,27 +23,39 @@ const UserRequestItem = ({
   },
   deleteRequest,
   getRequestHistory,
+  cancelRequest,
 }) => {
+  const [request_status, setStatus] = useState(status);
   return (
     <div className="profile-exp bg-white p-2">
       <div>
         <h3 className="text-dark request-header">Request: {request}</h3>
-
-        <span className="request-header-right">
-          <Link to={`/edit_request/${_id}`} className="btn btn-primary">
-            Edit
-          </Link>
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              deleteRequest(_id);
-              console.log("GETTING REQUEST HISTORY...");
-              getRequestHistory(_id);
-            }}
+        {request_status == "open" ? (
+          <span className="request-header-right">
+            <Link to={`/edit_request/${_id}`} className="btn btn-primary">
+              Edit
+            </Link>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                deleteRequest(_id);
+                console.log("GETTING REQUEST HISTORY...");
+                getRequestHistory(_id);
+              }}
+            >
+              Delete
+            </button>
+          </span>
+        ) : (
+          <i
+            className="text-primary"
+            style={{ paddingRight: "5px", float: "right" }}
           >
-            Delete
-          </button>
-        </span>
+            {request_status == "tutoring"
+              ? "INSTRUCTION IN PROGRESS"
+              : request_status.toUpperCase()}
+          </i>
+        )}
 
         <p>
           <strong>Course: </strong> {course ? course : "N/A"}
@@ -56,6 +74,34 @@ const UserRequestItem = ({
           <strong>Last edit: </strong>{" "}
           {new Date(last_edit_time).toLocaleString()}
         </p>
+        {/* TODO: add option to review session if status == "closed" */}
+        {/* TODO: add option to chat with tutor here too if status == "tutoring" */}
+        {request_status == "open" ? (
+          <Link
+            to={`/request_matched_tutors/${_id}`}
+            className="btn btn-dark"
+            style={{ float: "right" }}
+          >
+            {request.selected_tutor == undefined
+              ? "Check Tutors"
+              : "Your Tutor"}
+          </Link>
+        ) : (
+          <span className="request-header-right">
+            {request_status == "tutoring" ? (
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  cancelRequest(_id, setStatus);
+                }}
+              >
+                Cancel Session(s)
+              </button>
+            ) : (
+              <span></span>
+            )}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -65,6 +111,8 @@ UserRequestItem.propTypes = {
   item: PropTypes.object.isRequired,
 };
 
-export default connect(null, { deleteRequest, getRequestHistory })(
-  UserRequestItem
-);
+export default connect(null, {
+  deleteRequest,
+  getRequestHistory,
+  cancelRequest,
+})(UserRequestItem);

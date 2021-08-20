@@ -50,6 +50,9 @@ const RequestSchema = new Schema({
       },
     },
   ],
+  selected_tutor: {
+    type: String,
+  },
   bids: [
     {
       bidder_id: {

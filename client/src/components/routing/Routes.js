@@ -25,6 +25,7 @@ import UserRequestHistory from '../user-requests/UserRequestHistory';
 import UserRequestMatchedTutor from '../user-requests/UserRequestMatchedTutor';
 
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
+import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
 
 
 // Search page
@@ -57,6 +58,7 @@ const Routes = () => {
                 <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
                 <PrivateRoute exact path="/requests" component={UserRequestHistory} />
                 <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
+                <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
 
                 <PrivateRoute exact path="/calendar" component={TempCalendarPage} />

@@ -6,13 +6,20 @@ import {
   GET_USER_REQUEST,
   EDIT_USER_REQUEST,
   DELETE_USER_REQUEST,
+  GET_CONFIRMED_TUTORS_ERROR,
+  GET_CONFIRMED_TUTORS,
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
   UPDATE_CHECK_TIME,
   AUTH_ERROR,
   DISPERSE_REQUESTS,
+  DISPERSE_FINAL_REQUEST,
   DISPERSE_REQUEST_ERROR,
   REQUEST_RESPONSE,
+  CLOSE_REQUEST,
+  CLOSE_REQUEST_ERROR,
+  CANCEL_REQUEST,
+  CANCEL_REQUEST_ERROR,
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -164,7 +171,6 @@ export const checkNewPeerRequest = (userId) => async (dispatch) => {
       dispatch(setAlert(`You received ${res.data.new_request} new requests!`, "success"));
     }
     */
-
   } catch (err) {
     console.error(err);
     dispatch({
@@ -173,7 +179,6 @@ export const checkNewPeerRequest = (userId) => async (dispatch) => {
     });
   }
 };
-
 
 export const updateCheckTime = () => async (dispatch) => {
   try {
@@ -184,34 +189,29 @@ export const updateCheckTime = () => async (dispatch) => {
       payload: res.data,
     });
     dispatch(setAlert("Checked all new requests...", "success"));
-
   } catch (err) {
     dispatch({
       type: PEER_REQUEST_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
-}
-
+};
 
 export const updateTutorResponse = (response, id) => async (dispatch) => {
-  if (
-    window.confirm(
-      `You want to ${response} this request, are you sure?`
-    )
-  ) {
+  if (window.confirm(`You want to ${response} this request, are you sure?`)) {
     try {
-      const res = await axios.put(`/api/request/tutor/response`, {response: response, _id: id});
+      const res = await axios.put(`/api/request/tutor/response`, {
+        response: response,
+        _id: id,
+      });
       //console.log(res.data);
-      
+
       dispatch({
         type: REQUEST_RESPONSE,
         payload: res.data,
       });
-      
-  
+
       dispatch(setAlert(`${response} the request...`, "success"));
-  
     } catch (err) {
       dispatch({
         type: PEER_REQUEST_ERROR,
@@ -219,11 +219,17 @@ export const updateTutorResponse = (response, id) => async (dispatch) => {
       });
     }
   }
-}
-
+};
 
 export const disperseToTutors =
-  (chosen_tutors, request_id) => async (dispatch) => {
+  (
+    tutor_choices,
+    tutor_username,
+    request_id,
+    callback,
+    callback_arg = "CHECKING"
+  ) =>
+  async (dispatch) => {
     //add to request field in tutors; chosen_tutors should be list of id's
     try {
       var token = localStorage.getItem("token");
@@ -235,7 +241,7 @@ export const disperseToTutors =
       }
       var res = await axios.post(
         "/api/request/disperse",
-        { tutor_ids: chosen_tutors, request_id: request_id },
+        { tutor_ids: tutor_choices, request_id: request_id },
         {
           headers: {
             "x-auth-token": token,
@@ -247,13 +253,143 @@ export const disperseToTutors =
         payload: res.data,
       });
 
-      dispatch(setAlert(`Your request has been dispatched to selected tutors!`, "success"));
-
+      dispatch(
+        setAlert(
+          `Your request has been dispatched to ${tutor_username}!`,
+          "success"
+        )
+      );
+      callback(callback_arg);
     } catch (err) {
       console.error(err);
       dispatch({
         type: DISPERSE_REQUEST_ERROR,
         payload: { msg: err },
       });
+      dispatch(
+        setAlert(`Failed to dispatch request to ${tutor_username}.`, "danger")
+      );
     }
   };
+export const disperseToTutorFinal =
+  (chosen_tutor, tutor_username, request_id, callback) => async (dispatch) => {
+    if (
+      window.confirm(
+        "Are you sure you want to select this tutor for instruction?\nThis selection will be final."
+      )
+    ) {
+      try {
+        var token = localStorage.getItem("token");
+        if (!token) {
+          dispatch({
+            type: AUTH_ERROR,
+          });
+          throw Error("Unauthorized request.");
+        }
+        if (chosen_tutor == null) {
+          dispatch(
+            setAlert(
+              `You must select a tutor before finalizing your request.`,
+              "danger"
+            )
+          );
+          return;
+        }
+        var res = await axios.post(
+          "/api/request/disperseFinal",
+          { tutor_id: chosen_tutor, request_id: request_id },
+          {
+            headers: {
+              "x-auth-token": token,
+            },
+          }
+        );
+        dispatch({
+          type: DISPERSE_FINAL_REQUEST,
+          payload: res.data,
+        });
+
+        dispatch(
+          setAlert(
+            `Your request has been set for ${tutor_username}. Instruction will begin shortly!`,
+            "success"
+          )
+        );
+        callback();
+      } catch (err) {
+        console.error(err);
+        dispatch({
+          type: DISPERSE_REQUEST_ERROR,
+          payload: { msg: err },
+        });
+      }
+    }
+  };
+
+export const getConfirmedTutors = (request_ids) => async (dispatch) => {
+  try {
+    const res = await axios({
+      method: "post",
+      url: "/api/request/tutors/confirmed",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        request_ids: request_ids, // This is the body part
+      },
+    });
+    //get tutors that have received confirmation for each request
+    //console.log(res.data);
+    dispatch({
+      type: GET_CONFIRMED_TUTORS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_CONFIRMED_TUTORS_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+export const cancelRequest =
+  (request_id, callback, callback_arg = "canceled") =>
+  async (dispatch) => {
+    try {
+      const res = await axios.put(`/api/request/cancel/${request_id}`);
+      //get tutors that have received confirmation for each request
+      //console.log(res.data);
+      dispatch({
+        type: CANCEL_REQUEST,
+        payload: res.data,
+      });
+      dispatch(
+        setAlert(
+          `You have canceled session(s) for that request successfully.`,
+          "success"
+        )
+      );
+      callback(callback_arg);
+    } catch (err) {
+      dispatch({
+        type: CANCEL_REQUEST_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  };
+export const closeRequest = (request_id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/request/close/${request_id}`);
+    //get tutors that have received confirmation for each request
+    //console.log(res.data);
+    dispatch({
+      type: CLOSE_REQUEST,
+      payload: res.data,
+    });
+    dispatch(setAlert(`You have successfully closed that request.`, "success"));
+    return true;
+  } catch (err) {
+    dispatch({
+      type: CLOSE_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+    return false;
+  }
+};
