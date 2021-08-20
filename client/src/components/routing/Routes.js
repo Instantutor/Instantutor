@@ -31,6 +31,9 @@ import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
 // Search page
 import Search from '../search/Search';
 
+// Calendar
+import TempCalendarPage from '../calendar/TempCalendarPage'
+
 /*
 class SearchContainer extends Component {
     state = {
@@ -57,6 +60,8 @@ const Routes = () => {
                 <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
+
+                <PrivateRoute exact path="/calendar" component={TempCalendarPage} />
 
                 <PrivateRoute exact path="/search" component={Search} />
 

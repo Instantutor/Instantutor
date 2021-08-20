@@ -568,6 +568,90 @@ button {
   background-color: rgb(30, 144, 255);
 }
 
+/* Calendar Styles */
+.calendar {
+  display: grid;
+  grid-template-columns: auto repeat(7, 13.5%);
+  grid-template-rows: 100px 50px repeat(288, 5px);
+}
+
+.calendar-header {
+  grid-column: 1 / 9;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  flex-direction: row;
+}
+
+.week {
+  align-self: flex-end;
+  padding: 0.5rem;
+  font-size: 2em;
+}
+
+.weekday {
+  border-width: 0px 1px 1px 0px;
+  border-style: solid;
+  border-color: lightgray;
+}
+
+.event {
+  color: white;
+  border-radius: 5px;
+  font-size: 0.7em;
+}
+
+.event-form {
+  background-color: white;
+  box-shadow: 2px 4px;
+  border-radius: 5px;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 25px auto 40px;
+}
+
+.event-form-header {
+  background-color: rgb(190, 188, 204);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.event-form-header > i {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.event-form {
+  overflow: auto;
+}
+
+.event-form-footer {
+  background-color: rgb(214, 224, 228);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+.day-input {
+  border: 0px;
+  margin: 0.3rem;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  text-align:center;
+}
+
+.selected {
+  background-color: rgb(30, 144, 255);
+  color: white;
+}
+
+
 /* Mobile Styles */
 @media (max-width: 750px) {
   .container {
