@@ -113,12 +113,8 @@ const PeerRequestItem = ({
                 <span className="request-header-right">
                   <button
                     className="btn btn-danger"
-                    onClick={async () => {
-                      const went_through = await cancelRequest(_id);
-                      //TODO: Consider not changing state until we know request went through
-                      if (went_through) {
-                        setCurrentStatus("canceled");
-                      }
+                    onClick={() => {
+                      cancelRequest(_id, setCurrentStatus);
                     }}
                   >
                     Cancel Session(s)

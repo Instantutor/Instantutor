@@ -410,7 +410,7 @@ router.put("/cancel/:request_id", auth, async (req, res) => {
     const request_id = req.params.request_id;
     var request = await Request.findOne({ _id: request_id });
     if (!request) {
-      res.json({ error: { msg: "No request found with that id." } });
+      res.status(404).json({ error: { msg: "No request found with that id." } });
     }
     request.status = "canceled";
     await request.save();
