@@ -56,7 +56,9 @@ export default function (state = initialState, action) {
         case EDIT_EVENT:
             return {
                 ...state,
-                availability: state.availability.concat(payload)
+                availability: state.availability.map(elem => 
+                    elem._id === payload._id ? payload : elem
+                )
             }
 
         case DELETE_EVENT:
