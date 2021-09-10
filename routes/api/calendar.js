@@ -124,6 +124,21 @@ router.post("/frontend/event",
         try {
             let new_event = await Calendar.findOne({ user: req.user.id });
             if (new_event) {
+                // checking for time overlaps
+                for (let i = 0; i < new_event["availability"].length; i++) {
+                    for (let j = 0; j < 7; j++) {
+                        if ((new_event.availability[i].days[j] && event.days[j]) && 
+                        ((new_event["availability"][i].start_time <= event.start_time &&
+                        event.start_time <= new_event["availability"][i].stop_time) ||
+                        (new_event["availability"][i].start_time <= event.stop_time &&
+                        event.start_time <= new_event["availability"][i].stop_time) ||
+                        (event.start_time <= new_event["availability"][i].start_time &&
+                        event.stop_time >= new_event["availability"][i].stop_time))) {
+                            return res.status(400).json({ errors: [{msg: "The time overlaps with another event"}] });
+                        }
+                    }
+                }
+
                 new_event["availability"].push(event);
                 new_event.save();
 
@@ -286,6 +301,23 @@ router.put("/frontend/event/",
             });
             
             if (edit_event) {
+                // checking for time overlaps
+                console.log();
+                for (let i = 0; i < edit_event["availability"].length; i++) {
+                    for (let j = 0; j < 7; j++) {
+                        if (edit_event["availability"][i]._id != event._id &&
+                        (edit_event.availability[i].days[j] && event.days[j]) && 
+                        ((edit_event["availability"][i].start_time <= event.start_time &&
+                        event.start_time <= edit_event["availability"][i].stop_time) ||
+                        (edit_event["availability"][i].start_time <= event.stop_time &&
+                        event.start_time <= edit_event["availability"][i].stop_time) ||
+                        (event.start_time <= edit_event["availability"][i].start_time &&
+                        event.stop_time >= edit_event["availability"][i].stop_time))) {
+                            return res.status(400).json({ errors: [{msg: "The time overlaps with another event"}] });
+                        }
+                    }
+                }
+
                 edit_event["availability"] = edit_event["availability"].map(
                     elem => elem._id == _id
                         ? new_exception
