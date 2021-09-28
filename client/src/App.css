@@ -623,19 +623,18 @@ button {
   padding-right: 0.5rem;
 }
 
-.event-form {
+.event-form-body {
+  padding: 0.25rem;
   overflow: auto;
 }
 
-.event-form-footer {
-  background-color: rgb(214, 224, 228);
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.time-input {
+  padding-left: 1.2rem;
 }
 
+.days-input-row {
+  margin-left: 1.0rem;
+}
 
 .day-input {
   border: 0px;
@@ -649,6 +648,20 @@ button {
 .selected {
   background-color: rgb(30, 144, 255);
   color: white;
+}
+
+.event-form-footer {
+  background-color: rgb(214, 224, 228);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.event-form-btn {
+  padding: 0.2rem 0.65rem;
+  border-radius: 5px;
 }
 
 

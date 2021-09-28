@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
 import { createEvent, editEvent, deleteEvent } from '../../actions/calendar';
 
@@ -29,10 +29,12 @@ const CalendarEventForm = ({
     const stopHour = event.stop_time < 100 ? 12 :
         event.stop_time <= 1300 ? parseInt(event.stop_time / 100) :
         parseInt((event.stop_time - 1200) / 100);
-    const startMinute = event.start_time%100 !== 5 ? event.start_time%100 : "05";
-    const stopMinute = event.stop_time%100 !== 5 ? event.stop_time%100 : "05";
+    const startMinute = (event.start_time%100 > 5 ? "" : "0") + (event.start_time%100).toString();
+    const stopMinute = (event.stop_time%100 > 5 ? "" : "0") + (event.stop_time%100).toString();
     const startAMPM = event.start_time < 1200 || event.start_time === 2400 ? "am" : "pm";
     const stopAMPM = event.stop_time < 1200 || event.stop_time === 2400 ? "am" : "pm";
+
+    const [timeSetting, setTimeSetting] = useState("Custom");
 
     const timeChange = (e, mode, start, time) => {
         setTempEvent({
@@ -89,9 +91,61 @@ const CalendarEventForm = ({
             </div>
 
             <div className="event-form-body">
-                { /* role === "Both" ? display component(default={Roles[role]}) : null*/ }
 
-                <div className="time-input">
+                <div>
+                    {"Time: "}
+                    <select
+                        value={timeSetting}
+                        onChange={e => {
+                            setTimeSetting(e.target.value);
+                            if (e.target.value !== "Custom")
+                                setTempEvent({
+                                    ...event,
+                                    start_time: e.target.value === "All Day"
+                                            ? 0
+                                        : e.target.value === "Morning"
+                                            ? 800
+                                        : e.target.value === "Afternoon"
+                                            ? 1200
+                                        : e.target.value === "Evening"
+                                            && 1600,
+                                    stop_time: e.target.value === "All Day"
+                                            ? 2400
+                                        : e.target.value === "Morning"
+                                            ? 1200
+                                        : e.target.value === "Afternoon"
+                                            ? 1600
+                                        : e.target.value === "Evening"
+                                            && 2000
+                                })
+                        }}
+                        style={{marginRight: "1rem"}}
+                    >
+                        <option value="Custom" key="Custom">Custom</option>
+                        <option value="All Day" key="All Day">All Day</option>
+                        <option value="Morning" key="Morning">Morning</option>
+                        <option value="Afternoon" key="Afternoon">Afternoon</option>
+                        <option value="Evening" key="Evening">Evening</option>
+                    </select>
+
+                    {"Role: "}
+                    <select
+                        value={event.target}
+                        onChange={e => setTempEvent(
+                            { ...event, target: parseInt(e.target.value) }
+                        )}
+                    >
+                        <option value="2" key="Both">Both</option>
+                        <option value="1" key="Student">Student</option>
+                        <option value="0" key="Tutor">Tutor</option>
+                    </select>
+                </div>
+                
+                <div className="time-input" style={
+                    timeSetting!=="Custom"
+                    ? {pointerEvents: "none", backgroundColor: 'lightgrey'}
+                    : {}
+                }>
                     {"Start Time: "}
 
                     <select
@@ -150,7 +204,11 @@ const CalendarEventForm = ({
                     </select>
                 </div>
 
-                <div className="time-input">
+                <div className="time-input" style={
+                    timeSetting!=="Custom"
+                    ? {pointerEvents: "none", backgroundColor: 'lightgrey'}
+                    : {}
+                }>
                     {"Stop Time: "}
 
                     <select
@@ -214,30 +272,37 @@ const CalendarEventForm = ({
                 </div>
 
                 <div className="days-input">
-                    {["U", "M", "T", "W", "R", "F", "S"].map( (elem, index) => 
-                        <button
-                            className={"day-input" +
-                                (event.days[index] ? " selected" : "")
-                            }
-                            onClick={() => setTempEvent({ ...event, 
-                                days: event.days.map((day, dayi) => 
-                                    dayi === index 
-                                    ? day === true ? false : true 
-                                    : day
-                                )
-                            })}
-                            key={"Day " + elem}
-                        >
-                            {elem}
-                        </button>
-                    )}
-
+                    {"Days: "}
+                    <div className="days-input-row">
+                        {["U", "M", "T", "W", "R", "F", "S"].map( (elem, index) =>
+                            <button
+                                className={"day-input" +
+                                    (event.days[index] ? " selected" : "")
+                                }
+                                onClick={() => !(event.days
+                                    .reduce(
+                                        (a, v) => (v === true ? a + 1 : a), 0
+                                    ) === 1 && event.days[index] === true) &&
+                                    setTempEvent({ ...event,
+                                        days: event.days.map((day, dayi) =>
+                                            dayi === index
+                                            ? day === true ? false : true
+                                            : day
+                                        )
+                                    }
+                                )}
+                                key={"Day " + elem}
+                            >
+                                {elem}
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
             <div className="event-form-footer">
                 <button
-                    className="btn btn-primary"
+                    className="btn btn-primary event-form-btn"
                     onClick={() => editMode === true ? editClick() : createClick()}
                 >
                     {editMode ? "Edit" : "Create"}
@@ -245,7 +310,7 @@ const CalendarEventForm = ({
 
                 {editMode &&
                     <button
-                        className="btn btn-danger"
+                        className="btn btn-danger event-form-btn"
                         onClick={() => deleteClick()}
                     >
                         Delete

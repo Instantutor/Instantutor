@@ -20,23 +20,23 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
                     <h1 className="text-primary">
                         Looks like u did not create any calendar yet...
                     </h1>
-                    <btn
+                    <button
                         className="btn btn-primary"
                         onClick={() => createCalendar()}
                     >
                         Create Calendar
-                    </btn>
+                    </button>
                     <Link to="/dashboard" className="btn btn-light">
                         Back to dashboard
                     </Link>
                 </div> :
                 <div>
-                    <btn
+                    <button
                         className="btn btn-danger"
                         onClick={() => deleteCalendar()}
                     >
                         Delete Calendar
-                    </btn>
+                    </button>
                     <Link to="/dashboard" className="btn btn-light">
                         Back to dashboard
                     </Link>
