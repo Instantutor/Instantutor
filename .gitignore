@@ -5,3 +5,7 @@ client/build
 client/.eslintcache
 package-lock.json
 client/package-lock.json
+# Elastic Beanstalk Files
+#.elasticbeanstalk/*
+#!.elasticbeanstalk/*.cfg.yml
+#!.elasticbeanstalk/*.global.yml
