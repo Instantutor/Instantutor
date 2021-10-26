@@ -65,11 +65,7 @@ const RequestSchema = new Schema({
   ],
   ratings: [
     {
-      rating_id:
-      {
-        type: String, 
-      },
-      starts: {
+      stars: {
         type: Number,
       },
       review:

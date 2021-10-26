@@ -565,6 +565,19 @@ router.post("/tutors/confirmed", auth, async (req, res) => {
   }
 });
 
+//@route: GET api/request/completed
+//@desc: A user can fill out an iframe in the frontend describing the performance of the tutor based on stars (integer) and review (string) 
+//@access Private
+
+// ----------------------------------------- //
+// router.get("/completed", (req,res) =>
+// {
+//   try
+//   {
+//     req.review = 
+//   }
+// }) 
+
 /* Need renew
 // @route: PUT api/request/bid
 // @desc:  A user can bid, adding to the bids array
