@@ -22,5 +22,6 @@ app.use('/api/searchbar', require('./routes/api/searchbar'));
 // Check if the slack channel is workingfsdsdfsdkhfajksdfhjklashfajklsd
 
 const PORT = process.env.PORT || 5000;
+// const server = new Ap
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

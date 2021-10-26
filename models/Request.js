@@ -63,6 +63,21 @@ const RequestSchema = new Schema({
       },
     },
   ],
+  ratings: [
+    {
+      rating_id:
+      {
+        type: String, 
+      },
+      starts: {
+        type: Number,
+      },
+      review:
+      {
+        type: String
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("request", RequestSchema);

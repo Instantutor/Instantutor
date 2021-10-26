@@ -124,6 +124,8 @@ const ProfileSchema = new mongoose.Schema({
     },
   },
 
+  feedback: [],
+  
   date: {
     type: Date,
     default: Date.now,
