@@ -1,0 +1,7 @@
+../node_modules/
+../client/node_modules/
+../config/production.json
+../client/build
+../client/.eslintcache
+../package-lock.json
+../client/package-lock.json
