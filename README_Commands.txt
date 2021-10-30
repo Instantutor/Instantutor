@@ -2,6 +2,21 @@
 List of Useful Commands, Feel Free to Add More
 Version: 1.1
 ######################################################################################################
+//----------------------------------------------------------------------------------------------------
+Deployment:
+
+Install Elastic Beanstalk CLI from Linux Machine (Virtual Box VM reccomended):
+https://github.com/aws/aws-elastic-beanstalk-cli-setup
+
+Initialize Project:
+	eb init
+
+Deploy Project:
+	eb deploy
+
+SSH into Project:
+Donwload keypair from AWS console
+	eb ssh
 
 //----------------------------------------------------------------------------------------------------
 Backending:
