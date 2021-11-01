@@ -1,4 +1,4 @@
-const Profile = require("../models/Profile");
+const Profile = require("../server/models/Profile");
 
 function partialMatch(profileName, queryName) {
   //True if segment of profileName contains queryName

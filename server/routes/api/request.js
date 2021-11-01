@@ -1,7 +1,7 @@
 const express = require("express");
 const request = require("request");
 const config = require("config");
-const getTutorMatches = require("../../utils/utilities").getTutorMatches;
+const getTutorMatches = require("../../../utils/utilities").getTutorMatches;
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
