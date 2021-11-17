@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    stdin_open: true
+    volumes:
+      - "./client/src:/usr/src/app/src"
+      - "./client/public:/usr/src/app/public"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "5000:5000"
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+    ports:
+      - "5500:80"
+    depends_on:
+      - frontend
+      - server
+# networks:
+#   full-app:
+#     driver: bridge
