@@ -377,6 +377,7 @@ export const cancelRequest =
 export const closeRequest = (request_id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/request/close/${request_id}`);
+    // const res = await axios.put(`/api/request/rate/${request_id}`);
     //get tutors that have received confirmation for each request
     //console.log(res.data);
     dispatch({

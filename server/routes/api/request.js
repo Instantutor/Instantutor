@@ -192,15 +192,16 @@ router.get("/received/:user_id", auth, async (req, res) => {
     }
 
     let num_new_request = 0;
-    for (i in Tutor.received_requests) {
+    for (let i = 0; i < Tutor.received_requests.length; i++) {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
       });
       if (!temp) {
-        return res.status(400).json({
-          msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
-        });
+        continue;
+        // return res.status(400).json({
+        //   msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
+        // });
       }
 
       // Create a copy of the request. May be switch to hard-code version if this copy code has error.
@@ -220,9 +221,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
     }
 
     // Sort the peered requests such that the newest one be the first
-    reqs.sort(function (a, b) {
-      return b.last_edit_time - a.last_edit_time;
-    });
+    reqs.sort((a, b)  => b.last_edit_time - a.last_edit_time);
 
     res.json({
       peer_requests: reqs,
@@ -432,7 +431,39 @@ router.put("/cancel/:request_id", auth, async (req, res) => {
 
   //remove request from tutors received requests
 });
+
+// @route: PUT api/request/rate/:request_id
+// @desc:  Adds a rating to the relevent request
+// @access Private
+router.put("/rate/:request_id", auth, async(req, res) => {
+  const {
+    rating
+  } = req.body;
+
+  try {
+    requestMatch = await RequestRelate.findOne({ _id: req.params.request_id });
+    if (requestMatch) {
+      if (rating) requestMatch["rating"] = rating;
+      requestMatch.save();
+
+      res.json({ msg: "Rating added", updated_request: requestMatch });
+    } else {
+      res.status(400).json({ error: "Request ID is invalid" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: PUT api/request/close/:request_id
+// @desc:  Update the last check time when a user check his peer requests.
+// @access Private
 router.put("/close/:request_id", auth, async (req, res) => {
+  // const {
+  //   rating
+  // } = req.body;
+
   //close a request that has active instruction
   try {
     const request_id = req.params.request_id;
@@ -441,16 +472,21 @@ router.put("/close/:request_id", auth, async (req, res) => {
       res.json({ error: { msg: "No request found with that id." } });
     }
     request.status = "closed";
+    // if (rating) requestMatch["rating"].push({stars: rating});
     await request.save();
     //remove from active_requests if present
     var requestByUser = await RequestRelate.findOne({ user: request.user });
+    // console.log(requestByUser);
     const removeIndex = requestByUser.tutoring_requests.findIndex(
       (item) => item._id == request_id
     );
+    // console.log(removeIndex);
     if (removeIndex > -1) {
       requestByUser.tutoring_requests.splice(removeIndex, 1);
     }
+    // console.log(requestbyUser);
     requestByUser.closed_requests.push(request_id);
+    // console.log(requestbyUser);
     await requestByUser.save();
     res.json({ msg: `Request ${request_id} has been closed successfully.` });
   } catch (err) {
