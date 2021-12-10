@@ -31,6 +31,7 @@ const DashboardActions = ({ role }) => {
                 ><i className="fas fa-inbox text-primary"></i> Received Request </Link>
                 : <Fragment />
             }
+            {/* <Link to= "/VideoPage" className = "btn btn-light"></Link> */}
 
             <Link to="/calendar" className="btn btn-light">
                 <i className="fas fa-calendar text-primary" /> Your calendar
