@@ -17,6 +17,9 @@ const RequestRelateSchema = new Schema({
       request_id: {
         type: String,
       },
+      rating: {
+        type: String
+      }
     },
   ],
 
