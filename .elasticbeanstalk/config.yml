@@ -1,13 +1,13 @@
 branch-defaults:
-  main:
-    environment: Instantutor1013-env
+  Deployment:
+    environment: Instantutor1210-env
 environment-defaults:
-  Instantutor1013-env:
+  Instantutor1210-env:
     branch: null
     repository: null
 global:
-  application_name: instantutor-1013
-  default_ec2_keyname: instantutor1
+  application_name: Instantutor-1210
+  default_ec2_keyname: null
   default_platform: Node.js 14 running on 64bit Amazon Linux 2
   default_region: us-east-1
   include_git_submodules: true
