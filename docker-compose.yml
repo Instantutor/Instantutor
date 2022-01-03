@@ -24,12 +24,12 @@ services:
   nginx:
     image: nginx:alpine
     volumes:
-      - ./nginx:/etc/nginx/conf.d/
+      - ./nginx/ngnix.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "5500:80"
     depends_on:
       - frontend
-      - server
+      - client
 # networks:
 #   full-app:
 #     driver: bridge
