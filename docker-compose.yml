@@ -28,7 +28,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - frontend
+      - server
       - client
 # networks:
 #   full-app:
