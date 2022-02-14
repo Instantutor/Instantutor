@@ -108,7 +108,7 @@ router.get("/", auth, async (req, res) => {
 
 router.get("/requestID/:request_id", auth, async (req, res) => {
   //Get all requests for which tutor qualifies or has been chosen]
-  /* Should consider simply adding a field in database for user 
+  /* Should consider simply adding a field in database for user
   that stores potential requests instead of performing all these
   searches.*/
   try {
@@ -601,6 +601,31 @@ router.post("/tutors/confirmed", auth, async (req, res) => {
   }
 });
 
+//router for google calendar integration
+
+router.post("/google/get", async (req, res, next) => {
+ const {
+    google
+ } = require('googleapis')
+ const {
+    addWeeks
+ } = require('date-fns')
+ const {
+    OAuth2
+ } = google.auth
+ const oAuth2Client = new OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET
+ )
+ oAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+ })
+
+ const calendar = google.calendar({
+    version: 'v3',
+    auth: oAuth2Client
+ })
+});
 /* Need renew
 // @route: PUT api/request/bid
 // @desc:  A user can bid, adding to the bids array
