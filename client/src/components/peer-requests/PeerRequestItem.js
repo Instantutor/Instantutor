@@ -50,6 +50,10 @@ const PeerRequestItem = ({
         </p>
 
         <p>
+          <strong>User ID: </strong> {_id}
+        </p>
+
+        <p>
           <strong>Topic: </strong> {topic}
         </p>
 
