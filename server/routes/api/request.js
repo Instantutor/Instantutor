@@ -601,7 +601,7 @@ router.post("/tutors/confirmed", auth, async (req, res) => {
   }
 });
 
-//router for google calendar integration
+/*router for google calendar integration
 
 router.post("/google/get", async (req, res, next) => {
  const {
@@ -625,7 +625,7 @@ router.post("/google/get", async (req, res, next) => {
     version: 'v3',
     auth: oAuth2Client
  })
-});
+});*/
 /* Need renew
 // @route: PUT api/request/bid
 // @desc:  A user can bid, adding to the bids array
