@@ -7,8 +7,19 @@ const redirect_URI = 'https://developers.google.com/oauthplayground/'
 const refresh_token = '1//04YXwduuzFRZECgYIARAAGAQSNwF-L9IraAVG7ZwOmuK6Sw2y-7qmwMoQrOxR5tbGJp5dB9EQbFvRoECOJdmA3tOXp7bIS3lnKNA'
 
 const o_auth2_client = new google.auth.OAuth2(client_ID, client_secret, redirect_URI);
-o_auth2_client.setCredentials({refresh_token: refresh_token});  
+o_auth2_client.setCredentials({refresh_token: refresh_token});
 
+function generateCode(){
+    var result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charactersLength = characters.length;
+    for (var x = 0; x < 4; x++){
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+const code = generateCode();
 
 // method to send the email
 async function sendEmail(reciever){
@@ -33,9 +44,9 @@ async function sendEmail(reciever){
         const mail_options = {
             from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
             to: reciever,
-            subject: 'Testing :)',
-            text: 'This is a testing email omg! It worked!!!',
-            html: '<h1>This is a testing email omg! It worked!!!<\h1>'
+            subject: 'Email Verification',
+            text: 'Your code:'+code,
+            html: '<h1>Your code:<\h1>'+code
         };
 
         const email = await transporter.sendMail(mail_options);
