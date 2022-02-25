@@ -39,9 +39,10 @@ img {
   max-width: 1100px;
   margin: auto;
   overflow: hidden;
-  padding: 0 2rem;
   margin-top: 6rem;
   margin-bottom: 3rem;
+  /* display: inline-block; */
+  display: flex;
 }
 
 /* Text Styles*/
@@ -328,6 +329,13 @@ button {
 
 .navbar .welcome span {
   margin-right: 0.6rem;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 20%;
+  background-color: black;
+  color: white;
 }
 
 /* Landing Page */
