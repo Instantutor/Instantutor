@@ -9,7 +9,6 @@ const refresh_token = '1//04YXwduuzFRZECgYIARAAGAQSNwF-L9IraAVG7ZwOmuK6Sw2y-7qmw
 const o_auth2_client = new google.auth.OAuth2(client_ID, client_secret, redirect_URI);
 o_auth2_client.setCredentials({refresh_token: refresh_token});
 
-const user_email = 'zhengz5@rpi.edu';
 const admin_email = 'instantutor.webservices@gmail.com';
 const user_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 const user_name = 'zhi';

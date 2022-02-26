@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer')
 const {google} = require('googleapis')
+const fs = require('fs')
+const handlebars = require('handlebars')
 
 const client_ID = '263169478503-dajgk2tbveuoij028f1d7gv8uvmmnr1q.apps.googleusercontent.com'
 const client_secret = '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'
@@ -13,7 +15,7 @@ function generateCode(){
     var result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     var charactersLength = characters.length;
-    for (var x = 0; x < 4; x++){
+    for (var x = 0; x < 6; x++){
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
@@ -41,13 +43,16 @@ async function sendEmail(reciever){
             }
         });
 
+        var htmlfile = handlebars.compile('content.html');
+
         const mail_options = {
             from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
             to: reciever,
             subject: 'Email Verification',
-            text: 'Your code:'+code,
-            html: '<h1>Your code:<\h1>'+code
+            html: htmlfile
         };
+
+        console.log(htmlfile);
 
         const email = await transporter.sendMail(mail_options);
         return email
@@ -57,4 +62,4 @@ async function sendEmail(reciever){
     }
 }
 
-sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+//sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
