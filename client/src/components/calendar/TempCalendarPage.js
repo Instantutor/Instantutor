@@ -48,7 +48,7 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
     // )
 
 
-
+    const CLIENT_ID = '817226416342-kib0spf1jur26c07n2bpk08mk6ml1frn.apps.googleusercontent.com';
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState({
@@ -63,7 +63,8 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
             name: response.profileObj.name,
             emailId: response.profileObj.email,
         };
-        this.setState({ userInfo, isLoggedIn: true });
+        setUserInfo(userInfo);
+        setIsLoggedIn(true);
     };
 
     const responseGoogleError = (response) => {
@@ -76,7 +77,8 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
           name: "",
           emailId: "",
         };
-        this.setState({ userInfo, isLoggedIn: false });
+        setUserInfo(userInfo);
+        setIsLoggedIn(false);
     };
 
     return (
@@ -89,7 +91,7 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
                 <GoogleLogout
                   clientId={CLIENT_ID}
                   buttonText={"Logout"}
-                  onLogoutSuccess={this.logout}
+                  onLogoutSuccess={logout}
                 ></GoogleLogout>
               </div>
             ) : (
