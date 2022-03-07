@@ -43,23 +43,45 @@ async function sendEmail(reciever){
             }
         });
 
-        var htmlfile = handlebars.compile('content.html');
-
         const mail_options = {
-            from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
-            to: reciever,
-            subject: 'Email Verification',
-            html: htmlfile
+            from: 'Instantutor Admin <instantutor.webservices@gmail.com>', 
+            to: reciever, 
+            subject: "Error", 
+            html: "This is an error message"
         };
 
-        console.log(htmlfile);
+        fs.readFile('content.html', {encoding: 'utf-8'}, function(err, html) {
+            if(err){
+                console.error(err);
+                return
+            }   
+
+            var template = handlebars.compile(html);
+            var replacements = {
+                webcode: 'Deez Nuts'
+            };
+            var htmlToSend = template(replacements);
+            const temp_options = {
+                from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
+                to: reciever,
+                subject: 'Email Verification',
+                html: htmlToSend
+            };
+            mail_options.from = temp_options.from;
+            mail_options.subject = temp_options.subject;
+            mail_options.html = temp_options.html;
+            console.log(temp_options);
+        });
+
+        console.log(mail_options);
 
         const email = await transporter.sendMail(mail_options);
         return email
 
     } catch(error) {
+        console.log(error);
         return error;
     }
 }
 
-//sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
