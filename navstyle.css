@@ -1,0 +1,33 @@
+.navbar {
+
+background-color: black;
+overflow: hidden;
+padding: 15px;
+}
+
+.navbar a {
+
+    float: right;
+
+}
+
+.navbar a.homeB {
+
+float: left;
+}
+
+.navbar a.aboutB {
+
+padding-right:  20px;
+}
+
+.navbar a.registerB {
+
+padding-right:  20px;
+}
+
+.navbar a.signinB {
+
+    padding-right:  4px;
+    }
+    
