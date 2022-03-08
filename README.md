@@ -12,4 +12,12 @@ https://drive.google.com/drive/folders/1e1VJH_k9VLQH7QrlELsNV1ljwsdtFZCG?usp=sha
 
 # How to run the App
 Download the source code from the repository and
-in the command line enter `npm run dev`
+open two command lines at:
+<br />
+/Instantutor/server
+<br />
+/Instantutor/client
+<br />
+In the server command line type ```npm run server```
+<br />
+In the client command line type ```npm start```

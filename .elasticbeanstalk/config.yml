@@ -1,14 +1,16 @@
 branch-defaults:
-  Deployment:
-    environment: Instantutor1210-env
+  docker:
+    environment: Instantutor0108-env
+  main:
+    environment: Instantutor0108-env
 environment-defaults:
-  Instantutor1210-env:
+  Instantutor0108-env:
     branch: null
     repository: null
 global:
-  application_name: Instantutor-1210
-  default_ec2_keyname: null
-  default_platform: Node.js 14 running on 64bit Amazon Linux 2
+  application_name: Instantutor-0108
+  default_ec2_keyname: Instantutor-Samyuth3
+  default_platform: Docker running on 64bit Amazon Linux 2
   default_region: us-east-1
   include_git_submodules: true
   instance_profile: null
