@@ -3,7 +3,7 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     stdin_open: true
     volumes:
       - "./client/src:/usr/src/app/src"
