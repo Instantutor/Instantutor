@@ -21,6 +21,7 @@
     "express-validator": "^6.10.0",
     "googleapis": "^95.0.0",
     "gravatar": "^1.8.1",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.3",
     "nodemailer": "^6.7.2",

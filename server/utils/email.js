@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 const {google} = require('googleapis')
-const fs = require('fs')
+const fs = require('fs/promises')
 const handlebars = require('handlebars')
 
 const client_ID = '263169478503-dajgk2tbveuoij028f1d7gv8uvmmnr1q.apps.googleusercontent.com'
@@ -50,28 +50,15 @@ async function sendEmail(reciever){
             html: "This is an error message"
         };
 
-        fs.readFile('content.html', {encoding: 'utf-8'}, function(err, html) {
-            if(err){
-                console.error(err);
-                return
-            }   
+        const data = await fs.readFile("content.html", {encoding: 'utf-8'});
 
-            var template = handlebars.compile(html);
-            var replacements = {
-                webcode: 'Deez Nuts'
-            };
-            var htmlToSend = template(replacements);
-            const temp_options = {
-                from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
-                to: reciever,
-                subject: 'Email Verification',
-                html: htmlToSend
-            };
-            mail_options.from = temp_options.from;
-            mail_options.subject = temp_options.subject;
-            mail_options.html = temp_options.html;
-            console.log(temp_options);
-        });
+        var template = handlebars.compile(data);
+        var replacements = {
+            webcode: code
+        };
+
+        mail_options.subject = 'Email verification';
+        mail_options.html = template(replacements);
 
         console.log(mail_options);
 
@@ -84,4 +71,4 @@ async function sendEmail(reciever){
     }
 }
 
-sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+//sendEmail('sagis2@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
