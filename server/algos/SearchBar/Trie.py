@@ -13,17 +13,24 @@ class TrieNode:
         self.parent = None
         
     def __str__(self):
-        ans = "\t"
+        ans = ["\t"]
         for child in self.children.keys():
             childnode = self.children[child]
             add = str(self.children[child])
             if len(self.children) == 0:
                 add = ""
-            ans += '\n"' + str(child) + '":[\n' 
+            ans[-1] += '\n"' + str(child) + '":[\n' 
             assert(childnode)
-            ans += str(childnode.confirmation).lower() + ", \n{ " + add + "}],"
+            ans[-1] += str(childnode.confirmation).lower() + ", \n{ " + add + "}]"
+            ans.append("")
         
-        return str(ans)        
+        return str(", ".join(ans[:-1]))  
+
+    def __getitem__(self, index):
+        if len(index) <= 1:
+            return self.children[index]
+        return self[index[0]][index[1:]]
+        
 
 
 # Tree-Based Data Structure that takes in letters and points it to a respective node using a Default Dictionary. There will be more functions that will be included into this structure as the project progresses (Macine Learning, Heap Frequency List Suggestion, and Persistency, Caching, and more)
@@ -38,7 +45,7 @@ class Trie:
         
     
     def __str__(self):
-        return "{"+str(self.root)[:-1]+"\n}"
+        return "{"+str(self.root)+"\n}"
 
     # This function builds the Trie by iterating through the word and creating respective pointers to other TreeNodes by inserting it as a key:value pair. It iterates through the word and with a traversal pointer and confirms that the word exists by having a boolean storage. Moreover, I pointed a node to its parent in order to go back (this is important for my Serialization Algorithim and establishing levels)
 
@@ -94,7 +101,7 @@ class Trie:
         for key in trie.keys():
             #assert(curr)
             curr.children[key] = self.convertdict(trie[key][1], curr)
-            curr.confirmation = trie[key][0]
+            curr.children[key].confirmation = trie[key][0]
             #assert(curr)
         return curr
         
@@ -104,13 +111,12 @@ class Trie:
         curr = self.root
         f = open("./algos/SearchBar/serializedtrie.json","r")
         
-        
         trie = json.loads(f.read())
-        #Rendundant
+        #Rendundant?
         for key in trie.keys():
             curr.children[key] = self.convertdict(trie[key][1], curr)
-            curr.confirmation = trie[key][0]
-        
+        #print(trie)
+        #print(self)
         f.close()
 
 
@@ -119,6 +125,11 @@ def main():
     obj = Trie()
     obj.deserialize()
     #print(obj)
+    """
+    f = open("test.json", "w")
+    f.write(str(obj))
+    f.close()
+    """
     """
     print(obj)
     with open("sample.json", "w") as outfile:
@@ -129,7 +140,7 @@ def main():
     elif len(sys.argv) > 2:
         obj.Build(sys.argv[1])
         obj.serialize()
-    obj.serialize()
+    #obj.serialize()
 if __name__=="__main__":
     main()
 
