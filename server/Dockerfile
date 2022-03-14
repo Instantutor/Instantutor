@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the directories
-RUN npm install
+RUN npm install --force
 
 # Copy over the remaining files
 COPY . .
