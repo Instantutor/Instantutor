@@ -1,0 +1,11 @@
+FROM node:16-slim
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY --chown=node:node . .
+
+CMD ["npm", "run", "server"]
