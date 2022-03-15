@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 const {google} = require('googleapis')
-const fs = require('fs')
+const fs = require('fs/promises')
 const handlebars = require('handlebars')
 
 const client_ID = '263169478503-dajgk2tbveuoij028f1d7gv8uvmmnr1q.apps.googleusercontent.com'
@@ -43,23 +43,32 @@ async function sendEmail(reciever){
             }
         });
 
-        var htmlfile = handlebars.compile('content.html');
-
         const mail_options = {
-            from: 'Instantutor Admin <instantutor.webservices@gmail.com>',
-            to: reciever,
-            subject: 'Email Verification',
-            html: htmlfile
+            from: 'Instantutor Admin <instantutor.webservices@gmail.com>', 
+            to: reciever, 
+            subject: "Error", 
+            html: "This is an error message"
         };
 
-        console.log(htmlfile);
+        const data = await fs.readFile("content.html", {encoding: 'utf-8'});
+
+        var template = handlebars.compile(data);
+        var replacements = {
+            webcode: code
+        };
+
+        mail_options.subject = 'Email verification';
+        mail_options.html = template(replacements);
+
+        console.log(mail_options);
 
         const email = await transporter.sendMail(mail_options);
         return email
 
     } catch(error) {
+        console.log(error);
         return error;
     }
 }
 
-//sendEmail(reciever = 'zhengz5@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+//sendEmail('sagis2@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
