@@ -10,25 +10,13 @@ import {
 
 const PeerRequestItem = ({
   user,
-  item: {
-    _id,
-    request,
-    course,
-    grade,
-    topic,
-    help_time,
-    number_sessions,
-    last_edit_time,
-    state,
-    status,
-    selected_tutor,
-  },
+  item,
   updateTutorResponse,
   cancelRequest,
   closeRequest,
 }) => {
   const tutor_id = user._id;
-  const [currentStatus, setCurrentStatus] = useState(status);
+  const [currentStatus, setCurrentStatus] = useState(item.status);
   return (
     <div className="profile-exp bg-white p-2">
       <div>
@@ -36,37 +24,41 @@ const PeerRequestItem = ({
           className="text-primary"
           style={{ paddingRight: "5px", float: "right" }}
         >
-          {currentStatus == "tutoring" && selected_tutor == tutor_id
+          {currentStatus == "tutoring" && item.selected_tutor == tutor_id
             ? "INSTRUCTION IN PROGRESS"
             : currentStatus == "canceled" || currentStatus == "closed"
             ? currentStatus.toUpperCase()
             : ""}
         </i>
 
-        <h3 className="text-dark"> Request: {request}</h3>
+        <h3 className="text-dark"> Request: {item.request}</h3>
 
         <p>
-          <strong>Course: </strong> {course}
+          <strong>Course: </strong> {item.course}
         </p>
 
         <p>
-          <strong>Topic: </strong> {topic}
+          <strong>User ID: </strong> {item.user}
         </p>
 
         <p>
-          <strong>Number of sessions: </strong> {number_sessions}
+          <strong>Topic: </strong> {item.topic}
+        </p>
+
+        <p>
+          <strong>Number of sessions: </strong> {item.number_sessions}
         </p>
 
         <p>
           <strong>Last edit: </strong>{" "}
-          {new Date(last_edit_time).toLocaleString()}
+          {new Date(item.last_edit_time).toLocaleString()}
         </p>
 
-        {state === "CHECKING" ? (
+        {item.state === "CHECKING" ? (
           <div>
             <button
               onClick={function () {
-                updateTutorResponse("ACCEPT", _id);
+                updateTutorResponse("ACCEPT", item._id);
               }}
               className="btn btn-success"
             >
@@ -75,7 +67,7 @@ const PeerRequestItem = ({
 
             <button
               onClick={function () {
-                updateTutorResponse("DENY", _id);
+                updateTutorResponse("DENY", item._id);
               }}
               className="btn btn-danger"
             >
@@ -90,7 +82,7 @@ const PeerRequestItem = ({
               Chat with the poster
             </button>
           </div>
-        ) : selected_tutor == tutor_id ? (
+        ) : item.selected_tutor == tutor_id ? (
           <div>
             <p>You have been selected for this request!</p>{" "}
             <p> You may now begin instruction with this student.</p>
@@ -100,7 +92,7 @@ const PeerRequestItem = ({
                   <button
                     className="btn btn-dark"
                     onClick={async () => {
-                      const went_through = await closeRequest(_id);
+                      const went_through = await closeRequest(item._id);
                       //TODO: Consider not changing state until we know request went through
                       if (went_through) {
                         setCurrentStatus("closed");
@@ -114,7 +106,7 @@ const PeerRequestItem = ({
                   <button
                     className="btn btn-danger"
                     onClick={() => {
-                      cancelRequest(_id, setCurrentStatus);
+                      cancelRequest(item._id, setCurrentStatus);
                     }}
                   >
                     Cancel Session(s)
@@ -125,12 +117,12 @@ const PeerRequestItem = ({
               <div></div>
             )}
           </div>
-        ) : selected_tutor != undefined && selected_tutor != tutor_id ? (
+        ) : item.selected_tutor != undefined && item.selected_tutor != tutor_id ? (
           <div>The student has selected another tutor for this request.</div>
         ) : (
           <div>
             Your response to this request is:{" "}
-            <i className="text-primary">{state}</i>
+            <i className="text-primary">{item.state}</i>
           </div>
         )}
       </div>
