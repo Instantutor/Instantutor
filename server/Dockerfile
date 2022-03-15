@@ -1,5 +1,5 @@
 # node version from docker hub
-FROM node:16
+FROM node:16-slim
 
 # working directory inside the docker image
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the directories
-RUN npm install --force
+RUN npm ci
 
 # Copy over the remaining files
 COPY . .
