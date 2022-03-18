@@ -34,14 +34,20 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   );
 
     return (
-        <nav className="navbar bg-dark">
-      <h1>
-        <Link to="/">
-          <i className="fas fa-code"></i> Instantutor
-        </Link>
-      </h1>
-      { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
-    </nav>
+    //     <nav className="navbar bg-dark">
+    //   <h1>
+    //     <Link to="/">
+    //       <i className="fas fa-code"></i> Instantutor
+    //     </Link>
+    //   </h1>
+    //   { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
+    // </nav>
+      <div class = "navbar">
+        <a class = "homeB" href="#home">Instantutor</a>
+        <a class = "signinB" href = "#signin" > Sign In </a>
+        <a class = "registerB" href = "#register"> Register </a>
+        <a class = "aboutB" href = "#about"> About </a>
+      </div>  
     )
 }
 
