@@ -14,7 +14,7 @@ class TrieNode:
 
 # Tree-Based Data Structure that takes in letters and points it to a respective node using a Default Dictionary. There will be more functions that will be included into this structure as the project progresses (Macine Learning, Heap Frequency List Suggestion, and Persistency, Caching, and more)
 
-class Trie: 
+class Trie:
 
     "Prototypes: Constructor, Build, PrintAll, autosuggestion, serialize, deserialize "
 
@@ -26,9 +26,9 @@ class Trie:
     # This function builds the Trie by iterating through the word and creating respective pointers to other TreeNodes by inserting it as a key:value pair. It iterates through the word and with a traveral pointer and confirms that the word exists by having a boolean storage. Moreover, I pointed a node to its parent in order to go back (this is important for my Serialization Algorithim and establishing levels)
 
     def Build(self, word: str) -> None:
-        curr = self.root  
-        for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr 
-        curr.confirmation = True 
+        curr = self.root
+        for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
+        curr.confirmation = True
 
 
     # Prints all the words in the DS utilizing Depth First Search (can be shortened for better reading purposes, i.e. creating a DFS function)
@@ -44,7 +44,7 @@ class Trie:
         print(words)
 
 
-    # This algorithim takes a prefix (inputed through the search bar), goes through it and finds the current pointer. If there is no match, for now, it returns [] (I will code the rest of the algo later and update this comment when I do so). Same DFS algo, will find a way to rewrite this to shorten and read it properly 
+    # This algorithim takes a prefix (inputed through the search bar), goes through it and finds the current pointer. If there is no match, for now, it returns [] (I will code the rest of the algo later and update this comment when I do so). Same DFS algo, will find a way to rewrite this to shorten and read it properly
 
     def autosuggestion(self, prefix: str) -> list:
         curr, words = self.root, []
@@ -74,7 +74,7 @@ class Trie:
             ans+=letter
             if node.confirmation: ans+="Y"
             else: ans+="N"
-            if node.children: ans+="("  
+            if node.children: ans+="("
             else:
                 temp = node
                 while temp.parent and not temp.parent.children:
@@ -96,12 +96,12 @@ class Trie:
                 curr = curr.children[trie[k-2]]
                 curr.parent = temp
             elif i == ")":
-                curr = curr.parent         
+                curr = curr.parent
             elif i == "Y":
                 curr.children[trie[k-1]].confirmation = True
             elif i == "N":
                 curr.children[trie[k-1]].confirmation = False
-            else: 
+            else:
                 curr.children[i] = TrieNode()
 
 
@@ -116,5 +116,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
-
