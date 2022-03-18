@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 import sys
+import json
 
 # Declaration for nodes of the Trie
 class TrieNode:
@@ -10,6 +11,26 @@ class TrieNode:
         self.children = defaultdict(TrieNode)
         self.confirmation = False
         self.parent = None
+        
+    def __str__(self):
+        ans = ["\t"]
+        for child in self.children.keys():
+            childnode = self.children[child]
+            add = str(self.children[child])
+            if len(self.children) == 0:
+                add = ""
+            ans[-1] += '\n"' + str(child) + '":[\n' 
+            assert(childnode)
+            ans[-1] += str(childnode.confirmation).lower() + ", \n{ " + add + "}]"
+            ans.append("")
+        
+        return str(", ".join(ans[:-1]))  
+
+    def __getitem__(self, index):
+        if len(index) <= 1:
+            return self.children[index]
+        return self[index[0]][index[1:]]
+        
 
 
 # Tree-Based Data Structure that takes in letters and points it to a respective node using a Default Dictionary. There will be more functions that will be included into this structure as the project progresses (Macine Learning, Heap Frequency List Suggestion, and Persistency, Caching, and more)
@@ -21,9 +42,12 @@ class Trie:
     # Constructor; Establishes the root node of the entire Tree/Trie
     def __init__(self):
         self.root = TrieNode()
+        
+    
+    def __str__(self):
+        return "{"+str(self.root)+"\n}"
 
-
-    # This function builds the Trie by iterating through the word and creating respective pointers to other TreeNodes by inserting it as a key:value pair. It iterates through the word and with a traveral pointer and confirms that the word exists by having a boolean storage. Moreover, I pointed a node to its parent in order to go back (this is important for my Serialization Algorithim and establishing levels)
+    # This function builds the Trie by iterating through the word and creating respective pointers to other TreeNodes by inserting it as a key:value pair. It iterates through the word and with a traversal pointer and confirms that the word exists by having a boolean storage. Moreover, I pointed a node to its parent in order to go back (this is important for my Serialization Algorithim and establishing levels)
 
     def Build(self, word: str) -> None:
         curr = self.root  
@@ -61,59 +85,62 @@ class Trie:
         return words
 
 
-    # *** I wrote an algorithinm that sort of encrypts this Trie into a string and stored in this same folder (serializedtrie.txt) FOR NOW. The original idea is to convert this file into bits and stored Disk or Cache so we can retrieve the file quickly from memory. We can definitely use MongoDB In Storage Memory Store or even push this file into the Data Base in JSON. Having the file here is temporary, so it makes the entire process slow and I need to find a way to create a Persistent Trie/Data Structure which will be difficult. I need to do this in order to quickly update the previous Trie instead of going through the entire process of serializing and deserializng the DS over and over. There will need to be automation for when there is an updated profile to the trie, so this is extremely important to do. As of right now, the names of the profiles have been hardcoded. I am going to leave it as is and come back to it later
+    # *** I wrote an algorithinm that sort of encrypts this Trie into a string and stored in this same folder (serializedtrie.json) FOR NOW. The original idea is to convert this file into bits and stored Disk or Cache so we can retrieve the file quickly from memory. We can definitely use MongoDB In Storage Memory Store or even push this file into the Data Base in JSON. Having the file here is temporary, so it makes the entire process slow and I need to find a way to create a Persistent Trie/Data Structure which will be difficult. I need to do this in order to quickly update the previous Trie instead of going through the entire process of serializing and deserializng the DS over and over. There will need to be automation for when there is an updated profile to the trie, so this is extremely important to do. As of right now, the names of the profiles have been hardcoded. I am going to leave it as is and come back to it later
 
     def serialize(self) -> str:
-        curr = self.root
-        f = open("./algos/SearchBar/serializedtrie","w")
-        ans = ""
-        dfs = [[curr,"",0]]
-        while dfs:
-            node,letter,count = dfs.pop()
-            if node.parent: del node.parent.children[letter]
-            ans+=letter
-            if node.confirmation: ans+="Y"
-            else: ans+="N"
-            if node.children: ans+="("  
-            else:
-                temp = node
-                while temp.parent and not temp.parent.children:
-                     ans+= (")")
-                     temp = temp.parent
-            for i in node.children:
-                dfs.append([node.children[i],i,count+1])
-        f.write(ans[1:])
+        f = open("./algos/SearchBar/serializedtrie.json","w")
+        f.write(str(self))
+        f.close()
 
-
+    #Returns children, adds T/F to child, and links a parent to it
+    def convertdict(self, trie, par):
+        curr = TrieNode()
+        if not trie.keys():
+            return curr
+        curr.parent = par
+        for key in trie.keys():
+            #assert(curr)
+            curr.children[key] = self.convertdict(trie[key][1], curr)
+            curr.children[key].confirmation = trie[key][0]
+            #assert(curr)
+        return curr
+        
+        
     # Deserializes the string from the file. Need to find a better way code this in a clean format.
     def deserialize(self):
         curr = self.root
-        f = open("./algos/SearchBar/serializedtrie","r")
-        trie = f.read()[1:]
-        for k,i in enumerate(trie):
-            if i == "(":
-                temp = curr
-                curr = curr.children[trie[k-2]]
-                curr.parent = temp
-            elif i == ")":
-                curr = curr.parent         
-            elif i == "Y":
-                curr.children[trie[k-1]].confirmation = True
-            elif i == "N":
-                curr.children[trie[k-1]].confirmation = False
-            else: 
-                curr.children[i] = TrieNode()
+        f = open("./algos/SearchBar/serializedtrie.json","r")
+        
+        trie = json.loads(f.read())
+        #Rendundant?
+        for key in trie.keys():
+            curr.children[key] = self.convertdict(trie[key][1], curr)
+        #print(trie)
+        #print(self)
+        f.close()
 
 
 # Driver for now, when there are more Tries for different search bars I will fix this. Too lazy for now
 def main():
     obj = Trie()
     obj.deserialize()
+    #print(obj)
+    """
+    f = open("test.json", "w")
+    f.write(str(obj))
+    f.close()
+    """
+    """
+    print(obj)
+    with open("sample.json", "w") as outfile:
+        outfile.write(str(obj))
+        outfile.close()
+    """
     if len(sys.argv) == 2: print(",".join(obj.autosuggestion(sys.argv[1])))
     elif len(sys.argv) > 2:
         obj.Build(sys.argv[1])
         obj.serialize()
-
+    #obj.serialize()
 if __name__=="__main__":
     main()
 
