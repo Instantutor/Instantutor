@@ -8,8 +8,8 @@ const DashboardActions = ({ role }) => {
 
         <div className="dash-buttons">
             
-            <Link to="/search" className="btn btn-light"
-            ><i className="fas fa-search text-primary"></i> Search bar </Link>
+            {/* <Link to="/search" className="btn btn-light"
+            ><i className="fas fa-search text-primary"></i> Search bar </Link> */}
 
             {role !== "Tutor" ?
                 <Link to="/requests" className="btn btn-light"
@@ -32,9 +32,9 @@ const DashboardActions = ({ role }) => {
                 : <Fragment />
             }
 
-            <Link to="/calendar" className="btn btn-light">
+            {/* <Link to="/calendar" className="btn btn-light">
                 <i className="fas fa-calendar text-primary" /> Your calendar
-            </Link>
+            </Link> */}
 
         </div>
     )
