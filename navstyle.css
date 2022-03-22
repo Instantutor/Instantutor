@@ -16,36 +16,36 @@ padding: 15px;
 float: left;
 }
 
-a.aboutB {
+.navigation a.aboutB {
 
 padding-right:  20px;
 }
 
-a.registerB {
+.navigation a.registerB {
 
 padding-right:  20px;
 }
 
- a.signinB {
+.navigation a.signinB {
 
     padding-right:  4px;
     }
 
- a:link {
+.navlinks a:link {
     color: white;
     text-decoration: none;
 
 }
- a:visited{
+.navlinks a:visited{
     text-decoration: none;
     color: white;
 }
- a:hover{
+.navlinks a:hover{
     text-decoration: underline;
 }
- a:active{
+.navlinks a:active{
     text-decoration: underline;
 }
 #toplogo {
-
+    
 }
