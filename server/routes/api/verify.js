@@ -24,7 +24,8 @@ router.put("/code", auth, async (req, res) => {
               .json({ error: [{ msg: "User does not exist" }] });
           }
         const code = generateCode();
-
+        user.verify_code = code;
+        sendEmail(user.email).then(result => console.log('Email:', result)).catch(error => console.log(error.message));
         
     } catch(err){
         console.error(err.message);
@@ -32,6 +33,12 @@ router.put("/code", auth, async (req, res) => {
     }
 }); 
 
+router.put("/verified", auth, async (req, res) => {
+    
+
+
+
+})
 /*
     second route to check if the user inputted the code and if it is the 
     correct one
