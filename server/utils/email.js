@@ -71,4 +71,4 @@ async function sendEmail(reciever){
     }
 }
 
-//sendEmail('sagis2@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+sendEmail('fuentd@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
