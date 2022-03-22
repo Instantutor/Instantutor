@@ -1,33 +1,51 @@
-.navbar {
+.navigation {
 
 background-color: black;
 overflow: hidden;
 padding: 15px;
 }
 
-.navbar a {
+.navigation a {
 
     float: right;
 
 }
 
-.navbar a.homeB {
+.navigation a.homeB {
 
 float: left;
 }
 
-.navbar a.aboutB {
+a.aboutB {
 
 padding-right:  20px;
 }
 
-.navbar a.registerB {
+a.registerB {
 
 padding-right:  20px;
 }
 
-.navbar a.signinB {
+ a.signinB {
 
     padding-right:  4px;
     }
-    
+
+ a:link {
+    color: white;
+    text-decoration: none;
+
+}
+ a:visited{
+    text-decoration: none;
+    color: white;
+}
+ a:hover{
+    text-decoration: underline;
+}
+ a:active{
+    text-decoration: underline;
+}
+#toplogo {
+
+}

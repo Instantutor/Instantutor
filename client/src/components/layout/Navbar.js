@@ -42,11 +42,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     //   </h1>
     //   { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
     // </nav>
-      <div class = "navbar">
-        <a class = "homeB" href="#home">Instantutor</a>
-        <a class = "signinB" href = "#signin" > Sign In </a>
-        <a class = "registerB" href = "#register"> Register </a>
-        <a class = "aboutB" href = "#about"> About </a>
+      <div className='' = "navbar">
+        <a className = "homeB" href="#home">Instantutor</a>
+        <a className='' = "signinB" href = "#signin" > Sign In </a>
+        <a className = "registerB" href = "#register"> Register </a>
+        <a className='' = "aboutB" href = "#about"> About </a>
       </div>  
     )
 }
