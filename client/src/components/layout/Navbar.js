@@ -42,13 +42,31 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     //   </h1>
     //   { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
     // </nav>
-      <div className='' = "navbar">
-        <a className = "homeB" href="#home">Instantutor</a>
-        <a className='' = "signinB" href = "#signin" > Sign In </a>
-        <a className = "registerB" href = "#register"> Register </a>
-        <a className='' = "aboutB" href = "#about"> About </a>
-      </div>  
-    )
+      // c1 <div className='' = "navbar">
+      // c1  <a className = "homeB" href="#home">Instantutor</a>
+      // c1  <a className='' = "signinB" href = "#signin" > Sign In </a>
+      // c1  <a className = "registerB" href = "#register"> Register </a>
+      // c1  <a className='' = "aboutB" href = "#about"> About </a>
+      // c1 </div>  
+    
+      <nav>  
+        <div class = "navigation" id = "topnav">
+            <div class="logo-image">
+                <img src="../Instantutor.jpg" alt="Logo" id = "toplogo">
+            </div>
+        </div>
+
+            <div class = "navlinks" id = "toplinks">
+                <a class = "homeB" href="#home">Instantutor</a>
+                <a class = "signinB" href = "#signin" > Sign In </a>
+                <a class = "registerB" href = "#register"> Register </a>
+                <a class = "aboutB" href = "#about"> About </a>
+            </div>
+        </div> 
+
+    </nav>   
+    
+      )
 }
 
 Navbar.propTypes = {

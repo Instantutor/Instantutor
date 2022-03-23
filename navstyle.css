@@ -1,32 +1,33 @@
-.navigation {
+nav {
 
 background-color: black;
 overflow: hidden;
-padding: 15px;
+padding: 10px;
 }
 
-.navigation a {
+a {
 
     float: right;
-
+    padding-top: 5px;
+    font-family: 'Monaco', Georgia, 'Times New Roman', Times, serif;
 }
 
-.navigation a.homeB {
+a.homeB {
 
 float: left;
 }
 
-.navigation a.aboutB {
+ a.aboutB {
 
 padding-right:  20px;
 }
 
-.navigation a.registerB {
+ a.registerB {
 
 padding-right:  20px;
 }
 
-.navigation a.signinB {
+ a.signinB {
 
     padding-right:  4px;
     }
@@ -47,5 +48,10 @@ padding-right:  20px;
     text-decoration: underline;
 }
 #toplogo {
-    
+    height: 30px;
+    width: 30px;
+    padding-right: .65%;
+    display: inline;
+    text-align: left;
+    float: left;
 }
