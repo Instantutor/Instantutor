@@ -71,7 +71,7 @@ async function sendEmail(reciever){
     }
 }
 
-sendEmail('fuentd@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+//sendEmail('fuentd@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
 
 module.exports ={
     generateCode, sendEmail
