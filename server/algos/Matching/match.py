@@ -118,5 +118,5 @@ def main():
     
     
 if __name__ == "__main__":
-    r.seed(2)
+    #r.seed(2)
     main()
