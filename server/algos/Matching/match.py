@@ -2,7 +2,7 @@ import json
 import random as r
 
 class Person:
-    ex_subjects = {"MATH", "CSCI", "PHYS", "COGS"}
+    ex_subjects = {"MATH", "CSCI", "PHYS", "COGS", "CHEM"}
     def __init__(self, subj):
         self.subjects = subj.copy()
         
@@ -41,6 +41,9 @@ class BPG:
     
     def __getitem__(self, index):
         return self.edges[index]
+    
+    def __str__(self):
+        return str(self.edges)
 
 # https://www.geeksforgeeks.org/maximum-bipartite-matching/
 
@@ -77,10 +80,12 @@ def printmat(mat):
         print(i)
 
 def matchlist(bpg, ans):
+    #print(ans[1])
     for i in ans[1].keys():
-        print("i:", i)
-        print("ans[1][i]:", ans[1][i])
-        print(f"{i}:{bpg.A[i]} -> {ans[1][i]}:{bpg.B[ans[1][i]]}")
+        #print("i:", i)
+        #print("ans[1][i]:", ans[1][i])
+        #print(f"{i}:{bpg.A[i]} -> {ans[1][i]}:{bpg.B[ans[1][i]]}")
+        print(f"{i}:{bpg.A[ans[1][i]]} -> {ans[1][i]}:{bpg.B[i]}")
 
 def genBPG(n):
     chopped = r.choice(range(0, n-1))
@@ -112,8 +117,9 @@ def main():
     
     #scanBPG(og)
     
-    for i in range(10):
-        testbpg = genBPG(6)
+    for i in range(100):
+        testbpg = genBPG(30)
+        #print(testbpg)
         scanBPG(testbpg)
     
     
