@@ -3,10 +3,11 @@ const Profile = require("../models/Profile");
 //Durstenfeld shuffle
 //http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm
 function shuffle(arr) {
-  for (let i = array.length - 1; i > 0; i--) {
+  for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
   }
+  return arr
 }
 
 function partialMatch(profileName, queryName) {
