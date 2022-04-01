@@ -10,13 +10,13 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     <ul>
         <li>
           <Link to="/dashboard">
-          <i className="fas fa-sign-out-alt"></i>{' '}
-          <span className="hide-sm">Dashboard</span></Link>
+          <i classNameName="fas fa-sign-out-alt"></i>{' '}
+          <span classNameName="hide-sm">Dashboard</span></Link>
         </li>
         <li>
           <a  onClick={logout} href="#!">
-            <i className="fas fa-sign-out-alt"></i>{' '}
-            <span className="hide-sm">Logout</span>
+            <i classNameName="fas fa-sign-out-alt"></i>{' '}
+            <span classNameName="hide-sm">Logout</span>
           </a>
         </li>
       </ul>
@@ -34,34 +34,34 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   );
 
     return (
-        <nav className="navbar bg-dark">
+        <nav classNameName="navbar bg-dark">
       <h1>
         <Link to="/">
-          <i className="fas fa-code"></i> Instantutor
+          <i classNameName="fas fa-code"></i> Instantutor
         </Link>
       </h1>
       { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
     </nav>
 
-      // c1 <div className='' = "navbar">
-      // c1  <a className = "homeB" href="#home">Instantutor</a>
-      // c1  <a className='' = "signinB" href = "#signin" > Sign In </a>
-      // c1  <a className = "registerB" href = "#register"> Register </a>
-      // c1  <a className='' = "aboutB" href = "#about"> About </a>
+      // c1 <div classNameName='' = "navbar">
+      // c1  <a classNameName = "homeB" href="#home">Instantutor</a>
+      // c1  <a classNameName='' = "signinB" href = "#signin" > Sign In </a>
+      // c1  <a classNameName = "registerB" href = "#register"> Register </a>
+      // c1  <a classNameName='' = "aboutB" href = "#about"> About </a>
       // c1 </div>  
     
     //   <nav>  
-    //     <div class = "navigation" id = "topnav">
-    //         <div class="logo-image">
+    //     <div className = "navigation" id = "topnav">
+    //         <div className="logo-image">
     //             <img src="../Instantutor.jpg" alt="Logo" id = "toplogo">
     //         </div>
     //     </div>
 
-    //         <div class = "navlinks" id = "toplinks">
-    //             <a class = "homeB" href="#home">Instantutor</a>
-    //             <a class = "signinB" href = "#signin" > Sign In </a>
-    //             <a class = "registerB" href = "#register"> Register </a>
-    //             <a class = "aboutB" href = "#about"> About </a>
+    //         <div className = "navlinks" id = "toplinks">
+    //             <a className = "homeB" href="#home">Instantutor</a>
+    //             <a className = "signinB" href = "#signin" > Sign In </a>
+    //             <a className = "registerB" href = "#register"> Register </a>
+    //             <a className = "aboutB" href = "#about"> About </a>
     //         </div>
 
     // </nav>   

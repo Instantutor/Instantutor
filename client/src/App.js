@@ -14,23 +14,23 @@ import setAuthToken from './utils/setAuthToken';
 
 import './App.css';
 
-import './assets/images/gt_favicon.png';
-//import './assets/fonts/';
-import './assets/css/bootstrap.css'
-// import './assets/css/fonts/fontawesome.css'
-import './assets/css/bootstrap-theme.css'
-import './assets/css/main.css'
+//import './assetsNewimages/gt_favicon.png';
+//import './assetsNew/fonts/';
+import './assetsNew/css/bootstrap.css'
+//import './assetsNew/css/fonts/fontawesome.css'
+import './assetsNew/css/bootstrap-theme.css'
+import './assetsNew/css/main.css'
 //@import URL("http://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 
-// <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+// <link rel="shortcut icon" href="assetsNewimages/gt_favicon.png">
 	
 // 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-// 	<link rel="stylesheet" href="assets/css/bootstrap.css">
-// 	<link rel="stylesheet" href="assets/css/font-awesome.css">
+// 	<link rel="stylesheet" href="assetsNewcss/bootstrap.css">
+// 	<link rel="stylesheet" href="assetsNewcss/font-awesome.css">
 
 // 	<!-- Custom styles -->
-// 	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
-// 	<link rel="stylesheet" href="assets/css/main.css"></link>
+// 	<link rel="stylesheet" href="assetsNewcss/bootstrap-theme.css" media="screen" >
+// 	<link rel="stylesheet" href="assetsNewcss/main.css"></link>
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
