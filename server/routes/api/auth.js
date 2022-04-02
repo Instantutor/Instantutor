@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 
-//needed for verify api testing for right now
-//const generateCode = require('../../utils/email').generateCode;
+//needed for verifing email api testing for right now
 const User = require("../../models/User");
 const { route } = require("./users");
 const mongoose = require("mongoose");
@@ -101,16 +100,23 @@ router.put("/code", auth, async (req, res) => {
       return res.status(400).json({ error: errors.array() });
     }
     try{
-        /*console.log(req.user);*/
+        //find user in the database
         let user = await User.findOne({ _id: req.user.id });
         if (!user) {
             return res
               .status(404)
               .json({ error: [{ msg: "User does not exist" }] });
           }
-        const code = EmailVer.generateCode();
-        user.verify_code = code;
-        await EmailVer.sendEmail(user.email).then(result => console.log('Email:', result)).catch(error => console.log(error.message));
+        //generate random verification code and save it to the database to user.verify_code for
+        //this user
+        // console.log(user);
+        // console.log(user.verify_code);
+        //Send the email to the user's email and once it's sent successfully return the response
+        const [email, code] = await EmailVer.sendEmail(user.email);
+        //console.log(email);
+        //console.log(code);
+        user.verify_code = code["webcode"];
+        await user.save() //save code to database
         res.send("Email Successfully Sent");
     } catch(err){
         console.error(err.message);
@@ -125,7 +131,36 @@ router.put("/verified", auth, async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: errors.array() });
     }
-
+    const {
+        verification,
+    } = req.body;
+    console.log(req.body);
+    try{
+        //find user in the database
+        let user = await User.findOne({ _id: req.user.id });
+        if (!user) {
+            return res
+              .status(404)
+              .json({ error: [{ msg: "User does not exist" }] });
+          }
+        console.log(user.verify_code);
+        console.log(verification);
+        if (verification == user.verify_code) {
+            user.verified = true;
+            res.send("Verification Code Entered Correctly");
+        }
+        else{
+            res.send("Verification Code Entered Incorrectly");
+            user.verified = false;
+            user.verify_code = undefined;
+        }
+        console.log(user.verified);
+        console.log(user.verify_code);
+    }
+    catch(err){
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
 
 
 })

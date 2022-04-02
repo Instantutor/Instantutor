@@ -23,6 +23,10 @@ function generateCode(){
 
 const code = generateCode();
 
+function returnCode(code){
+    return code;
+}
+
 // method to send the email
 async function sendEmail(reciever){
     try {
@@ -63,7 +67,7 @@ async function sendEmail(reciever){
         console.log(mail_options);
 
         const email = await transporter.sendMail(mail_options);
-        return email
+        return [email, replacements];
 
     } catch(error) {
         console.log(error);
@@ -74,5 +78,5 @@ async function sendEmail(reciever){
 //sendEmail('fuentd@rpi.edu').then(result => console.log('Email:', result)).catch(error => console.log(error.message));
 
 module.exports ={
-    generateCode, sendEmail
+    returnCode, generateCode, sendEmail
 }
