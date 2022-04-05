@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
+import * as courses from "../../course_list.json"
 
 const UserRequest = ({ createRequest,
   editRequest,
@@ -15,6 +16,7 @@ const UserRequest = ({ createRequest,
   match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
+    subject: "",
     course: "",
     grade: "",
     topic: "",
@@ -26,6 +28,7 @@ const UserRequest = ({ createRequest,
 
   const {
     request,
+    subject,
     course,
     grade,
     topic,
@@ -135,15 +138,27 @@ const UserRequest = ({ createRequest,
             </div>
 
             <div className="form-group">
-              <input
-                type="text"
-                placeholder="* Subject"
-                name="course"
-                value={course}
-                onChange={onChange}
-              />
+              <select name="subject" value={subject} onChange={onChange}>
+              <option value="">What subject do you need help with?</option>
+                {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
+              </select>
               <small className="form-text">
                 What subject do you need help with eg. Math, Biology, English,
+                ...?
+              </small>
+            </div>
+
+            <div className="form-group">
+              <select name="course" value={course} onChange={onChange}>
+              <option value="">What course do you need help with?</option>
+                {/* {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)} */}
+                {subject in courses.course_list
+                  ? courses.course_list[subject].map(course => <option value={course}>{course}</option>)
+                  : null
+                }
+              </select>
+              <small className="form-text">
+                What subject do you need help with eg. Data Structures, Organic Chemistry, Linear Algebra
                 ...?
               </small>
             </div>

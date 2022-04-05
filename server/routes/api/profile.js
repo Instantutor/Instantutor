@@ -105,13 +105,13 @@ router.post(
 
       //Create
       profile = new Profile(profileFields);
-      var spawn = require("child_process").spawn;
-      const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
-      process.on("exit", function (code, signal) {
-        console.log(
-          "child process exited with " + `code ${code} and signal ${signal}`
-        );
-      });
+      // var spawn = require("child_process").spawn;
+      // const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
+      // process.on("exit", function (code, signal) {
+      //   console.log(
+      //     "child process exited with " + `code ${code} and signal ${signal}`
+      //   );
+      // });
       await profile.save(); //save it
       res.json(profile); //send back to the profile
     } catch (err) {
