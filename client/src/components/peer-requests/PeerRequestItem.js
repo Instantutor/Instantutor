@@ -13,6 +13,7 @@ const PeerRequestItem = ({
   item: {
     _id,
     request,
+    subject,
     course,
     grade,
     topic,
@@ -44,6 +45,10 @@ const PeerRequestItem = ({
         </i>
 
         <h3 className="text-dark"> Request: {request}</h3>
+
+        <p>
+          <strong>Subject: </strong> {subject}
+        </p>
 
         <p>
           <strong>Course: </strong> {course}
