@@ -45,7 +45,7 @@ async function getTutorMatches(requestFields, currentUserID) {
   if (grade) queryArr.push({ degree: grade });
   //Checks user profiles of tutors (role in [Tutor, Both]). This is where
   //it's determined if a tutor can match the request
-  const tutors = await shuffle(Profile.find({
+  const tutors = shuffle(await Profile.find({
     role: { $in: ["Tutor", "Both"] },
     expertise: {
       $elemMatch: { $or: queryArr },
