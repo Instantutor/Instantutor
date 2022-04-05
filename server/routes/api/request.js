@@ -34,6 +34,7 @@ router.post(
     }
     const {
       request,
+      subject,
       course,
       grade,
       topic,
@@ -44,12 +45,14 @@ router.post(
     const requestFields = {};
     requestFields.user = req.user.id;
     if (request) requestFields.request = request;
+    if (subject) requestFields.subject = subject;
     if (course) requestFields.course = course;
     if (grade) requestFields.grade = grade;
     if (topic) requestFields.topic = topic;
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
     if (number_sessions) requestFields.number_sessions = number_sessions;
+    // Matching happens here
     requestFields.potential_tutors = await getTutorMatches(
       req.body,
       req.user.id
@@ -61,6 +64,7 @@ router.post(
 
       let requestByUser = await RequestRelate.findOne({ user: req.user.id });
       if (!requestByUser) {
+        // Create request relate
         requestByUser = new RequestRelate({
           user: req.user.id,
           active_requests: [{ _id: new_request._id }],
@@ -133,6 +137,7 @@ router.get("/requestID/:request_id", auth, async (req, res) => {
 // @access Private
 router.get("/:user_id", auth, async (req, res) => {
   try {
+    // Getting the requests made by a user
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     let reqs = [];
 
@@ -140,6 +145,7 @@ router.get("/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
+    // get active requests
     for (i in requestUser.active_requests) {
       temp = await Request.findOne({
         _id: requestUser.active_requests[i].id,
@@ -151,6 +157,8 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
+
+    // get tutoring_requests
     for (i in requestUser.tutoring_requests) {
       temp = await Request.findOne({
         _id: requestUser.tutoring_requests[i].id,
@@ -162,6 +170,8 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
+
+    // get closed requests
     for (i in requestUser.closed_requests) {
       temp = await Request.findOne({
         _id: requestUser.closed_requests[i].id,
@@ -191,6 +201,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
+    // getting only recieved requests
     let num_new_request = 0;
     for (let i = 0; i < Tutor.received_requests.length; i++) {
       //TODO: Ensure request ids are dispersed as mongo object ids
@@ -199,9 +210,9 @@ router.get("/received/:user_id", auth, async (req, res) => {
       });
       if (!temp) {
         continue;
-        // return res.status(400).json({
-        //   msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
-        // });
+        return res.status(400).json({
+          msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
+        });
       }
 
       // Create a copy of the request. May be switch to hard-code version if this copy code has error.
@@ -240,6 +251,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
 router.put("/edit/:request_id", auth, async (req, res) => {
   const {
     request,
+    subject,
     course,
     grade,
     topic,
@@ -252,6 +264,7 @@ router.put("/edit/:request_id", auth, async (req, res) => {
     requestMatch = await Request.findOne({ _id: req.params.request_id });
     if (requestMatch) {
       if (request) requestMatch["request"] = request;
+      if (subject) requestMatch["subject"] = subject;
       if (course) requestMatch["course"] = course;
       if (grade) requestMatch["grade"] = grade;
       if (topic) requestMatch["topic"] = topic;
@@ -364,6 +377,7 @@ router.post("/disperseFinal", auth, async (req, res) => {
 // @access Private
 router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
+    // Make sure that this is actually deleted
     await Request.findOneAndRemove({ _id: req.params.request_id });
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     //need to remove this request from all tutors received_request

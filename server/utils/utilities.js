@@ -26,6 +26,7 @@ async function getTutorMatches(requestFields, currentUserID) {
     number_sessions,
   } = requestFields;
 
+  // just finding tutors matching the query arr
   var queryArr = [];
   if (course) queryArr.push({ area: course });
   if (grade) queryArr.push({ degree: grade });
