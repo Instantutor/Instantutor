@@ -53,7 +53,7 @@ def main():
         #subjdict = [{"name": scraped[i]["name"], "code": scraped[i]["code"]} for i in range(len(scraped))]
         file.write(json.dumps(final_list))
         
-    with open("../client/src/course_list.json", "w") as file:
+    with open("../server/config/course_list.json", "w") as file:
         final_list = {"subject_list": [scraped[i]["name"] for i in range(len(scraped))]}
         final_list["course_list"] = {}
         for i in range(len(scraped)):

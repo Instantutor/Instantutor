@@ -13,6 +13,8 @@ const { route } = require("./users");
 const mongoose = require("mongoose");
 const Profile = require("../../models/Profile");
 
+const courses = require("../../config/course_list.json");
+
 // @route: POST api/request/
 // @desc:  Post a request from a user
 // @access Private
@@ -45,9 +47,22 @@ router.post(
     const requestFields = {};
     requestFields.user = req.user.id;
     if (request) requestFields.request = request;
-    if (subject) requestFields.subject = subject;
-    if (course) requestFields.course = course;
-    if (grade) requestFields.grade = grade;
+    if (subject) {
+      if (!courses.subject_list.includes(subject)) {
+        res.status(400).json({ error: "The subject chosen is not valid" });
+        return;
+      }
+      requestMatch["subject"] = subject;
+    } if (course) {
+      if (!subject) {
+        res.status(400).json({ error: "Subject must be selected if you want to include the course" });
+        return;
+      } else if(!courses.course_list[subject].includes(course)) {
+        res.status(400).json({ error: "The course chosen is not valid" });
+        return;
+      }
+      requestMatch["course"] = course;
+    } if (grade) requestMatch["grade"] = grade;
     if (topic) requestFields.topic = topic;
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
@@ -264,9 +279,22 @@ router.put("/edit/:request_id", auth, async (req, res) => {
     requestMatch = await Request.findOne({ _id: req.params.request_id });
     if (requestMatch) {
       if (request) requestMatch["request"] = request;
-      if (subject) requestMatch["subject"] = subject;
-      if (course) requestMatch["course"] = course;
-      if (grade) requestMatch["grade"] = grade;
+      if (subject) {
+        if (!courses.subject_list.includes(subject)) {
+          res.status(400).json({ error: "The subject chosen is not valid" });
+          return;
+        }
+        requestMatch["subject"] = subject;
+      } if (course) {
+        if (!subject) {
+          res.status(400).json({ error: "Subject must be selected if you want to include the course" });
+          return;
+        } else if(!courses.course_list[subject].includes(course)) {
+          res.status(400).json({ error: "The course chosen is not valid" });
+          return;
+        }
+        requestMatch["course"] = course;
+      } if (grade) requestMatch["grade"] = grade;
       if (topic) requestMatch["topic"] = topic;
       if (help_time) requestMatch["help_time"] = help_time;
       if (availability) requestMatch["availability"] = availability;
