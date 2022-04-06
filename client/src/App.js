@@ -12,12 +12,12 @@ import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 
-import './App.css';
+//import './App.css';
 
 import './assets/images/gt_favicon.png';
 //import './assets/fonts/';
 import './assets/css/bootstrap.css'
-// import './assets/css/fonts/fontawesome.css'
+import './assets/css/font-awesome.css'
 import './assets/css/bootstrap-theme.css'
 import './assets/css/main.css'
 //@import URL("http://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
@@ -64,7 +64,7 @@ const App = () => {
         <Fragment>
           <Navbar />
             <Route exact path="/" component={Landing} />
-            <Route component={Routes} />
+            {/* <Route component={Routes} /> */}
         </Fragment>
       </Router>
     </Provider>

@@ -43,6 +43,10 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
     </nav>
 
+
+
+
+
       // c1 <div className='' = "navbar">
       // c1  <a className = "homeB" href="#home">Instantutor</a>
       // c1  <a className='' = "signinB" href = "#signin" > Sign In </a>

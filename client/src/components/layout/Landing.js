@@ -11,6 +11,17 @@ const Landing = ({ isAuthenticated }) => {
 
     return (
         <section className="landing">
+        <header id="head">
+        <div className="container">
+			      <div className="row">
+			      	<h1 className="lead">Instantutor</h1>
+			      	<p className="tagline">Get help or become a tutor!</p>
+				      <p><a className="btn btn-default btn-lg" role="button" href="insta_register.html">REGISTER</a> 
+				      <a className="btn btn-action btn-lg" role="button" href="insta_signin.html">SIGN IN</a></p>
+			      </div>
+		    </div>
+{/*         
+        
         <div className="dark-overlay">
           <div className="landing-inner">
             <h1 className="x-large">Instantutor</h1>
@@ -26,7 +37,8 @@ const Landing = ({ isAuthenticated }) => {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
+        </header>
       </section>
     )
 }
