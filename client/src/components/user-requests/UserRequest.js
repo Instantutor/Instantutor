@@ -227,7 +227,7 @@ const UserRequest = ({ createRequest,
                 onChange={onChange}
               />
               <small className="form-text">
-                Enter the number of sessions you need help with eg: 0, 3, 5 ...
+                Enter the number of sessions you need help with eg: 1, 3, 5 ...
               </small>
             </div>
 
