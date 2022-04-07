@@ -24,6 +24,7 @@ router.post(
     auth,
     [
       check("request", "request content is required").not().isEmpty(),
+      check("subject", "Related subject is required").not().isEmpty(),
       check("course", "Related course is required").not().isEmpty(),
     ],
   ],
