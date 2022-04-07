@@ -24,8 +24,16 @@ router.post(
     auth,
     [
       check("request", "request content is required").not().isEmpty(),
-      check("subject", "Related subject is required").not().isEmpty(),
-      check("course", "Related course is required").not().isEmpty(),
+      check("subject").not().isEmpty().withMessage("Related subject is required").bail()
+        .custom(subject => courses.subject_list.includes(subject))
+        .withMessage("The subject chosen is not an RPI major"),
+      check("course").not().isEmpty().withMessage("Related course is required").bail()
+        .custom((course, {req}) =>  "subject" in req.body)
+        .withMessage("Subject must be selected if you want to select a course").bail()
+        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .withMessage("Subject must be valid if you want to select a course").bail()
+        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .withMessage("The course chose is not a valid RPI course"),
     ],
   ],
 
@@ -47,23 +55,10 @@ router.post(
     } = req.body;
     const requestFields = {};
     requestFields.user = req.user.id;
-    if (request) requestFields.request = request;
-    if (subject) {
-      if (!courses.subject_list.includes(subject)) {
-        res.status(400).json({ error: "The subject chosen is not valid" });
-        return;
-      }
-      requestMatch["subject"] = subject;
-    } if (course) {
-      if (!subject) {
-        res.status(400).json({ error: "Subject must be selected if you want to include the course" });
-        return;
-      } else if(!courses.course_list[subject].includes(course)) {
-        res.status(400).json({ error: "The course chosen is not valid" });
-        return;
-      }
-      requestMatch["course"] = course;
-    } if (grade) requestMatch["grade"] = grade;
+    requestFields.request = request;
+    requestFields.subject = subject;
+    requestFields.course = course;
+    if (grade) requestFields.grade = grade;
     if (topic) requestFields.topic = topic;
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
@@ -264,53 +259,66 @@ router.get("/received/:user_id", auth, async (req, res) => {
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
 // @access Private
-router.put("/edit/:request_id", auth, async (req, res) => {
-  const {
-    request,
-    subject,
-    course,
-    grade,
-    topic,
-    help_time,
-    availability,
-    number_sessions,
-  } = req.body;
+router.put("/edit/:request_id", 
+  [
+    auth,
+    [
+      check("subject")
+        .custom(subject => subject ? courses.subject_list.includes(subject) : true)
+        .withMessage("The subject chosen is not an RPI major")
+        .custom((subject, {req}) => subject ? "course" in req.body : true)
+        .withMessage("If you are changing the subject you must also change the course"),
+      check("course").not().isEmpty()
+        .custom((course, {req}) =>  "subject" in req.body)
+        .withMessage("Subject must be included if you want to change the course").bail()
+        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .withMessage("Subject must be valid if you want to change the course").bail()
+        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .withMessage("The course chosen is not a valid RPI course"),
+    ],
+  ]
+  
+    , async (req, res) => {
 
-  try {
-    requestMatch = await Request.findOne({ _id: req.params.request_id });
-    if (requestMatch) {
-      if (request) requestMatch["request"] = request;
-      if (subject) {
-        if (!courses.subject_list.includes(subject)) {
-          res.status(400).json({ error: "The subject chosen is not valid" });
-          return;
-        }
-        requestMatch["subject"] = subject;
-      } if (course) {
-        if (!subject) {
-          res.status(400).json({ error: "Subject must be selected if you want to include the course" });
-          return;
-        } else if(!courses.course_list[subject].includes(course)) {
-          res.status(400).json({ error: "The course chosen is not valid" });
-          return;
-        }
-        requestMatch["course"] = course;
-      } if (grade) requestMatch["grade"] = grade;
-      if (topic) requestMatch["topic"] = topic;
-      if (help_time) requestMatch["help_time"] = help_time;
-      if (availability) requestMatch["availability"] = availability;
-      if (number_sessions) requestMatch["number_sessions"] = number_sessions;
-      requestMatch["last_edit_time"] = Date.now();
-      requestMatch.save();
+    const errors = validationResult(req);
 
-      res.json({ msg: "Request updated", updated_request: requestMatch });
-    } else {
-      res.status(400).json({ error: "Request ID is invalid" });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+    
+    const {
+      request,
+      subject,
+      course,
+      grade,
+      topic,
+      help_time,
+      availability,
+      number_sessions,
+    } = req.body;
+
+    try {
+      requestMatch = await Request.findOne({ _id: req.params.request_id });
+      if (requestMatch) {
+        if (request) requestMatch["request"] = request;
+        if (subject) requestMatch["subject"] = subject;
+        if (course) requestMatch["course"] = course;
+        if (grade) requestMatch["grade"] = grade;
+        if (topic) requestMatch["topic"] = topic;
+        if (help_time) requestMatch["help_time"] = help_time;
+        if (availability) requestMatch["availability"] = availability;
+        if (number_sessions) requestMatch["number_sessions"] = number_sessions;
+        requestMatch["last_edit_time"] = Date.now();
+        requestMatch.save();
+
+        res.json({ msg: "Request updated", updated_request: requestMatch });
+      } else {
+        res.status(400).json({ error: "Request ID is invalid" });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
 });
 
 // @route: POST api/request/disperse

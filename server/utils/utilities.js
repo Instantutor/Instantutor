@@ -51,8 +51,8 @@ async function getTutorMatches(requestFields, currentUserID) {
       $elemMatch: { $or: queryArr },
     },
   })
-    .populate("user", ["name", "avatar"]))
-    .limit(5)
+    .populate("user", ["name", "avatar"])
+    .limit(5));
 
   //TODO: Resolve edge case of no tutors that could fill the request
   //max of 5 tutors at the moment
