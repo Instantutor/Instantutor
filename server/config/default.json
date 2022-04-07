@@ -1,5 +1,6 @@
 {
   "mongoURI": "mongodb+srv://Adm:instutor@cluster0.s0gxd.mongodb.net/test?retryWrites=true&w=majority",
+  "mongoURI_deployment" : "mongodb+srv://Adm:instutor@cluster0.s0gxd.mongodb.net/deployment?retryWrites=true&w=majority",
   "jwtSecret": "mysecretetoken",
   "githubClientID": "019076a7228cad9c2e20",
   "githubSecret": "4e9ee7310777daede368136dafc24e8ef5db7807"

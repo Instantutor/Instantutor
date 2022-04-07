@@ -1,5 +1,15 @@
 const Profile = require("../models/Profile");
 
+//Durstenfeld shuffle
+//http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr
+}
+
 function partialMatch(profileName, queryName) {
   //True if segment of profileName contains queryName
   /*Want the length of the segment to be at least 3
@@ -16,6 +26,8 @@ function partialMatch(profileName, queryName) {
 async function getTutorMatches(requestFields, currentUserID) {
   //TODO: Make course selection limited so a non-existent course cannot be entered
   //Brute force for now, just return first 5 tutors by id
+
+  //Inputs: Request and user id for the request
   const {
     request,
     course,
@@ -28,18 +40,24 @@ async function getTutorMatches(requestFields, currentUserID) {
 
   // just finding tutors matching the query arr
   var queryArr = [];
+  //2 Relevent Request Params
   if (course) queryArr.push({ area: course });
   if (grade) queryArr.push({ degree: grade });
-  const tutors = await Profile.find({
+  //Checks user profiles of tutors (role in [Tutor, Both]). This is where
+  //it's determined if a tutor can match the request
+  const tutors = shuffle(await Profile.find({
     role: { $in: ["Tutor", "Both"] },
     expertise: {
       $elemMatch: { $or: queryArr },
     },
   })
-    .populate("user", ["name", "avatar"])
-    .limit(5);
+    .populate("user", ["name", "avatar"]))
+    .limit(5)
+
+  //TODO: Resolve edge case of no tutors that could fill the request
   //max of 5 tutors at the moment
   var tutorArr = [];
+  //Fill tutorArr with every tutor that could match the request
   for (var i in tutors) {
     //Don't add if id equal to current user's
     // const user_id = tutors[i]["user"];
@@ -54,7 +72,10 @@ async function getTutorMatches(requestFields, currentUserID) {
       tutorArr.push(returnField);
     }
   }
-  //console.log(tutorArr)
+  console.log("MATCHES:")
+  console.log(tutorArr)
+  //Returns edges from the request to every
+  //matchable tutor in the set of tutors
   return tutorArr;
 }
 module.exports = {
