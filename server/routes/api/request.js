@@ -268,12 +268,13 @@ router.put("/edit/:request_id",
         .withMessage("The subject chosen is not an RPI major")
         .custom((subject, {req}) => subject ? "course" in req.body : true)
         .withMessage("If you are changing the subject you must also change the course"),
-      check("course").not().isEmpty()
+      check("course")
         .custom((course, {req}) =>  "subject" in req.body)
         .withMessage("Subject must be included if you want to change the course").bail()
         .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
         .withMessage("Subject must be valid if you want to change the course").bail()
-        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .custom((course, {req}) =>  course ? 
+          courses.course_list[req.body.subject].includes(course) : true)
         .withMessage("The course chosen is not a valid RPI course"),
     ],
   ]
