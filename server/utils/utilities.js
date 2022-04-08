@@ -42,7 +42,7 @@ async function getTutorMatches(requestFields, currentUserID) {
   // just finding tutors matching the query arr
   var queryArr = [];
   //1 Relevent Request Param for now
-  if (course) queryArr.push({ area: subject });
+  if (subject) queryArr.push({ area: subject });
   //Checks user profiles of tutors (role in [Tutor, Both]). This is where
   //it's determined if a tutor can match the request
   const tutors = shuffle(await Profile.find({
