@@ -44,22 +44,22 @@ const PeerRequestItem = ({
             : ""}
         </i>
 
-        <h3 className="text-dark"> Request: {request}</h3>
+        <h3 className="text-dark"> Request: {request ? request : "N/A"}</h3>
 
         <p>
-          <strong>Subject: </strong> {subject}
+          <strong>Subject: </strong> {subject ? subject : "N/A"}
         </p>
 
         <p>
-          <strong>Course: </strong> {course}
+          <strong>Course: </strong> {course ? course : "N/A"}
         </p>
 
         <p>
-          <strong>Topic: </strong> {topic}
+          <strong>Topic: </strong> {topic ? topic : "N/A"}
         </p>
 
         <p>
-          <strong>Number of sessions: </strong> {number_sessions}
+          <strong>Number of sessions: </strong> {number_sessions ? number_sessions : "N/A"}
         </p>
 
         <p>
