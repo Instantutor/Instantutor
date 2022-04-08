@@ -14,6 +14,7 @@ const UserRequestItem = ({
     _id,
     request,
     status,
+    subject,
     course,
     grade,
     topic,
@@ -56,6 +57,10 @@ const UserRequestItem = ({
               : request_status.toUpperCase()}
           </i>
         )}
+
+        <p>
+          <strong>Subject: </strong> {subject ? subject : "N/A"}
+        </p>
 
         <p>
           <strong>Course: </strong> {course ? course : "N/A"}

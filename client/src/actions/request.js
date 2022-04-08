@@ -95,7 +95,7 @@ export const editRequest = (requestData, request_id) => async (dispatch) => {
 export const deleteRequest = (request_id) => async (dispatch) => {
   if (
     window.confirm(
-      "Are you sure you want to delete this expertise? \n This cannot undo!"
+      "Are you sure you want to delete this request? \n This cannot undo!"
     )
   ) {
     try {

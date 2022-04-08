@@ -151,14 +151,13 @@ const UserRequest = ({ createRequest,
             <div className="form-group">
               <select name="course" value={course} onChange={onChange}>
               <option value="">What course do you need help with?</option>
-                {/* {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)} */}
                 {subject in courses.course_list
                   ? courses.course_list[subject].map(course => <option value={course}>{course}</option>)
                   : null
                 }
               </select>
               <small className="form-text">
-                What subject do you need help with eg. Data Structures, Organic Chemistry, Linear Algebra
+                What course do you need help with eg. Data Structures, Organic Chemistry, Linear Algebra
                 ...?
               </small>
             </div>
@@ -227,7 +226,7 @@ const UserRequest = ({ createRequest,
                 onChange={onChange}
               />
               <small className="form-text">
-                Enter the number of sessions you need help with eg: 0, 3, 5 ...
+                Enter the number of sessions you need help with eg: 1, 3, 5 ...
               </small>
             </div>
 
