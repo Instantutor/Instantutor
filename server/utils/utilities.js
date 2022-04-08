@@ -78,8 +78,9 @@ async function getTutorMatches(requestFields, currentUserID) {
       break;
     }
   }
-  console.log("MATCHES:")
-  console.log(tutorArr)
+  
+  // console.log("MATCHES:")
+  // console.log(tutorArr)
   //Returns edges from the request to every
   //matchable tutor in the set of tutors
   return tutorArr;
