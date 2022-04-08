@@ -51,6 +51,9 @@ const UserRequest = ({ createRequest,
       
       setRequestData(oldRequestData);
     }
+    return () => {
+      setRequestData({});
+    }
   }, [getRequestHistory, user, loading]);
 
   const onChange = (e) =>
@@ -72,7 +75,7 @@ const UserRequest = ({ createRequest,
   const onSubmit = async (e) => {
     e.preventDefault();
     if (requestID)
-      await editRequest(requestData, requestID);
+      await editRequest(requestData, requestID, history);
     else
       await createRequest(requestData, history);
   };
