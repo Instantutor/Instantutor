@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
-import * as courses from "../../course_list.json"
+import subject_list from "../../course_list";
+import course_list from "../../course_list";
 
 const UserRequest = ({ createRequest,
   editRequest,
@@ -143,7 +144,7 @@ const UserRequest = ({ createRequest,
             <div className="form-group">
               <select name="subject" value={subject} onChange={onChange}>
               <option value="">What subject do you need help with?</option>
-                {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
+                { subject_list.map(subj => <option value={subj}>{subj}</option>)}
               </select>
               <small className="form-text">
                 What subject do you need help with eg. Math, Biology, English,
@@ -154,8 +155,8 @@ const UserRequest = ({ createRequest,
             <div className="form-group">
               <select name="course" value={course} onChange={onChange}>
               <option value="">What course do you need help with?</option>
-                {subject in courses.course_list
-                  ? courses.course_list[subject].map(course => <option value={course}>{course}</option>)
+                {subject in course_list
+                  ? course_list[subject].map(course => <option value={course}>{course}</option>)
                   : null
                 }
               </select>
