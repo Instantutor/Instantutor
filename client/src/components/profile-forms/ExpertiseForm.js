@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExpertise, getCurrentProfile } from '../../actions/profile';
-import * as courses from "../../course_list.json"
+const courses = require("../../course_list.json");
 
 const initialState = {
   area: '',
