@@ -45,18 +45,22 @@ async function getTutorMatches(requestFields, currentUserID) {
   if (subject) queryArr.push({ area: subject });
   //Checks user profiles of tutors (role in [Tutor, Both]). This is where
   //it's determined if a tutor can match the request
+
   const tutors = shuffle(await Profile.find({
     role: { $in: ["Tutor", "Both"] },
     expertise: {
       $elemMatch: { $or: queryArr },
     },
   })
-    .populate("user", ["name", "avatar"])
-    .limit(5));
-
+    .populate("user", ["name", "avatar"]))
+  // console.log(tutors);
+  
   //TODO: Resolve edge case of no tutors that could fill the request
-  //max of 5 tutors at the moment
+  
+  //max of 10 tutors at the moment
+  let tutorLimit = 10;
   var tutorArr = [];
+
   //Fill tutorArr with every tutor that could match the request
   for (var i in tutors) {
     //Don't add if id equal to current user's
@@ -71,9 +75,13 @@ async function getTutorMatches(requestFields, currentUserID) {
       };
       tutorArr.push(returnField);
     }
+    if (tutorArr.length >= tutorLimit) {
+      break;
+    }
   }
-  console.log("MATCHES:")
-  console.log(tutorArr)
+
+  // console.log("MATCHES:")
+  // console.log(tutorArr)
   //Returns edges from the request to every
   //matchable tutor in the set of tutors
   return tutorArr;
@@ -82,3 +90,5 @@ module.exports = {
   partialMatch: partialMatch,
   getTutorMatches: getTutorMatches,
 };
+
+// getTutorMatches({request: "hi", course: "Math"}, "60c103daecc2741050528c66");
