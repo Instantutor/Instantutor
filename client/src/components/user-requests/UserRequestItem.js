@@ -40,8 +40,6 @@ const UserRequestItem = ({
               className="btn btn-danger"
               onClick={() => {
                 deleteRequest(_id);
-                console.log("GETTING REQUEST HISTORY...");
-                getRequestHistory(_id);
               }}
             >
               Delete

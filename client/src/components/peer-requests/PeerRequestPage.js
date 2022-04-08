@@ -27,7 +27,7 @@ const PeerRequestPage = ({
     <Fragment>
       {loading ? (
         <Spinner />
-      ) : peer_requests === null || peer_requests.length < 1 ? (
+      ) : peer_requests === null || peer_requests === undefined || peer_requests.length < 1 ? (
         <div>
           <h1 className="large text-primary">
             Oops! No requests for you now...

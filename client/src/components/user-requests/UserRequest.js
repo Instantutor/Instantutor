@@ -51,6 +51,9 @@ const UserRequest = ({ createRequest,
       
       setRequestData(oldRequestData);
     }
+    return () => {
+      setRequestData({});
+    }
   }, [getRequestHistory, user, loading]);
 
   const onChange = (e) =>
@@ -72,7 +75,7 @@ const UserRequest = ({ createRequest,
   const onSubmit = async (e) => {
     e.preventDefault();
     if (requestID)
-      await editRequest(requestData, requestID);
+      await editRequest(requestData, requestID, history);
     else
       await createRequest(requestData, history);
   };
@@ -164,7 +167,7 @@ const UserRequest = ({ createRequest,
 
             <div className="form-group">
               <select name="grade" value={grade} onChange={onChange}>
-                <option>What is the level of this problem?</option>
+                <option value="">What is the level of this problem?</option>
                 <option value="None">Don't know</option>
                 <option value="K-12">K-12</option>
                 <option value="Undergraduate">Undergraduate</option>

@@ -416,7 +416,7 @@ router.post("/disperseFinal", auth, async (req, res) => {
 router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
     // Make sure that this is actually deleted
-    await Request.findOneAndRemove({ _id: req.params.request_id });
+    const deleted_request = await Request.findOneAndRemove({ _id: req.params.request_id });
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     //need to remove this request from all tutors received_request
     const removeIndex = requestUser.active_requests
@@ -445,7 +445,10 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
         { $set: { received_requests: tutor.received_requests } }
       );
     }
-    res.json(requestUser);
+    return res.json({
+      requestByUser: requestUser,
+      deleted_request: deleted_request,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

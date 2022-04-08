@@ -47,6 +47,9 @@ const ProfileForm = ({
         profileData.skills = profileData.skills.join(', ');
       setFormData(profileData);
     }
+    return () => {
+      setFormData({});
+    }
   }, [loading, getCurrentProfile, profile]);
 
   const {
