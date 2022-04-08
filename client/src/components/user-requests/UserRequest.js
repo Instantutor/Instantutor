@@ -167,7 +167,7 @@ const UserRequest = ({ createRequest,
 
             <div className="form-group">
               <select name="grade" value={grade} onChange={onChange}>
-                <option>What is the level of this problem?</option>
+                <option value="">What is the level of this problem?</option>
                 <option value="None">Don't know</option>
                 <option value="K-12">K-12</option>
                 <option value="Undergraduate">Undergraduate</option>

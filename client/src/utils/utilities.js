@@ -1,12 +1,10 @@
-const mongoose = require("mongoose");
-const isMongoId = (str) => {
+import mongoose from 'mongoose';
+
+export const isMongoId = (str) => {
   try {
     mongoose.Types.ObjectId(str);
     return true;
   } catch (err) {
     return false;
   }
-};
-module.exports = {
-  isMongoId: isMongoId,
 };
