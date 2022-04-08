@@ -64,7 +64,7 @@ const App = () => {
         <Fragment>
           <Navbar />
             <Route exact path="/" component={Landing} />
-            {/* <Route component={Routes} /> */}
+            <Route component={Routes} />
         </Fragment>
       </Router>
     </Provider>
