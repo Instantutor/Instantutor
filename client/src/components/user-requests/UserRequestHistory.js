@@ -28,7 +28,7 @@ const UserRequestHistory = ({ getRequestHistory,
             {loading ? (
                 <Spinner />
             ) : (
-                req_history === null || req_history.length < 1 ? (    
+                req_history === null || req_history === undefined || req_history.length < 1 ? (    
                     
                     <div>
                         <h1 className="large text-primary">Oops!</h1>

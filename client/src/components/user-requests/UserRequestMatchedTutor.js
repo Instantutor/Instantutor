@@ -33,6 +33,10 @@ const UserRequestMatchedTutor = ({
           setFinalTutor(request_history[request_index].selected_tutor);
         }
       }
+      return () => {
+        setTutorsData({});
+        setFinalTutor({});
+      };
     }
   }, [loading, request_history]);
   if (loading) {

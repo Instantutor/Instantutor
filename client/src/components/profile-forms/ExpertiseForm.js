@@ -53,6 +53,9 @@ const ExpertiseForm = (
           setFormData(expertise_data);
         }
       }
+      return () => {
+        setFormData({});
+      }
     }, [loading, getCurrentProfile, profile, expertise_id]);
 
     const onChange = e =>
