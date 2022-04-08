@@ -78,7 +78,7 @@ async function getTutorMatches(requestFields, currentUserID) {
       break;
     }
   }
-  
+
   // console.log("MATCHES:")
   // console.log(tutorArr)
   //Returns edges from the request to every
@@ -90,4 +90,4 @@ module.exports = {
   getTutorMatches: getTutorMatches,
 };
 
-getTutorMatches({request: "hi", course: "Math"}, "60c103daecc2741050528c66");
+// getTutorMatches({request: "hi", course: "Math"}, "60c103daecc2741050528c66");
