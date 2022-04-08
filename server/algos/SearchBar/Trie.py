@@ -35,7 +35,7 @@ class TrieNode:
 
 # Tree-Based Data Structure that takes in letters and points it to a respective node using a Default Dictionary. There will be more functions that will be included into this structure as the project progresses (Macine Learning, Heap Frequency List Suggestion, and Persistency, Caching, and more)
 
-class Trie: 
+class Trie:
 
     "Prototypes: Constructor, Build, PrintAll, autosuggestion, serialize, deserialize "
 
@@ -50,9 +50,9 @@ class Trie:
     # This function builds the Trie by iterating through the word and creating respective pointers to other TreeNodes by inserting it as a key:value pair. It iterates through the word and with a traversal pointer and confirms that the word exists by having a boolean storage. Moreover, I pointed a node to its parent in order to go back (this is important for my Serialization Algorithim and establishing levels)
 
     def Build(self, word: str) -> None:
-        curr = self.root  
-        for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr 
-        curr.confirmation = True 
+        curr = self.root
+        for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
+        curr.confirmation = True
 
 
     # Prints all the words in the DS utilizing Depth First Search (can be shortened for better reading purposes, i.e. creating a DFS function)
@@ -68,7 +68,7 @@ class Trie:
         print(words)
 
 
-    # This algorithim takes a prefix (inputed through the search bar), goes through it and finds the current pointer. If there is no match, for now, it returns [] (I will code the rest of the algo later and update this comment when I do so). Same DFS algo, will find a way to rewrite this to shorten and read it properly 
+    # This algorithim takes a prefix (inputed through the search bar), goes through it and finds the current pointer. If there is no match, for now, it returns [] (I will code the rest of the algo later and update this comment when I do so). Same DFS algo, will find a way to rewrite this to shorten and read it properly
 
     def autosuggestion(self, prefix: str) -> list:
         curr, words = self.root, []
@@ -143,5 +143,3 @@ def main():
     #obj.serialize()
 if __name__=="__main__":
     main()
-
-

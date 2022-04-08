@@ -108,7 +108,7 @@ router.post(
       //Create
       profile = new Profile(profileFields);
       // var spawn = require("child_process").spawn;
-      // const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
+      // const process = spawn("python", [".algos/SearchBar/Trie.py", user.name]);
       // process.on("exit", function (code, signal) {
       //   console.log(
       //     "child process exited with " + `code ${code} and signal ${signal}`
