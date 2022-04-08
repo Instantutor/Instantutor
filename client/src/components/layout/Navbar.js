@@ -44,7 +44,24 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     </nav>
 
 
-
+    // fixed navbar
+    // <div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		//    <div class="container">
+		//        <div class="navbar-header"></div>
+    //          button
+    // 				  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    //          <a class="navbar-brand" href="insta_index.html"><img src="assetsNew/images/Instantutor.png" style="width: 64px"> Instantutor</a>
+		//      	</div> -- nav header
+    //     <div class="navbar-collapse collapse">
+		// 	      <ul class="nav navbar-nav pull-right">
+    //           <li class="active"><a href="#">Home</a></li>
+    //           <li><a href="insta_about.html">About</a></li>
+    //           <li><a href="insta_register.html">Register</a></li>
+    //           <li><a class="btn" href="insta_signin.html">Sign In</a></li>
+    //        </ul>
+    //    </div>  nav collapse
+//      </div> -- container
+//  </div>  -- navbar fixed
 
 
       // c1 <div className='' = "navbar">
