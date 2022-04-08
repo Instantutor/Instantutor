@@ -30,6 +30,7 @@ async function getTutorMatches(requestFields, currentUserID) {
   //Inputs: Request and user id for the request
   const {
     request,
+    subject,
     course,
     grade,
     topic,
@@ -38,10 +39,10 @@ async function getTutorMatches(requestFields, currentUserID) {
     number_sessions,
   } = requestFields;
 
+  // just finding tutors matching the query arr
   var queryArr = [];
-  //2 Relevent Request Params
-  if (course) queryArr.push({ area: course });
-  if (grade) queryArr.push({ degree: grade });
+  //1 Relevent Request Param for now
+  if (subject) queryArr.push({ area: subject });
   //Checks user profiles of tutors (role in [Tutor, Both]). This is where
   //it's determined if a tutor can match the request
 

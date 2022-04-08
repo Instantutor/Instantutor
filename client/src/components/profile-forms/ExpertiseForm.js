@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExpertise, getCurrentProfile } from '../../actions/profile';
+import subject_list from "../../course_list";
+import course_list from "../../course_list";
 
 const initialState = {
   area: '',
@@ -52,6 +54,9 @@ const ExpertiseForm = (
           setFormData(expertise_data);
         }
       }
+      return () => {
+        setFormData({});
+      }
     }, [loading, getCurrentProfile, profile, expertise_id]);
 
     const onChange = e =>
@@ -72,38 +77,41 @@ const ExpertiseForm = (
           }}
         >
           <div className="form-group">
-            <input
-              type="text"
-              placeholder="* Area of Expertise"
-              name="area"
-              value={area}
-              onChange={onChange}
-              required
-            />
+            <select name="area" value={area} onChange={onChange}>
+            <option value="">Area of expertise</option>
+              {subject_list.map(subj => <option value={subj}>{subj}</option>)}
+            </select>
+            <small className="form-text">
+              * What subject is an area of your expertise
+            </small>
           </div>
 
           <div className="form-group">
             <select name="degree" value={degree} onChange={onChange}>
-              <option>* Select Your Degree</option>
+              <option>Degree level</option>
               <option value="Undergraduate">Undergraduate</option>
               <option value="Postgraduate">Postgraduate</option>
               <option value="PHD">PHD</option>
               <option value="Worked">Worked</option>
             </select>
+            <small className="form-text">
+              * Choose a degree level
+            </small>
           </div>
           
           <div className="form-group">
-          <input
-            type="text"
-            placeholder="* Related courses"
-            name="relatedCourses"
-            value={relatedCourses}
-            onChange={onChange}
-          />
-          <small className="form-text">
-            Please tell us courses you learnt about this expertise; Please use comma separated values (eg. course1,course2,...).
-          </small>
-        </div>
+            <select name="relatedCourses" value={relatedCourses} onChange={onChange}>
+              <option value="">Related course</option>
+                {area in course_list
+                  ? course_list[area].map(course => <option value={course}>{course}</option>)
+                  : null
+                }
+            </select>
+            <small className="form-text">
+              * Fill in a course related to this area of expertise
+            </small>
+          </div>
+
           <div className="form-group">
             <textarea
               name="description"

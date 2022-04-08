@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
 import "../../App.css";
+import subject_list from "../../course_list";
+import course_list from "../../course_list";
 
 const UserRequest = ({ createRequest,
   editRequest,
@@ -15,6 +17,7 @@ const UserRequest = ({ createRequest,
   match }) => {
   const [requestData, setRequestData] = useState({
     request: "",
+    subject: "",
     course: "",
     grade: "",
     topic: "",
@@ -26,6 +29,7 @@ const UserRequest = ({ createRequest,
 
   const {
     request,
+    subject,
     course,
     grade,
     topic,
@@ -48,6 +52,9 @@ const UserRequest = ({ createRequest,
       
       setRequestData(oldRequestData);
     }
+    return () => {
+      setRequestData({});
+    }
   }, [getRequestHistory, user, loading]);
 
   const onChange = (e) =>
@@ -69,7 +76,7 @@ const UserRequest = ({ createRequest,
   const onSubmit = async (e) => {
     e.preventDefault();
     if (requestID)
-      await editRequest(requestData, requestID);
+      await editRequest(requestData, requestID, history);
     else
       await createRequest(requestData, history);
   };
@@ -135,13 +142,10 @@ const UserRequest = ({ createRequest,
             </div>
 
             <div className="form-group">
-              <input
-                type="text"
-                placeholder="* Subject"
-                name="course"
-                value={course}
-                onChange={onChange}
-              />
+              <select name="subject" value={subject} onChange={onChange}>
+              <option value="">What subject do you need help with?</option>
+                { subject_list.map(subj => <option value={subj}>{subj}</option>)}
+              </select>
               <small className="form-text">
                 What subject do you need help with eg. Math, Biology, English,
                 ...?
@@ -149,8 +153,22 @@ const UserRequest = ({ createRequest,
             </div>
 
             <div className="form-group">
+              <select name="course" value={course} onChange={onChange}>
+              <option value="">What course do you need help with?</option>
+                {subject in course_list
+                  ? course_list[subject].map(course => <option value={course}>{course}</option>)
+                  : null
+                }
+              </select>
+              <small className="form-text">
+                What course do you need help with eg. Data Structures, Organic Chemistry, Linear Algebra
+                ...?
+              </small>
+            </div>
+
+            <div className="form-group">
               <select name="grade" value={grade} onChange={onChange}>
-                <option>What is the level of this problem?</option>
+                <option value="">What is the level of this problem?</option>
                 <option value="None">Don't know</option>
                 <option value="K-12">K-12</option>
                 <option value="Undergraduate">Undergraduate</option>
@@ -212,7 +230,7 @@ const UserRequest = ({ createRequest,
                 onChange={onChange}
               />
               <small className="form-text">
-                Enter the number of sessions you need help with eg: 0, 3, 5 ...
+                Enter the number of sessions you need help with eg: 1, 3, 5 ...
               </small>
             </div>
 

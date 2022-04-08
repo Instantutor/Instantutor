@@ -1,20 +1,32 @@
-# Node distribution from dockerhub
-FROM node:10.16-alpine
+#########################################################
+#      Configuration from Dorm Design Dockerfile        #
+#########################################################
+# First build the files
+FROM node:16-slim AS builder
 
-# App directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copying over dependencies
+# copyies package-lock.json and package.json
 COPY package*.json ./
 
-# Install the directories
-RUN npm install
+# install dependencies (excluding devDependencies)
+RUN npm ci --production
 
-# Copy over the remaining files
+# copy everything over to environment
 COPY . .
 
-# Expose the port for 3000
+RUN npm run build
+
+# Now actually serve the built files
+FROM node:16-slim
+WORKDIR /app
+
+# Install serve
+RUN npm install -g serve
+
+# Copy files over from builder
+COPY --from=builder /app/build ./build
+
 EXPOSE 3000
 
-# Using npm start
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "3000"]

@@ -21,7 +21,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
     return (
         <Fragment>
             
-            {profile === null || profile.user == null ? (
+            {profile === null || profile === undefined || profile.user == null ? (
                 <Spinner />
             ) : (
                 <Fragment> 

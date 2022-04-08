@@ -21,3 +21,7 @@ open two command lines at:
 In the server command line type ```npm run server```
 <br />
 In the client command line type ```npm start```
+
+# Deployment
+
+Credit to Dorm Design for setup files and Dockerfiles for deployment. Repository found [here](https://github.com/gmisail/dormdesign)
