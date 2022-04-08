@@ -107,18 +107,15 @@ router.put("/code", auth, async (req, res) => {
               .status(404)
               .json({ error: [{ msg: "User does not exist" }] });
           }
-        //generate random verification code and save it to the database to user.verify_code for
-        //this user
-        // console.log(user);
-        // console.log(user.verify_code);
         //Send the email to the user's email and once it's sent successfully return the response
+        //will return [Email response, code that was sent to user]
         const [email, code] = await EmailVer.sendEmail(user.email);
-        //console.log(email);
-        //console.log(code);
+        //save code from email response to database (verify_code attribute)
         user.verify_code = code["webcode"];
         await user.save() //save code to database
-        res.send("Email Successfully Sent");
+        res.send("Email Successfully Sent"); //send successful response
     } catch(err){
+        //if error send proper response
         console.error(err.message);
         res.status(500).send("Server Error");
     }
@@ -128,13 +125,15 @@ router.put("/code", auth, async (req, res) => {
 // @desc: check if verfication code recieved by user is inputted correctly
 router.put("/verified", auth, async (req, res) => {
     const errors = validationResult(req);
+    //check for errors
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: errors.array() });
     }
+    //User will be entering verification code which will be in request body
+    //in this form
     const {
         verification,
     } = req.body;
-    console.log(req.body);
     try{
         //find user in the database
         let user = await User.findOne({ _id: req.user.id });
@@ -143,19 +142,29 @@ router.put("/verified", auth, async (req, res) => {
               .status(404)
               .json({ error: [{ msg: "User does not exist" }] });
           }
-        console.log(user.verify_code);
-        console.log(verification);
+        //test to see code is in database and code inputted by user
+        //console.log(user.verify_code);
+        //console.log(verification);
+        //if the user entered the right code update the database that the
+        //user is verified
         if (verification == user.verify_code) {
             user.verified = true;
+            await user.save() //save code to database
             res.send("Verification Code Entered Correctly");
         }
+        //if the code is not the same
         else{
             res.send("Verification Code Entered Incorrectly");
+            //user is not verified
             user.verified = false;
+            //update code in the database to undefined, user
+            //will have to request new code to their email if they
+            //want to get verified
             user.verify_code = undefined;
+            await user.save() //save code to database
         }
-        console.log(user.verified);
-        console.log(user.verify_code);
+        //console.log(user.verified);
+        //console.log(user.verify_code);
     }
     catch(err){
         console.error(err.message);
