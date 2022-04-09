@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExpertise, getCurrentProfile } from '../../actions/profile';
-import subject_list from "../../course_list";
-import course_list from "../../course_list";
+const courses = require("../../course_list.json");
 
 const initialState = {
   area: '',
@@ -79,7 +78,7 @@ const ExpertiseForm = (
           <div className="form-group">
             <select name="area" value={area} onChange={onChange}>
             <option value="">Area of expertise</option>
-              {subject_list.map(subj => <option value={subj}>{subj}</option>)}
+              {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
             </select>
             <small className="form-text">
               * What subject is an area of your expertise
@@ -102,8 +101,8 @@ const ExpertiseForm = (
           <div className="form-group">
             <select name="relatedCourses" value={relatedCourses} onChange={onChange}>
               <option value="">Related course</option>
-                {area in course_list
-                  ? course_list[area].map(course => <option value={course}>{course}</option>)
+                {area in courses.course_list
+                  ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
                   : null
                 }
             </select>
