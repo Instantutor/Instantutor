@@ -218,7 +218,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
-      });
+      }).populate("user", ["id", "name"]);
       if (!temp) {
         continue;
         return res.status(400).json({

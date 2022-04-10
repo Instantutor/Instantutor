@@ -12,7 +12,9 @@ const PeerRequestItem = ({
   user,
   item: {
     _id,
-    user : peer_user,
+    user : {
+      name
+    },
     request,
     subject,
     course,
@@ -31,7 +33,6 @@ const PeerRequestItem = ({
 }) => {
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
-  console.log(peer_user);
   return (
     <div className="profile-exp bg-white p-2">
       <div>
@@ -49,11 +50,11 @@ const PeerRequestItem = ({
         <h3 className="text-dark"> Request: {request ? request : "N/A"}</h3>
 
         <p>
-          <strong>Subject: </strong> {subject ? subject : "N/A"}
+          <strong>Name: </strong> {name}
         </p>
 
         <p>
-          <strong>User ID: </strong> {peer_user}
+          <strong>Subject: </strong> {subject ? subject : "N/A"}
         </p>
 
         <p>
