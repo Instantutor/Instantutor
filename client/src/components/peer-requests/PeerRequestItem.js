@@ -12,6 +12,9 @@ const PeerRequestItem = ({
   user,
   item: {
     _id,
+    user : {
+      name
+    },
     request,
     subject,
     course,
@@ -22,7 +25,7 @@ const PeerRequestItem = ({
     last_edit_time,
     state,
     status,
-    selected_tutor,
+    selected_tutor
   },
   updateTutorResponse,
   cancelRequest,
@@ -45,6 +48,10 @@ const PeerRequestItem = ({
         </i>
 
         <h3 className="text-dark"> Request: {request ? request : "N/A"}</h3>
+
+        <p>
+          <strong>Name: </strong> {name}
+        </p>
 
         <p>
           <strong>Subject: </strong> {subject ? subject : "N/A"}
