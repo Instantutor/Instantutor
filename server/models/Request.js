@@ -9,6 +9,9 @@ const RequestSchema = new Schema({
   request: {
     type: String,
   },
+  subject: {
+    type: String,
+  },
   course: {
     type: String,
   },

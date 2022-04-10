@@ -61,9 +61,9 @@ const Routes = () => {
                 <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
                 <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
 
-                <PrivateRoute exact path="/calendar" component={TempCalendarPage} />
+                {/* <PrivateRoute exact path="/calendar" component={TempCalendarPage} /> */}
 
-                <PrivateRoute exact path="/search" component={Search} />
+                {/* <PrivateRoute exact path="/search" component={Search} /> */}
 
                 <Route exact path="/profile/:id" component={Profile} />
                 <PrivateRoute exact path="/create_profile" component={ProfileForm} />

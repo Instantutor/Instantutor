@@ -54,11 +54,18 @@ export default function (state = initialState, action) {
         request: payload.request,
         loading: true,
       };
+    
+    case DELETE_USER_REQUEST:
+      return {
+        ...state,
+        request_history: state.request_history.filter(request => 
+          request._id != payload.deleted_request._id),
+        loading: false
+      }
 
     case DISPERSE_REQUEST_ERROR:
     case GET_CONFIRMED_TUTORS_ERROR:
     case EDIT_USER_REQUEST:
-    case DELETE_USER_REQUEST:
     case LOGOUT:
     case ACCOUNT_DELETED:
     case CLEAR_USER_REQUEST:
