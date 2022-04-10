@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+//import { listEvents } from './g_cal.js';
 import { createCalendar, deleteCalendar, confirmCalendar } from '../../actions/calendar';
 import Calendar from './Calendar';
 import { GoogleLogin, GoogleLogout } from "react-google-login";
@@ -87,7 +88,7 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
             {isLoggedIn ? (
               <div>
                 <h1>Welcome, {userInfo.name}</h1>
-  
+
                 <GoogleLogout
                   clientId={CLIENT_ID}
                   buttonText={"Logout"}
@@ -104,6 +105,21 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
                 cookiePolicy={"single_host_origin"}
               />
             )}
+            {
+
+            }
+            <div>
+              <button
+                onClick={(e) =>{
+                  e.preventDefault();
+                  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly&response_type=code&client_id=817226416342-kib0spf1jur26c07n2bpk08mk6ml1frn.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcalendar';
+                  //console.log("verification is ");
+                  //listEvents(clientId);
+                }
+                  }>
+              Button
+              </button >
+            </div>
             {/* <GoogleLogin
                 clientId={CLIENT_ID}
                 buttonText="Sign In with Google"
