@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  verified: {
+    type: Boolean,
+    default: true,
+  },
   password: {
     type: String,
     required: true,
@@ -20,6 +24,9 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  verify_code: {
+    type: String,
   },
 });
 
