@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Button } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExpertise, getCurrentProfile } from '../../actions/profile';
+import ExpertiseBox from './ExpertiseBox';
 const courses = require("../../course_list.json");
 
 const initialState = {
@@ -22,6 +23,7 @@ const ExpertiseForm = (
     })  => {
 
     const [formData, setFormData] = useState(initialState);
+    const [course, setCourse] = useState("");
     const { area, degree, description, relatedCourses} = formData;
     
     // Check if expertise_id in URL esists
@@ -64,9 +66,14 @@ const ExpertiseForm = (
     const changeSubject = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value, relatedCourses: [] });
     
-    const changeCourse = e => {
-      if (!(formData.relatedCourses.includes(e.target.value)))
-        setFormData({ ...formData, [e.target.name]: [ ...formData.relatedCourses, e.target.value]});
+    const addCourse = (e, course) => {
+      if (course == "") return;
+      if (!(formData.relatedCourses.includes(course)))
+        setFormData({ ...formData, relatedCourses: [ ...formData.relatedCourses, course]});
+    }
+
+    const removeCourse = (e, course) => {
+      setFormData({ ...formData, relatedCourses: formData.relatedCourses.filter(val => val != course)});
     }
 
     return (
@@ -107,17 +114,24 @@ const ExpertiseForm = (
           </div>
           
           <div className="form-group">
-            <select name="relatedCourses" onChange={changeCourse}>
+            <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
               <option value="">Related course</option>
                 {area in courses.course_list
                   ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
                   : null
                 }
             </select>
+            <span className="btn btn-light" onClick={e => addCourse(e, course)}>
+                Add Course
+            </span>
             <small className="form-text">
-              * Fill in a course related to this area of expertise
+              * Choose a course to add
             </small>
           </div>
+
+          {relatedCourses !== null && relatedCourses !== undefined
+          && relatedCourses.length > 0 ? relatedCourses.map(course => 
+            <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
 
           <div className="form-group">
             <textarea
