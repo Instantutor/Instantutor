@@ -49,42 +49,33 @@ class SearchContainer extends Component {
 */
 
 const Routes = () => {
-
-    const [display, setDisplay] = useState(true);
-
     return (
         <section className="container">
-            <button style={{width: "20px"}} onClick={() => setDisplay(!display)}/>
-            {
-                display ? <Sidebar /> : null
-            }
-            <div>
-                <Alert />
-                <Switch>
-                    <Route exact path="/register" component={Register}></Route>
-                    <Route exact path="/login" component={Login}></Route>
-                    <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <Alert />
+            <Switch>
+                <Route exact path="/register" component={Register}></Route>
+                <Route exact path="/login" component={Login}></Route>
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
-                    <PrivateRoute exact path="/make_request" component={UserRequest} />
-                    <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
-                    <PrivateRoute exact path="/requests" component={UserRequestHistory} />
-                    <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
-                    <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
-                    <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
+                <PrivateRoute exact path="/make_request" component={UserRequest} />
+                <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
+                <PrivateRoute exact path="/requests" component={UserRequestHistory} />
+                <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
+                <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
+                <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
 
-                    <PrivateRoute exact path="/calendar" component={TempCalendarPage} />
+                <PrivateRoute exact path="/calendar" component={TempCalendarPage} />
 
-                    <PrivateRoute exact path="/search" component={Search} />
+                <PrivateRoute exact path="/search" component={Search} />
 
-                    <Route exact path="/profile/:id" component={Profile} />
-                    <PrivateRoute exact path="/create_profile" component={ProfileForm} />
-                    <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
+                <Route exact path="/profile/:id" component={Profile} />
+                <PrivateRoute exact path="/create_profile" component={ProfileForm} />
+                <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
 
-                    <PrivateRoute exact path="/add_expertise" component={ExpertiseForm} />
-                    <PrivateRoute exact path="/edit_expertise/:id" component={ExpertiseForm} />
-                    <Route component={NotFound} />
-                </Switch>
-            </div>
+                <PrivateRoute exact path="/add_expertise" component={ExpertiseForm} />
+                <PrivateRoute exact path="/edit_expertise/:id" component={ExpertiseForm} />
+                <Route component={NotFound} />
+            </Switch>
         </section>
     )
 }              
