@@ -1,4 +1,4 @@
-/* Global Styles */
+/* Global Styles
 :root {
   --primary-color: #17a2b8;
   --dark-color: #343a40;
@@ -32,10 +32,10 @@ ul {
 
 img {
   width: 100%;
-}
+} */
 
 /* Utilities */
-.container {
+/* .container {
   max-width: 1100px;
   margin: auto;
   overflow: hidden;
@@ -44,11 +44,10 @@ img {
   margin-bottom: 3rem;
   display: inline-block;
   width: 100%;
-  /* display: flex; */
-}
+} */
 
 /* Text Styles*/
-.x-large {
+/* .x-large {
   font-size: 4rem;
   line-height: 1.2;
   margin-bottom: 1rem;
@@ -75,10 +74,10 @@ img {
 
 .text-dark {
   color: var(--dark-color);
-}
+} */
 
 /* Padding */
-.p {
+/* .p {
   padding: 0.5rem;
 }
 .p-1 {
@@ -101,10 +100,10 @@ img {
 }
 .py-3 {
   padding: 3rem 0;
-}
+} */
 
 /* Margin */
-.m {
+/* .m {
   margin: 0.5rem;
 }
 .m-1 {
@@ -127,9 +126,9 @@ img {
 }
 .my-3 {
   margin: 3rem 0;
-}
+} */
 
-.btn {
+/* .btn {
   display: inline-block;
   background: var(--light-color);
   color: #333;
@@ -225,20 +224,20 @@ img {
   height: 1px;
   background: #ccc;
   margin: 1.5rem 0;
-}
+} */
 
 /* Overlay */
-.dark-overlay {
+/* .dark-overlay {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
+} */
 
 /* Forms */
-.form .form-group {
+/* .form .form-group {
   margin: 1.2rem 0;
 }
 
@@ -299,10 +298,10 @@ button {
 
 .table th {
   background: var(--light-color);
-}
+} */
 
 /* Navbar */
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -331,17 +330,71 @@ button {
 
 .navbar .welcome span {
   margin-right: 0.6rem;
-}
+} */
 
 /* Sidebar */
+.sidebar-parent {
+  display: flex;
+}
+
+.sidebar-parent .container {
+  width: 75%;
+  margin-left: 25%;
+}
+
 .sidebar {
-  width: 20%;
-  background-color: black;
+  width: 25%;
+  background-color: #101010;
   color: white;
+  text-align: center;
+  align-items: center;
+  height: 100vh;
+  position: fixed;
+}
+
+.sidebar h3 {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: inline-block;
+}
+
+.sidebar h3 img {
+  width: 36;
+}
+
+.sidebar ul {
+  padding: 2rem;
+  text-align: left;
+  display: inline-block;
+  font-size: 1.5rem;
+}
+
+.sidebar li {
+  padding: 1.2rem;
+}
+
+/* .sidebar li:hover {
+  background-color: #F29141;
+  background-image: linear-gradient(to bottom, #F29141 0%, #F29141 100%);
+  color: #101010;
+} */
+
+.btn-sidebar {
+  background-color: #101010;
+  color: white;
+  align-items: left;
+  text-align: left;
+}
+
+.btn-sidebar:focus,
+.btn-sidebar:hover {
+  background-color: #F29141;
+  background-image: linear-gradient(to bottom, #F29141 0%, #F29141 100%);
+  color: #101010;
 }
 
 /* Landing Page */
-.landing {
+/* .landing {
   position: relative;
   background: url("./assets/images/bg_header.jpg") no-repeat center center/cover;
   height: 100vh;
@@ -357,10 +410,10 @@ button {
   align-items: center;
   justify-content: center;
   text-align: center;
-}
+} */
 
 /* Profiles Page */
-.profile {
+/* .profile {
   display: grid;
   grid-template-columns: 2fr 4fr 2fr;
   align-items: center;
@@ -368,10 +421,10 @@ button {
   padding: 1rem;
   line-height: 1.8;
   margin-bottom: 1rem;
-}
+} */
 
 /* Profile Page */
-.profile-grid {
+/* .profile-grid {
   display: grid;
   grid-template-areas:
     "top top"
@@ -461,20 +514,20 @@ button {
 .profile-github > div:last-child {
   flex: 3;
   flex-basis: 20%;
-}
+} */
 
 /* Requests */
-.request-header {
+/* .request-header {
   display: inline-block;
 }
 
 .request-header-right {
   display: inline-block;
   float: right;
-}
+} */
 
 /* Posts Page */
-.post-form .post-form-header {
+/* .post-form .post-form-header {
   background: var(--primary-color);
   padding: 0.5rem;
 }
@@ -506,10 +559,10 @@ button {
   color: #aaa;
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
-}
+} */
 
 /* Search Bar Styles */
-.searchbar {
+/* .searchbar {
   width: 100%;
   height: auto;
   margin: 0 auto;
@@ -522,10 +575,10 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   font-family: Arial, Helvetica, sans-serif;
-}
+} */
 
 /* Timepicker Styles */
-.timepicker {
+/* .timepicker {
   table-layout: fixed;
   margin-left: auto;
   margin-right: auto;
@@ -542,10 +595,10 @@ button {
   text-align: center;
   vertical-align: center;
   padding: 5px;
-}
+} */
 
 /* Autocomplete Input Styles*/
-.autocomplete {
+/* .autocomplete {
   position: relative;
   text-align: left;
 }
@@ -576,10 +629,10 @@ button {
 .autocomplete .selected {
   color: white;
   background-color: rgb(30, 144, 255);
-}
+} */
 
 /* Calendar Styles */
-.calendar {
+/* .calendar {
   display: grid;
   grid-template-columns: auto repeat(7, 13.5%);
   grid-template-rows: 100px 50px repeat(288, 5px);
@@ -672,7 +725,7 @@ button {
 .event-form-btn {
   padding: 0.2rem 0.65rem;
   border-radius: 5px;
-}
+} */
 
 /* Expertise Styles */
 .add-course {

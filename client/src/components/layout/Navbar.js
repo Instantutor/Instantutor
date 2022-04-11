@@ -46,7 +46,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     //   </h1>
     //   { !loading && (<Fragment>{ isAuthenticated ? authLinks: guestLinks }</Fragment>)}
     // </nav>
-      <div className="navbar navbar-inverse navbar-fixed-top headroom animated slideDown">
+      <div className="navbar navbar-inverse navbar-fixed-top headroom animated">
           <div className="container">
             <div className="navbar-header">
               <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
