@@ -114,24 +114,30 @@ const ExpertiseForm = (
           </div>
           
           <div className="form-group">
-            <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
-              <option value="">Related course</option>
-                {area in courses.course_list
-                  ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
-                  : null
-                }
-            </select>
-            <span className="btn btn-light" onClick={e => addCourse(e, course)}>
-                Add Course
-            </span>
+            <div className="add-course">
+              <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
+                <option value="">Related course</option>
+                  {area in courses.course_list
+                    ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
+                    : null
+                  }
+              </select>
+              <div className="add-expertise" onClick={e => addCourse(e, course)}>
+                <i className="fas fa-plus"></i>
+                  {" Add a course "}
+              </div>
+            </div>
             <small className="form-text">
-              * Choose a course to add
+              * Choose courses to add
             </small>
+            <div>
+            <fieldset>
+              {relatedCourses !== null && relatedCourses !== undefined
+              && relatedCourses.length > 0 ? relatedCourses.map(course => 
+              <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
+            </fieldset>
+            </div>
           </div>
-
-          {relatedCourses !== null && relatedCourses !== undefined
-          && relatedCourses.length > 0 ? relatedCourses.map(course => 
-            <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
 
           <div className="form-group">
             <textarea
