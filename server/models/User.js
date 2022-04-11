@@ -5,13 +5,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  verified: {
-    type: Boolean
-  },
   email: {
     type: String,
     required: true,
     unique: true,
+  },
+  verified: {
+    type: Boolean,
+    default: true,
   },
   password: {
     type: String,
@@ -23,6 +24,9 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  verify_code: {
+    type: String,
   },
 });
 

@@ -33,6 +33,10 @@ const UserRequestMatchedTutor = ({
           setFinalTutor(request_history[request_index].selected_tutor);
         }
       }
+      return () => {
+        setTutorsData({});
+        setFinalTutor({});
+      };
     }
   }, [loading, request_history]);
   if (loading) {
@@ -54,14 +58,14 @@ const UserRequestMatchedTutor = ({
           <h1 className="large text-primary">Oops!</h1>
           <h1 className="text-primary">No matched tutor...</h1>
         </div>
-        ;
+
         <button
           onClick={() => window.history.back(-1)}
           className="btn btn-dark"
         >
           Go Back
         </button>
-        ;
+
       </Fragment>
     );
   } else {

@@ -12,6 +12,8 @@ const Request = require("../../models/Request");
 const checkObjectId = require("../../middleware/checkObjectId");
 const RequestRelate = require("../../models/RequestRelate");
 
+const courses = require("../../config/course_list.json");
+
 // @route: GET api/profile/me
 // @desc: Get current users profile
 // @access Private
@@ -105,13 +107,13 @@ router.post(
 
       //Create
       profile = new Profile(profileFields);
-      var spawn = require("child_process").spawn;
-      const process = spawn("python3", [".algos/SearchBar/Trie.py", user.name]);
-      process.on("exit", function (code, signal) {
-        console.log(
-          "child process exited with " + `code ${code} and signal ${signal}`
-        );
-      });
+      // var spawn = require("child_process").spawn;
+      // const process = spawn("python", [".algos/SearchBar/Trie.py", user.name]);
+      // process.on("exit", function (code, signal) {
+      //   console.log(
+      //     "child process exited with " + `code ${code} and signal ${signal}`
+      //   );
+      // });
       await profile.save(); //save it
       res.json(profile); //send back to the profile
     } catch (err) {
@@ -288,9 +290,20 @@ router.put(
   "/expertise",
   [
     auth,
-    check("area", "Area is required").not().isEmpty(),
+    check("area").not().isEmpty().withMessage("Area is required").bail()
+      .custom(area => courses.subject_list.includes(area))
+      .withMessage("The subject chosen is not an RPI major"),
     check("degree", "Degree is required").not().isEmpty(),
-    check("relatedCourses", "Related courses are required").not().isEmpty(),
+    check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
+      .withMessage("Area must be selected if you want to select a course").bail()
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
+      .withMessage("Subject must be valid if you want to select a course").bail()
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
+      .withMessage("The course chose is not a valid RPI course"),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -305,9 +318,7 @@ router.put(
       degree,
       description,
     };
-    newExp.relatedCourses = (relatedCourses + "")
-      .split(",")
-      .map((relatedCourses) => relatedCourses.trim());
+    newExp.relatedCourses = relatedCourses
 
     // Get new expertise and put it into the array of expertise.
     try {
@@ -354,9 +365,22 @@ router.put(
   "/expertise/:expertise_id",
   [
     auth,
-    check("area", "Area is required").not().isEmpty(),
+    check("area").not().isEmpty().withMessage("Area is required").bail()
+      .custom(subject => subject ? courses.subject_list.includes(subject) : true)
+      .withMessage("The area chosen is not an RPI major")
+      .custom((subject, {req}) => subject ? "relatedCourses" in req.body : true)
+      .withMessage("If you are changing the area you must also change the course"),
     check("degree", "Degree is required").not().isEmpty(),
-    check("relatedCourses", "Related courses are required").not().isEmpty(),
+    check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
+      .withMessage("Area must be included if you want to change the course").bail()
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
+      .withMessage("Area must be valid if you want to change the course").bail()
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
+      .withMessage("The course chosen is not a valid RPI course"),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -372,9 +396,7 @@ router.put(
         degree,
         description,
       };
-      updatedExp.relatedCourses = (relatedCourses + "")
-        .split(",")
-        .map((relatedCourses) => relatedCourses.trim());
+      updatedExp.relatedCourses = relatedCourses;
 
       const profile = await Profile.findOne({ user: req.user.id });
 

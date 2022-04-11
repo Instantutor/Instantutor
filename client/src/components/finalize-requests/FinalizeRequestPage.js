@@ -40,6 +40,10 @@ const UserRequestAcceptedTutor = ({
         setRequestId(request_history[request_index]._id);
       }
     }
+    return () => {
+      setTutorsData({});
+      setRequestId("");
+    }
   }, [loading, request_history]);
   if (tutors == null) {
     return (

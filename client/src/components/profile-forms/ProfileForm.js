@@ -47,6 +47,9 @@ const ProfileForm = ({
         profileData.skills = profileData.skills.join(', ');
       setFormData(profileData);
     }
+    return () => {
+      setFormData({});
+    }
   }, [loading, getCurrentProfile, profile]);
 
   const {
@@ -137,7 +140,7 @@ const ProfileForm = ({
 
         <div className="form-group">
           <textarea
-            placeholder="A short discription of yourself"
+            placeholder="A short description of yourself"
             name="bio"
             value={bio}
             onChange={onChange}

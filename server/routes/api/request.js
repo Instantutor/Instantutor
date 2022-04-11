@@ -13,6 +13,8 @@ const { route } = require("./users");
 const mongoose = require("mongoose");
 const Profile = require("../../models/Profile");
 
+const courses = require("../../config/course_list.json");
+
 // @route: POST api/request/
 // @desc:  Post a request from a user
 // @access Private
@@ -22,7 +24,16 @@ router.post(
     auth,
     [
       check("request", "request content is required").not().isEmpty(),
-      check("course", "Related course is required").not().isEmpty(),
+      check("subject").not().isEmpty().withMessage("Related subject is required").bail()
+        .custom(subject => courses.subject_list.includes(subject))
+        .withMessage("The subject chosen is not an RPI major"),
+      check("course").not().isEmpty().withMessage("Related course is required").bail()
+        .custom((course, {req}) =>  "subject" in req.body)
+        .withMessage("Subject must be selected if you want to select a course").bail()
+        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .withMessage("Subject must be valid if you want to select a course").bail()
+        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .withMessage("The course chose is not a valid RPI course"),
     ],
   ],
 
@@ -34,6 +45,7 @@ router.post(
     }
     const {
       request,
+      subject,
       course,
       grade,
       topic,
@@ -43,13 +55,15 @@ router.post(
     } = req.body;
     const requestFields = {};
     requestFields.user = req.user.id;
-    if (request) requestFields.request = request;
-    if (course) requestFields.course = course;
+    requestFields.request = request;
+    requestFields.subject = subject;
+    requestFields.course = course;
     if (grade) requestFields.grade = grade;
     if (topic) requestFields.topic = topic;
     if (help_time) requestFields.help_time = help_time;
     if (availability) requestFields.availability = availability;
     if (number_sessions) requestFields.number_sessions = number_sessions;
+    // Matching happens here
     requestFields.potential_tutors = await getTutorMatches(
       req.body,
       req.user.id
@@ -61,6 +75,7 @@ router.post(
 
       let requestByUser = await RequestRelate.findOne({ user: req.user.id });
       if (!requestByUser) {
+        // Create request relate
         requestByUser = new RequestRelate({
           user: req.user.id,
           active_requests: [{ _id: new_request._id }],
@@ -108,7 +123,7 @@ router.get("/", auth, async (req, res) => {
 
 router.get("/requestID/:request_id", auth, async (req, res) => {
   //Get all requests for which tutor qualifies or has been chosen]
-  /* Should consider simply adding a field in database for user 
+  /* Should consider simply adding a field in database for user
   that stores potential requests instead of performing all these
   searches.*/
   try {
@@ -133,6 +148,7 @@ router.get("/requestID/:request_id", auth, async (req, res) => {
 // @access Private
 router.get("/:user_id", auth, async (req, res) => {
   try {
+    // Getting the requests made by a user
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     let reqs = [];
 
@@ -140,6 +156,7 @@ router.get("/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
+    // get active requests
     for (i in requestUser.active_requests) {
       temp = await Request.findOne({
         _id: requestUser.active_requests[i].id,
@@ -151,6 +168,8 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
+
+    // get tutoring_requests
     for (i in requestUser.tutoring_requests) {
       temp = await Request.findOne({
         _id: requestUser.tutoring_requests[i].id,
@@ -162,6 +181,8 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
+
+    // get closed requests
     for (i in requestUser.closed_requests) {
       temp = await Request.findOne({
         _id: requestUser.closed_requests[i].id,
@@ -191,17 +212,18 @@ router.get("/received/:user_id", auth, async (req, res) => {
       return res.json(reqs);
     }
 
+    // getting only recieved requests
     let num_new_request = 0;
     for (let i = 0; i < Tutor.received_requests.length; i++) {
       //TODO: Ensure request ids are dispersed as mongo object ids
       temp = await Request.findOne({
         _id: Tutor.received_requests[i].id,
-      });
+      }).populate("user", ["id", "name"]);
       if (!temp) {
         continue;
-        // return res.status(400).json({
-        //   msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
-        // });
+        return res.status(400).json({
+          msg: `request of the _id ${Tutor.received_requests[i].id} not found`,
+        });
       }
 
       // Create a copy of the request. May be switch to hard-code version if this copy code has error.
@@ -237,38 +259,67 @@ router.get("/received/:user_id", auth, async (req, res) => {
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
 // @access Private
-router.put("/edit/:request_id", auth, async (req, res) => {
-  const {
-    request,
-    course,
-    grade,
-    topic,
-    help_time,
-    availability,
-    number_sessions,
-  } = req.body;
+router.put("/edit/:request_id", 
+  [
+    auth,
+    [
+      check("subject")
+        .custom(subject => subject ? courses.subject_list.includes(subject) : true)
+        .withMessage("The subject chosen is not an RPI major")
+        .custom((subject, {req}) => subject ? "course" in req.body : true)
+        .withMessage("If you are changing the subject you must also change the course"),
+      check("course")
+        .custom((course, {req}) =>  "subject" in req.body)
+        .withMessage("Subject must be included if you want to change the course").bail()
+        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .withMessage("Subject must be valid if you want to change the course").bail()
+        .custom((course, {req}) =>  course ? 
+          courses.course_list[req.body.subject].includes(course) : true)
+        .withMessage("The course chosen is not a valid RPI course"),
+    ],
+  ]
+  
+    , async (req, res) => {
 
-  try {
-    requestMatch = await Request.findOne({ _id: req.params.request_id });
-    if (requestMatch) {
-      if (request) requestMatch["request"] = request;
-      if (course) requestMatch["course"] = course;
-      if (grade) requestMatch["grade"] = grade;
-      if (topic) requestMatch["topic"] = topic;
-      if (help_time) requestMatch["help_time"] = help_time;
-      if (availability) requestMatch["availability"] = availability;
-      if (number_sessions) requestMatch["number_sessions"] = number_sessions;
-      requestMatch["last_edit_time"] = Date.now();
-      requestMatch.save();
+    const errors = validationResult(req);
 
-      res.json({ msg: "Request updated", updated_request: requestMatch });
-    } else {
-      res.status(400).json({ error: "Request ID is invalid" });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+    
+    const {
+      request,
+      subject,
+      course,
+      grade,
+      topic,
+      help_time,
+      availability,
+      number_sessions,
+    } = req.body;
+
+    try {
+      requestMatch = await Request.findOne({ _id: req.params.request_id });
+      if (requestMatch) {
+        if (request) requestMatch["request"] = request;
+        if (subject) requestMatch["subject"] = subject;
+        if (course) requestMatch["course"] = course;
+        if (grade) requestMatch["grade"] = grade;
+        if (topic) requestMatch["topic"] = topic;
+        if (help_time) requestMatch["help_time"] = help_time;
+        if (availability) requestMatch["availability"] = availability;
+        if (number_sessions) requestMatch["number_sessions"] = number_sessions;
+        requestMatch["last_edit_time"] = Date.now();
+        requestMatch.save();
+
+        res.json({ msg: "Request updated", updated_request: requestMatch });
+      } else {
+        res.status(400).json({ error: "Request ID is invalid" });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
 });
 
 // @route: POST api/request/disperse
@@ -364,7 +415,8 @@ router.post("/disperseFinal", auth, async (req, res) => {
 // @access Private
 router.delete("/delete/:request_id", auth, async (req, res) => {
   try {
-    await Request.findOneAndRemove({ _id: req.params.request_id });
+    // Make sure that this is actually deleted
+    const deleted_request = await Request.findOneAndRemove({ _id: req.params.request_id });
     const requestUser = await RequestRelate.findOne({ user: req.user.id });
     //need to remove this request from all tutors received_request
     const removeIndex = requestUser.active_requests
@@ -393,7 +445,10 @@ router.delete("/delete/:request_id", auth, async (req, res) => {
         { $set: { received_requests: tutor.received_requests } }
       );
     }
-    res.json(requestUser);
+    return res.json({
+      requestByUser: requestUser,
+      deleted_request: deleted_request,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -601,6 +656,31 @@ router.post("/tutors/confirmed", auth, async (req, res) => {
   }
 });
 
+/*router for google calendar integration
+
+router.post("/google/get", async (req, res, next) => {
+ const {
+    google
+ } = require('googleapis')
+ const {
+    addWeeks
+ } = require('date-fns')
+ const {
+    OAuth2
+ } = google.auth
+ const oAuth2Client = new OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET
+ )
+ oAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+ })
+
+ const calendar = google.calendar({
+    version: 'v3',
+    auth: oAuth2Client
+ })
+});*/
 /* Need renew
 // @route: PUT api/request/bid
 // @desc:  A user can bid, adding to the bids array

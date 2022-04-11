@@ -3,9 +3,7 @@ client/node_modules/
 server/config/production.json
 client/build
 client/.eslintcache
-server/package-lock.json
 server/client
-client/package-lock.json
 # Elastic Beanstalk Files
 #.elasticbeanstalk/*
 #!.elasticbeanstalk/*.cfg.yml
