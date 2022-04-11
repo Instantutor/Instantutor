@@ -1,8 +1,6 @@
 import React, { Component, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Register from '../auth/Register';
-import Login from '../auth/Login';
 import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -53,8 +51,6 @@ const Routes = () => {
         <section className="container">
             <Alert />
             <Switch>
-                <Route exact path="/register" component={Register}></Route>
-                <Route exact path="/login" component={Login}></Route>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
                 <PrivateRoute exact path="/make_request" component={UserRequest} />

@@ -25,7 +25,65 @@ const Login = ({ login, isAuthenticated }) => {
 
     return (
         <Fragment>
-            <h1 className="large text-primary">Sign In</h1>
+
+            <div className="container">
+
+            <div className="row">
+
+                <article className="col-xs-12 maincontent">
+                    <h6></h6>
+                    <div className="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div className="panel panel-other">
+                            <div className="panel-body">
+                                <h5 className="thin text-center" style={{"marginTop": "50px", "marginBottom": "30px"}}>
+                                    Sign in to Instantutor</h5>
+                                <form>
+                                    <div className="top-margin">
+                                        <label>Email Address</label>
+                                        <input
+                                            type="email"
+                                            placeholder="Email Address"
+                                            name="email"
+                                            value={email}
+                                            onChange={e => onChange(e)}
+                                            required
+                                            className="form-control"
+                                            style={{"marginBottom": "30px"}}
+                                        />
+                                    </div>
+
+                                    <div className="top-margin">
+                                        <label>Password</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Password"
+                                            name="password"
+                                            value={password}
+                                            onChange={e => onChange(e)}
+                                            required
+                                            minLength="6"
+                                            className="form-control"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        {/* <a href="insta_forgotpass.html" style={{"margin-left": "75px"}}>Forgot Password? </a> */}
+                                        <Link to="/register" style={{"marginLeft": "75px"}}>New User?</Link>
+                                    </div>
+
+                                    <div className="text-center" style={{"marginTop": "20px"}}>
+                                            <button className="btn btn-action" type="submit" onClick={onSubmit}>Sign In</button>
+                                        </div>
+                                    </form></div>
+                                
+                            </div>
+                        </div>
+
+                    </article></div>
+                    
+
+            </div>
+            {/* <h1 className="large text-primary">Sign In</h1>
             <p className="lead">
                 <i className="fas fa-user"></i> Sign Into Your Account
         </p>
@@ -55,7 +113,7 @@ const Login = ({ login, isAuthenticated }) => {
             </form>
             <p className="my-1">
                 Don't have an account? <Link to="/register">Sign Up</Link>
-            </p>
+            </p> */}
         </Fragment>);
 };
 

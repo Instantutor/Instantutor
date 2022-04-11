@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
 import Routes from './components/routing/Routes';
+import PreLoginRoutes from './components/routing/PreLoginRoutes';
+import Footer from './components/layout/Footer';
 //import { LOGOUT } from './actions/types';
 
 // Redux
@@ -12,7 +14,7 @@ import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 
-//import './App.css';
+// import './App.css';
 
 import './assets/images/gt_favicon.png';
 //import './assets/fonts/';
@@ -62,11 +64,13 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Fragment>
-          <Navbar />
+            <Navbar />
             <Switch>
               <Route exact path="/" component={Landing} />
+              <Route component={PreLoginRoutes} />
               <Route component={Routes} />
             </Switch>
+            <Footer />
         </Fragment>
       </Router>
     </Provider>
