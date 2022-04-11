@@ -1,10 +1,6 @@
 import React, { Component, Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Landing from './components/layout/Landing';
-import Navbar from './components/layout/Navbar';
 import Routes from './components/routing/Routes';
-import PreLoginRoutes from './components/routing/PreLoginRoutes';
-import Footer from './components/layout/Footer';
 //import { LOGOUT } from './actions/types';
 
 // Redux
@@ -64,13 +60,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Fragment>
-            <Navbar />
-            <Switch>
-              <Route exact path="/" component={Landing} />
-              <Route component={PreLoginRoutes} />
-              <Route component={Routes} />
-            </Switch>
-            <Footer />
+            <Route component={Routes} />
         </Fragment>
       </Router>
     </Provider>

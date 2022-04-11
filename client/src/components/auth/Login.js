@@ -37,7 +37,7 @@ const Login = ({ login, isAuthenticated }) => {
                             <div className="panel-body">
                                 <h5 className="thin text-center" style={{"marginTop": "50px", "marginBottom": "30px"}}>
                                     Sign in to Instantutor</h5>
-                                <form>
+                                <form onSubmit={onSubmit}>
                                     <div className="top-margin">
                                         <label>Email Address</label>
                                         <input
@@ -72,7 +72,7 @@ const Login = ({ login, isAuthenticated }) => {
                                     </div>
 
                                     <div className="text-center" style={{"marginTop": "20px"}}>
-                                            <button className="btn btn-action" type="submit" onClick={onSubmit}>Sign In</button>
+                                            <button className="btn btn-action" type="submit" value="Login">Sign In</button>
                                         </div>
                                     </form></div>
                                 
