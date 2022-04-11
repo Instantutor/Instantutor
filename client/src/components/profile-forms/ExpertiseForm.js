@@ -9,7 +9,7 @@ const initialState = {
   area: '',
   degree: '',
   description: '',
-  relatedCourses: ''
+  relatedCourses: []
 };
 
 
@@ -61,6 +61,14 @@ const ExpertiseForm = (
     const onChange = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const changeSubject = e =>
+      setFormData({ ...formData, [e.target.name]: e.target.value, relatedCourses: [] });
+    
+    const changeCourse = e => {
+      if (!(formData.relatedCourses.includes(e.target.value)))
+        setFormData({ ...formData, [e.target.name]: [ ...formData.relatedCourses, e.target.value]});
+    }
+
     return (
         <Fragment>
         <h1 className="large text-primary">Manage your Expertise</h1>
@@ -76,7 +84,7 @@ const ExpertiseForm = (
           }}
         >
           <div className="form-group">
-            <select name="area" value={area} onChange={onChange}>
+            <select name="area" value={area} onChange={changeSubject}>
             <option value="">Area of expertise</option>
               {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
             </select>
@@ -99,7 +107,7 @@ const ExpertiseForm = (
           </div>
           
           <div className="form-group">
-            <select name="relatedCourses" value={relatedCourses} onChange={onChange}>
+            <select name="relatedCourses" onChange={changeCourse}>
               <option value="">Related course</option>
                 {area in courses.course_list
                   ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
