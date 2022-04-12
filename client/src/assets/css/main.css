@@ -46,8 +46,8 @@ ul.list-spaces li{ margin-bottom:10px; }
 
 /* Helpers */
 .container-full { margin: 0 auto; width: 100%; }
-	.top-space { margin-top: 60px; }*/
-  	.top-margin { margin-top:20px; }*/
+	.top-space { margin-top: 60px; }
+  	.top-margin { margin-top:20px; }
 
 img { max-width:100%; }
 img.pull-right {margin-left: 10px;width: 350px;height: 300px;margin-top: 80px;}
