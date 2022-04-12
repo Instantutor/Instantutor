@@ -14,10 +14,10 @@ import setAuthToken from './utils/setAuthToken';
 
 import './assets/images/gt_favicon.png';
 //import './assets/fonts/';
-import './assets/css/bootstrap.css'
-import './assets/css/font-awesome.css'
-import './assets/css/bootstrap-theme.css'
-import './assets/css/main.css'
+import './assets/css/bootstrap.css';
+import './assets/css/font-awesome.css';
+import './assets/css/bootstrap-theme.css';
+import './assets/css/main.css';
 
 import './App.css';
 

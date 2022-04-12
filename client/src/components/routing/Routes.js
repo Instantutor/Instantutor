@@ -80,7 +80,7 @@ const Routes = () => {
 
                 <SidebarRoute privateR exact path="/add_expertise" component={ExpertiseForm} />
                 <SidebarRoute privateR exact path="/edit_expertise/:id" component={ExpertiseForm} />
-                <SidebarRoute component={NotFound} />
+                <Route component={NotFound} />
             </Switch>
         </Fragment>
     )

@@ -333,8 +333,10 @@ button {
 } */
 
 /* Sidebar */
-.sidebar-parent {
-  display: flex;
+/* .sidebar-parent {
+  position: relative;
+  top: 0;
+  height: 100vh;
 }
 
 .sidebar-parent .container {
@@ -373,11 +375,11 @@ button {
   padding: 1.2rem;
 }
 
-/* .sidebar li:hover {
+.sidebar li:hover {
   background-color: #F29141;
   background-image: linear-gradient(to bottom, #F29141 0%, #F29141 100%);
   color: #101010;
-} */
+}
 
 .btn-sidebar {
   background-color: #101010;
@@ -391,7 +393,7 @@ button {
   background-color: #F29141;
   background-image: linear-gradient(to bottom, #F29141 0%, #F29141 100%);
   color: #101010;
-}
+} */
 
 /* Landing Page */
 /* .landing {
