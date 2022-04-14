@@ -1,0 +1,32 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    pre_build:
+      commands:
+        - echo Build client and server docker images (test)
+        - docker build -t Instantutor/client -f ./client/Dockerfile.dev ./client
+        - docker build -t Instantutor/server -f ./server/Dockerfile.dev ./server
+    build:
+      commands:
+        - echo Build started on 'date'
+        # Run tests with built Docker images
+        - echo Run react tests
+        - docker run -e CI=true Instantutor/client
+        - echo Run nodejs tests
+        - docker run -e CI=true Instantutor/server
+        # Build docker images (multi-container)
+        - echo Build production docker image
+        - docker build -t Instantutor/client ./client
+        - docker build -t Instantutor/server ./server
+        - docker build -t Instantutor/nginx  ./nginx
+        # Log into the Docker CLI
+        - echo "$DOCKER_PW" | docker login -u "$DOCKER_ID" --password-stdin
+    post_build:
+      commands:
+        # Take images and push to Docker hub
+        - echo Pushing the Docker images
+        - docker push Instantutor/client
+        - docker push Instantutor/server
+        - docker push Instantutor/nginx
