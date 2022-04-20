@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 import PrivateRoute from './PrivateRoute';
 import '../../assets/css/dashboard.css';
+import Alert from '../layout/Footer';
 
 const SidebarRoute = ({
     logout,
@@ -108,6 +109,7 @@ const SidebarRoute = ({
               </div></div> */}
             </div>
         </div>
+        <Alert />
         <div className="main-panel ps-container ps-theme-default ps-active-x ps-active-y">
             {privateR ? <PrivateRoute {...props} /> : <Route {...props}/>}
         </div>
