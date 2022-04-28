@@ -1,6 +1,6 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
-import { setAlert } from './alert'; 
+import { setAlert } from './alert';
 import {
     REGISTER_SUCCESS,
     REGISTER_FAIL,
@@ -16,7 +16,7 @@ export const loadUser = () => async dispatch => {
     if (localStorage.token) {
         setAuthToken(localStorage.token);
     }
-    
+
     try {
         const res = await axios.get('/api/auth');
         dispatch({
@@ -41,7 +41,7 @@ export const register = ({ name, email, role, password }) => async dispatch => {
     }
 
 
-    const body = JSON.stringify({ name, email, role, password }); 
+    const body = JSON.stringify({ name, email, role, password });
 
     try {
         const res = await axios.post('/api/users', body, config);
@@ -73,7 +73,7 @@ export const login = (email, password) => async dispatch => {
     }
 
 
-    const body = JSON.stringify({ email, password }); 
+    const body = JSON.stringify({ email, password });
 
     try {
         const res = await axios.post('/api/auth', body, config);
@@ -88,11 +88,26 @@ export const login = (email, password) => async dispatch => {
         if (errors) {
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
-        
 
         dispatch({
             type: LOGIN_FAIL
         });
+    }
+};
+
+export const sendLInk = (email) => async dispatch => {
+  const config = {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  }
+
+  try {
+      const res = await axios.get('/api/auth');
+      //res.send();
+    }
+    catch (err){
+      console.log(err);
     }
 };
 

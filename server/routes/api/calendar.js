@@ -20,7 +20,7 @@ add time zone to the schedule
 Make it so you can't post if there is a conflict with the week schedule
 */
 
-const event_checks = [auth, 
+const event_checks = [auth,
     [check("target")
         .notEmpty().withMessage("event must have a target").bail()
         .isInt({min: 0, max: 2}).withMessage("target must be of value 0, 1, or 2")],
@@ -94,7 +94,7 @@ router.post("/frontend/event",
     event_checks.concat(
         [check("exceptions", "you can not pass exceptions when making event").isEmpty()]
     ),
-    
+
     async (req, res) => {
 
         const errors = validationResult(req);
@@ -127,7 +127,7 @@ router.post("/frontend/event",
                 // checking for time overlaps
                 for (let i = 0; i < new_event["availability"].length; i++) {
                     for (let j = 0; j < 7; j++) {
-                        if ((new_event.availability[i].days[j] && event.days[j]) && 
+                        if ((new_event.availability[i].days[j] && event.days[j]) &&
                         ((new_event["availability"][i].start_time <= event.start_time &&
                         event.start_time <= new_event["availability"][i].stop_time) ||
                         (new_event["availability"][i].start_time <= event.stop_time &&
@@ -175,7 +175,7 @@ router.post("/frontend/week",
             })
             .withMessage("Week start can not be before the start of the current week")
     ]],
-    
+
     async(req, res) => {
 
         const errors = validationResult(req);
@@ -195,7 +195,7 @@ router.post("/frontend/week",
             let week_start_date = new Date(week_start)
             let week_end = new Date(week_start);
             week_end.setDate(week_end.getDate() + 7)
-            
+
             if (calendar)
                 res.json(calendar.availability
                     .filter(elem =>
@@ -264,7 +264,7 @@ router.put("/frontend/event/",
         [check("new_exception", "an exception must be in a date format")
             .optional({nullable: true}).isDate()]
     ),
-    
+
     async (req, res) => {
 
         const errors = validationResult(req);
@@ -299,14 +299,14 @@ router.put("/frontend/event/",
                 user: req.user.id,
                 "availability._id": mongoose.Types.ObjectId(_id)
             });
-            
+
             if (edit_event) {
                 // checking for time overlaps
                 console.log();
                 for (let i = 0; i < edit_event["availability"].length; i++) {
                     for (let j = 0; j < 7; j++) {
                         if (edit_event["availability"][i]._id != event._id &&
-                        (edit_event.availability[i].days[j] && event.days[j]) && 
+                        (edit_event.availability[i].days[j] && event.days[j]) &&
                         ((edit_event["availability"][i].start_time <= event.start_time &&
                         event.start_time <= edit_event["availability"][i].stop_time) ||
                         (edit_event["availability"][i].start_time <= event.stop_time &&

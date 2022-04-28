@@ -1,0 +1,5 @@
+Please visit this URL to authorize this application: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=76721183540-1218tnb619rdhft9bs2a0pv4t8mlr3tk.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&state=nvpjTwrOzgmvUbDHF7FhNBbHDUWOEg&access_type=offline
+it work
+it work
+it work
+it work

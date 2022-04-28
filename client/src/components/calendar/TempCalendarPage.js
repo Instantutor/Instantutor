@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode, SyntheticEvent, TextField } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-//import { listEvents } from './g_cal.js';
 import { createCalendar, deleteCalendar, confirmCalendar } from '../../actions/calendar';
 import Calendar from './Calendar';
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 
+
+const jsonData= require('./output.json');
+
+function parser(key, value){
+  if(key != 'summary' || 'status' || 'timezone' || 'start' || 'end'){
+    return undefined;
+  }
+  return value;
+}
+
+const jsonString = JSON.stringify(jsonData, ['summary', 'status', 'timezone','start', 'timeZone', 'dateTime','end'], 2);
+
 const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCalendar }) => {
 
     // creating calendar if not found
-    // useEffect(async () => {
-    //     await confirmCalendar();
-    //     // !created && createCalendar();
-    // }, []);
+     useEffect(async () => {
+         await confirmCalendar();
+          !created && createCalendar();
+     }, []);
 
     // return (
     //     <>
@@ -49,6 +60,7 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
     // )
 
 
+
     const CLIENT_ID = '817226416342-kib0spf1jur26c07n2bpk08mk6ml1frn.apps.googleusercontent.com';
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,17 +71,24 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
 
     // Success Handler
     const responseGoogleSuccess = (response) => {
-        console.log();
+        console.log(response);
         let userInfo = {
             name: response.profileObj.name,
             emailId: response.profileObj.email,
+            googleId: response.profileObj.googleId,
         };
+
+        const scopes = ['https://www.googleapis.com/auth/calendar'];
+        const keyFile = './credentials.json';
+
         setUserInfo(userInfo);
         setIsLoggedIn(true);
+        console.log(response.profileObj.googleId);
     };
 
     const responseGoogleError = (response) => {
         console.log(response);
+        console.log(response["tokenObj"]["scope"]);
     };
 
     const logout = (response) => {
@@ -77,6 +96,7 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
         let userInfo = {
           name: "",
           emailId: "",
+          googleId: "",
         };
         setUserInfo(userInfo);
         setIsLoggedIn(false);
@@ -88,7 +108,8 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
             {isLoggedIn ? (
               <div>
                 <h1>Welcome, {userInfo.name}</h1>
-
+                <div>{userInfo.name}s calendar:</div>
+                <div><pre>{jsonString}</pre></div>
                 <GoogleLogout
                   clientId={CLIENT_ID}
                   buttonText={"Logout"}
@@ -102,24 +123,14 @@ const TempCalendarPage = ({ created, confirmCalendar, createCalendar, deleteCale
                 onSuccess={responseGoogleSuccess}
                 onFailure={responseGoogleError}
                 isSignedIn={true}
+                scope={"https://www.googleapis.com/auth/calendar"}
                 cookiePolicy={"single_host_origin"}
               />
             )}
             {
 
             }
-            <div>
-              <button
-                onClick={(e) =>{
-                  e.preventDefault();
-                  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly&response_type=code&client_id=817226416342-kib0spf1jur26c07n2bpk08mk6ml1frn.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcalendar';
-                  //console.log("verification is ");
-                  //listEvents(clientId);
-                }
-                  }>
-              Button
-              </button >
-            </div>
+
             {/* <GoogleLogin
                 clientId={CLIENT_ID}
                 buttonText="Sign In with Google"
