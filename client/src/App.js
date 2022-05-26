@@ -18,6 +18,7 @@ import './assets/css/bootstrap.css';
 import './assets/css/font-awesome.css';
 import './assets/css/bootstrap-theme.css';
 import './assets/css/main.css';
+import './assets/css/dashboard.css';
 
 import './App.css';
 

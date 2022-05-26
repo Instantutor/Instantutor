@@ -2,7 +2,6 @@ import React, { Fragment } from 'react'
 import { Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import Sidebar from '../layout/Sidebar';
-import '../../assets/css/dashboard.css';
 import Alert from '../layout/Alert';
 
 const SidebarRoute = ({

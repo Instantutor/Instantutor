@@ -20,7 +20,7 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 Copyright (c) 2015 Daniel Eden
 */
 
-.animated {
+/* .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
@@ -148,7 +148,7 @@ Copyright (c) 2015 Daniel Eden
 
 .fadeOutUp {
   -webkit-animation-name: fadeOutUp;
-  animation-name: fadeOutUp; }
+  animation-name: fadeOutUp; } */
 
 /* perfect-scrollbar v0.6.13 */
 .ps-container {
@@ -272,7 +272,7 @@ Copyright (c) 2015 Daniel Eden
 .ps-container:hover > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y {
   background-color: #999; }
 
-.btn,
+/* .btn,
 .navbar .navbar-nav > a.btn {
   border-width: 2px;
   font-weight: 400;
@@ -1313,7 +1313,7 @@ body {
   background: #FFFFFF; }
 
 /* Animations */
-.nav-pills .nav-link,
+/* .nav-pills .nav-link,
 .navbar,
 .nav-tabs .nav-link,
 .sidebar .nav a,
@@ -1730,7 +1730,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
     top: 0;
     content: ""; }
   .page-header:before {
-    background-color: rgba(0, 0, 0, 0.3); }
+    background-color: rgba(0, 0, 0, 0.3); } */
   .page-header[filter-color="orange"] {
     background: rgba(44, 44, 44, 0.2);
     /* For browsers that do not support gradients */
@@ -1915,12 +1915,12 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
   .dropdown.show .dropdown-menu,
   .bootstrap-select.show .dropdown-menu:not(.inner), .dropdown-menu.bootstrap-datetimepicker-widget.top.open, .dropdown-menu.bootstrap-datetimepicker-widget.bottom.open,
   .dropup.show:not(.bootstrap-select) .dropdown-menu,
-  .navbar .dropdown.show .dropdown-menu {
+  /* .navbar .dropdown.show .dropdown-menu {
     opacity: 1;
     filter: alpha(opacity=100);
     visibility: visible;
     -webkit-transform: translate3d(0, 1px, 0) !important;
-    transform: translate3d(0, 1px, 0) !important; }
+    transform: translate3d(0, 1px, 0) !important; } */
   .dropdown-menu.bootstrap-datetimepicker-widget.top.open, .dropdown-menu.bootstrap-datetimepicker-widget.bottom.open {
     -webkit-transform: translate3d(0, 0px, 0) !important;
     transform: translate3d(0, 0px, 0) !important; }
@@ -2697,7 +2697,7 @@ Created using IcoMoon - icomoon.io
       font-weight: 1000;
       font-size: large;
       }
-    .sidebar .logo:after, .navbar-wrapper::after,
+    .sidebar .logo:after, /* .navbar-wrapper::after ,*/
     .off-canvas-sidebar .logo:after {
       content: '';
       position: absolute;
@@ -2841,8 +2841,8 @@ Created using IcoMoon - icomoon.io
     padding: 0 30px 30px;
     min-height: calc(100vh - 123px);
     margin-top: -30px; background: white;}
-  .main-panel > .navbar {
-    margin-bottom: 0; }
+  /* .main-panel > .navbar {
+    margin-bottom: 0; } */
   .main-panel .header {
     margin-bottom: 50px; }
 
@@ -3020,7 +3020,7 @@ Created using IcoMoon - icomoon.io
   .card-chart .dropdown .btn {
     margin: 0; }
 
-.footer {
+/* .footer {
   padding: 24px 0; background: white;}
   .footer.footer-default {
     background-color: #f2f2f2; }
@@ -3047,7 +3047,7 @@ Created using IcoMoon - icomoon.io
   .footer:after {
     display: table;
     clear: both;
-    content: " "; }
+    content: " "; } */
 
 .fixed-plugin {
   position: fixed;
@@ -3259,7 +3259,7 @@ Created using IcoMoon - icomoon.io
     display: none; }
   #minimizeSidebar {
     display: none; }
-  .navbar .container-fluid {
+  /* .navbar .container-fluid {
     padding-right: 15px;
     padding-left: 15px; }
   .navbar .navbar-collapse .input-group {
@@ -3339,7 +3339,7 @@ Created using IcoMoon - icomoon.io
     transform: translate3d(-300px, 0, 0); }
   .nav-open .menu-on-right #bodyClick {
     right: 260px;
-    left: auto; }
+    left: auto; } */
   .menu-on-right .sidebar {
     left: auto;
     right: 0;
@@ -3505,13 +3505,13 @@ Created using IcoMoon - icomoon.io
     background-color: transparent;
     -webkit-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
     transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1); }
-  .footer .copyright {
-    text-align: right; }
+  /* .footer .copyright {
+    text-align: right; } */
   .section-nucleo-icons .icons-container {
     margin-top: 65px; }
-  .navbar-nav .nav-link i.fa,
+  /* .navbar-nav .nav-link i.fa,
   .navbar-nav .nav-link i.now-ui-icons {
-    opacity: .5; }
+    opacity: .5; } */
   .sidebar,
   .bootstrap-navbar {
     position: fixed;
@@ -3533,20 +3533,20 @@ Created using IcoMoon - icomoon.io
     width: 100%; } }
 
 @media screen and (min-width: 992px) {
-  .navbar-collapse {
+  /* .navbar-collapse {
     background: none !important; }
   .navbar .navbar-toggle {
     display: none; }
   .navbar-nav .nav-link.profile-photo {
     padding: 0;
-    margin: 7px 0.7rem; }
+    margin: 7px 0.7rem; } */
   .section-nucleo-icons .icons-container {
     margin: 0 0 0 auto; }
   .dropdown-menu .dropdown-item {
     color: inherit; }
-  .footer .copyright {
+  /* .footer .copyright {
     float: right;
-    padding-right: 15px; } }
+    padding-right: 15px; } */ }
 
 @media screen and (max-width: 768px) {
   .nav-tabs {
@@ -3562,18 +3562,18 @@ Created using IcoMoon - icomoon.io
   .main-panel .content {
     padding-left: 15px;
     padding-right: 15px; }
-  .footer nav {
+  /* .footer nav {
     display: block;
     margin-bottom: 5px;
-    float: none; }
+    float: none; } */
   .landing-page .section-story-overview .image-container:nth-child(2) {
     margin-left: 0;
     margin-bottom: 30px; } }
 
 @media screen and (max-width: 576px) {
-  .navbar[class*='navbar-toggleable-'] .container {
+  /* .navbar[class*='navbar-toggleable-'] .container {
     margin-left: 0;
-    margin-right: 0; }
+    margin-right: 0; } */
   .card-contributions .card-stats {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
