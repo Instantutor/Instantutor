@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import Sidebar from '../layout/Sidebar';
 import '../../assets/css/dashboard.css';
+import Alert from '../layout/Alert';
 
 const SidebarRoute = ({
     privateR,
@@ -13,6 +14,7 @@ const SidebarRoute = ({
       <div className='wrapper'>
         <Sidebar />
         <div className="main-panel ps-container ps-theme-default ps-active-x ps-active-y">
+            <Alert />
             {privateR ? <PrivateRoute {...props} /> : <Route {...props}/>}
         </div>
       </div>
