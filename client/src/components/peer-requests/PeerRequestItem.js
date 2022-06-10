@@ -49,23 +49,23 @@ const PeerRequestItem = ({
 
         <h3 className="text-dark request-header"> Request: {request ? request : "N/A"}</h3>
 
-        <p>
+        <p className="request">
           <strong>Name: </strong> {name}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Subject: </strong> {subject ? subject : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Course: </strong> {course ? course : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Topic: </strong> {topic ? topic : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Number of sessions: </strong> {number_sessions ? number_sessions : "N/A"}
         </p>
         

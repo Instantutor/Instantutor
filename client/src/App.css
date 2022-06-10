@@ -912,14 +912,19 @@ button.btn-confirm {
   transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s;
 }
 
-/* Peer Request Page / Items // TODO elephant */
+/* Peer Request Page/Items */
+div.request {
+  margin-top: 10px;
+}
+
 div.request.item {
-  width: 30vw;
+  width: 30%;
   border: 1px solid black;
   border-radius: 20px;
   display: inline-block;
   height: inherit;
   overflow: hidden;
+  margin: 2px 4px 2px 4px;
 }
 
 div.request.content {
@@ -933,9 +938,19 @@ h3.request-header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 hr.request { 
   width: calc(100% + 20px);
   margin-left: -10px;
+}
+
+.main-panel {
+  padding-left: 5%;
+}
+
+p.request {
+  margin-bottom: 0;
 }
