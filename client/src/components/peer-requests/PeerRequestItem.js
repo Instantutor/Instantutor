@@ -34,9 +34,9 @@ const PeerRequestItem = ({
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
   return (
-    <div className="profile-exp bg-white p-2">
-      <div>
-        <i
+    <div className="profile-exp bg-white p-2 request item peer-req">
+      <div className="request content">
+        {/* <i
           className="text-primary"
           style={{ paddingRight: "5px", float: "right" }}
         >
@@ -45,9 +45,9 @@ const PeerRequestItem = ({
             : currentStatus == "canceled" || currentStatus == "closed"
             ? currentStatus.toUpperCase()
             : ""}
-        </i>
+        </i> */}
 
-        <h3 className="text-dark"> Request: {request ? request : "N/A"}</h3>
+        <h3 className="text-dark request-header"> Request: {request ? request : "N/A"}</h3>
 
         <p>
           <strong>Name: </strong> {name}
@@ -68,11 +68,8 @@ const PeerRequestItem = ({
         <p>
           <strong>Number of sessions: </strong> {number_sessions ? number_sessions : "N/A"}
         </p>
-
-        <p>
-          <strong>Last edit: </strong>{" "}
-          {new Date(last_edit_time).toLocaleString()}
-        </p>
+        
+        <hr className="request"></hr>
 
         {state === "CHECKING" ? (
           <div>

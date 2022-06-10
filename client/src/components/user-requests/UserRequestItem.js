@@ -28,8 +28,8 @@ const UserRequestItem = ({
 }) => {
   const [request_status, setStatus] = useState(status);
   return (
-    <div className="profile-exp bg-white p-2">
-      <div>
+    <div className="profile-exp bg-white p-2 request item user-req">
+      <div className="request content">
         <h3 className="text-dark request-header">Request: {request}</h3>
         {request_status == "open" ? (
           <span className="request-header-right">
@@ -73,10 +73,6 @@ const UserRequestItem = ({
           {number_sessions ? number_sessions : "N/A"}
         </p>
 
-        <p>
-          <strong>Last edit: </strong>{" "}
-          {new Date(last_edit_time).toLocaleString()}
-        </p>
         {/* TODO: add option to review session if status == "closed" */}
         {/* TODO: add option to chat with tutor here too if status == "tutoring" */}
         {request_status == "open" ? (
