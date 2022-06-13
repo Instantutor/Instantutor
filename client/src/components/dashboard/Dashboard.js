@@ -41,7 +41,7 @@ const DashBoard = ({ getRequestHistory,
                 ) : (
                     <div className='request'>
     
-                        <h1 className="large text-primary">Request History</h1>
+                        <h1 className="large text-primary">DashBoard</h1>
                         {req_history.map(request => (
                             <RequestItem key={request._id} item={request} />
                         ))}
@@ -51,13 +51,13 @@ const DashBoard = ({ getRequestHistory,
                 )
             )}
 
-            <Link to="/dashboard" className="btn btn-light">
+            {/* <Link to="/dashboard" className="btn btn-light">
                 Back to dashboard
-            </Link>
+                        </Link> */}
 
-            <Link to="/make_request" className="btn btn-light">
+            {/* <Link to="/make_request" className="btn btn-light">
                 Make a Request
-            </Link>
+            </Link> */}
         </Fragment>
     )
 }
