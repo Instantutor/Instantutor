@@ -7,12 +7,9 @@ import ExpertiseBox from './ExpertiseBox';
 const courses = require("../../course_list.json");
 
 const initialState = {
-  area: '',
-  degree: '',
-  description: '',
-  relatedCourses: []
+  area: "",
+  course: "",
 };
-
 
 const ExpertiseForm = (
     { addExpertise, 
@@ -23,8 +20,8 @@ const ExpertiseForm = (
     })  => {
 
     const [formData, setFormData] = useState(initialState);
-    const [course, setCourse] = useState("");
-    const { area, degree, description, relatedCourses} = formData;
+    const [allCourses, setAllCourses] = useState([]);
+    const { area, degree, description, course} = formData;
     
     // Check if expertise_id in URL esists
     let expertise_id = match.params.id
@@ -61,19 +58,18 @@ const ExpertiseForm = (
     }, [loading, getCurrentProfile, profile, expertise_id]);
 
     const onChange = e =>
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    const changeSubject = e =>
-      setFormData({ ...formData, [e.target.name]: e.target.value, relatedCourses: [] });
+      setFormData({ ...formData, [e.target.name]: e.target.value,});
     
     const addCourse = (e, course) => {
       if (course == "") return;
-      if (!(formData.relatedCourses.includes(course)))
-        setFormData({ ...formData, relatedCourses: [ ...formData.relatedCourses, course]});
+      if (!(allCourses.includes(course))) {
+        setAllCourses([...allCourses, formData]);
+        setFormData({initialState});
+      }
     }
 
     const removeCourse = (e, course) => {
-      setFormData({ ...formData, relatedCourses: formData.relatedCourses.filter(val => val != course)});
+      setAllCourses(allCourses.filter(val => val.course != course));
     }
 
     return (
@@ -91,7 +87,7 @@ const ExpertiseForm = (
           }}
         >
           <div className="form-group">
-            <select name="area" value={area} onChange={changeSubject}>
+            <select name="area" value={area} onChange={onChange}>
             <option value="">Area of expertise</option>
               {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
             </select>
@@ -99,26 +95,13 @@ const ExpertiseForm = (
               * What subject is an area of your expertise
             </small>
           </div>
-
-          <div className="form-group">
-            <select name="degree" value={degree} onChange={onChange}>
-              <option>Degree level</option>
-              <option value="Undergraduate">Undergraduate</option>
-              <option value="Postgraduate">Postgraduate</option>
-              <option value="PHD">PHD</option>
-              <option value="Worked">Worked</option>
-            </select>
-            <small className="form-text">
-              * Choose a degree level
-            </small>
-          </div>
           
           <div className="form-group">
             <div className="add-course">
-              <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
-                <option value="">Related course</option>
+              <select name="course" value={course} onChange={onChange}>
+                <option value="">Related courses</option>
                   {area in courses.course_list
-                    ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
+                    ? courses.course_list[area].map(enteredCourse => <option value={enteredCourse}>{enteredCourse}</option>)
                     : null
                   }
               </select>
@@ -132,26 +115,13 @@ const ExpertiseForm = (
             </small>
             <div>
             <fieldset>
-              {relatedCourses !== null && relatedCourses !== undefined
-              && relatedCourses.length > 0 ? relatedCourses.map(course => 
-              <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
+              {allCourses !== null && allCourses !== undefined
+              && allCourses.length > 0 ? allCourses.map(form => 
+              <ExpertiseBox area={form.area} course={form.course} removeCourse={removeCourse} />) : null}
             </fieldset>
             </div>
           </div>
 
-          <div className="form-group">
-            <textarea
-              name="description"
-              cols="30"
-              rows="5"
-              placeholder="Expertise Description"
-              value={description}
-              onChange={onChange}
-            />
-            <small className="form-text">
-              Your may show more about your expertise!
-            </small>
-          </div>
           <input type="submit" className="btn btn-primary my-1" />
           <Link className="btn btn-light my-1" to="/dashboard">
             Go Back
