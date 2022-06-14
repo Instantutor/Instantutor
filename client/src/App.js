@@ -1,7 +1,5 @@
 import React, { Component, Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Landing from './components/layout/Landing';
-import Navbar from './components/layout/Navbar';
 import Routes from './components/routing/Routes';
 //import { LOGOUT } from './actions/types';
 
@@ -12,8 +10,17 @@ import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 
-import './App.css';
 
+
+import './assets/images/gt_favicon.png';
+// import './assets/fonts/';
+import './assets/css/bootstrap.css';
+import './assets/css/font-awesome.css';
+import './assets/css/bootstrap-theme.css';
+import './assets/css/main.css';
+import './assets/css/dashboard.css';
+
+import './App.css';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -45,11 +52,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Fragment>
-          <Navbar />
-            <Switch>
-              <Route exact path="/" component={Landing} />
-              <Route component={Routes} />
-            </Switch>
+            <Route component={Routes} />
         </Fragment>
       </Router>
     </Provider>

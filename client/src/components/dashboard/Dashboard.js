@@ -77,7 +77,7 @@ const Dashboard = ({
             </Fragment>
           </p>
 
-          <DashboardActions role={profile.role} />
+          {/* <DashboardActions role={profile.role} /> */}
 
           {profile.role !== "Student" ? (
             <Expertise expertise={profile.expertise} />
