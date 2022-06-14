@@ -121,6 +121,22 @@ router.get("/", auth, async (req, res) => {
 });
 */
 
+router.get("/open", auth, async(req,res) => {
+  try {
+    const open = await Request.find({ status: "open" });
+    /*let open_requests = [];
+    open.forEach(function(object)){
+      open_requests.push({
+        
+      })
+    }*/
+    res.json(open);
+  } catch(err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+})
+
 router.get("/requestID/:request_id", auth, async (req, res) => {
   //Get all requests for which tutor qualifies or has been chosen]
   /* Should consider simply adding a field in database for user
