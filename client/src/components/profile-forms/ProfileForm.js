@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+import { deleteAccount } from '../../actions/profile';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
 
@@ -25,6 +26,7 @@ const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
+  deleteAccount,
   history
 }) => {
   const [formData, setFormData] = useState(initialState);
@@ -78,7 +80,7 @@ const ProfileForm = ({
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Edit Your Profile</h1>
+      <h1 className="large text-primary">{profile ? "Edit Your Profile" : "Create Your Profile"}</h1>
       <p className="lead">
         <i className="fas fa-user" /> Add some changes to your profile
       </p>
@@ -148,7 +150,7 @@ const ProfileForm = ({
           <small className="form-text">Tell us a little about yourself </small>
         </div>
 
-        <div className="my-2">
+        {/* <div className="my-2">
           <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
             type="button"
@@ -157,9 +159,9 @@ const ProfileForm = ({
             Add Social Network Links
           </button>
           <span>Optional</span>
-        </div>
+        </div> */}
 
-        {displaySocialInputs && (
+        {/* {displaySocialInputs && (
           <Fragment>
             <div className="form-group social-input">
               <i className="fab fa-twitter fa-2x" />
@@ -216,12 +218,12 @@ const ProfileForm = ({
               />
             </div>
           </Fragment>
-        )}
+        )} */}
 
         <input type="submit" className="btn btn-primary my-1" />
-        <Link className="btn btn-light my-1" to="/dashboard">
-          Go Back
-        </Link>
+        {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
+          Delete Account
+        </button> }
       </form>
     </Fragment>
   );
@@ -237,6 +239,6 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+export default connect(mapStateToProps, { createProfile, getCurrentProfile, deleteAccount })(
   ProfileForm
 );
