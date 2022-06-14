@@ -15,8 +15,8 @@ const Profile = ({ getProfileById, getCurrentProfile, profile: { profile, peer_p
     useEffect(() => {
         if (match.params.id !== null && match.params.id !== undefined)
             getProfileById(match.params.id);
-        else
-            getCurrentProfile();
+        
+        getCurrentProfile();
     }, 
         [getProfileById, getCurrentProfile, match.params.id]
     );
