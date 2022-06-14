@@ -1,5 +1,6 @@
 import { CLEAR_PROFILE, 
-        GET_PROFILE, 
+        GET_PROFILE,
+        GET_PEER_PROFILE,
         PROFILE_ERROR, 
         UPDATE_PROFILE, 
         ACCOUNT_DELETED,
@@ -8,6 +9,7 @@ import { CLEAR_PROFILE,
 
 const initialState = {
     profile: null,
+    peer_profile: null,
     profiles: [],
     repos: [],
     loading: true,
@@ -25,6 +27,12 @@ export default function (state = initialState, action) {
                 profile: payload,
                 loading: false
             };
+        case GET_PEER_PROFILE:
+            return {
+                ...state,
+                peer_profile: payload,
+                loading: false,
+            }
         case PROFILE_ERROR:
             return {
                 ...state,

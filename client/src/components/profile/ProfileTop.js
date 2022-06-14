@@ -8,9 +8,9 @@ const ProfileTop = ({
         location,
         degree,
         website,
-        social,
-        user: { name, avatar }
-    }
+        social
+    },
+    user: { name, avatar }
 }) => {
   return (
     <div className="profile-top bg-primary p-2">

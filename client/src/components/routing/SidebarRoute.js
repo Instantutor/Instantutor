@@ -6,12 +6,13 @@ import Alert from '../layout/Alert';
 
 const SidebarRoute = ({
     privateR,
+    selected,
     ...props
 }) => {
   return (
     <Fragment>
       <div className='wrapper'>
-        <Sidebar />
+        <Sidebar selected={selected} />
         <div className="main-panel ps-container ps-theme-default ps-active-x ps-active-y">
             <Alert />
             {privateR ? <PrivateRoute {...props} /> : <Route {...props}/>}

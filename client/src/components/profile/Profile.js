@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import { getProfileById } from '../../actions/profile';
+import { getCurrentProfile, getProfileById } from '../../actions/profile';
 import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
 import ProfileExpertise from './ProfileExpertise';
@@ -11,24 +11,30 @@ import ProfileExpertise from './ProfileExpertise';
 // Main Profile display page
 //  Will show ProfileTop; ProfileAbout and ProfileExperience... 
 
-const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
+const Profile = ({ getProfileById, getCurrentProfile, profile: { profile, peer_profile }, auth, match }) => {
     useEffect(() => {
-        getProfileById(match.params.id);
+        if (match.params.id !== null && match.params.id !== undefined)
+            getProfileById(match.params.id);
+        else
+            getCurrentProfile();
     }, 
-        [getProfileById, match.params.id]
+        [getProfileById, getCurrentProfile, match.params.id]
     );
+
+    if (match.params.id === null || match.params.id === undefined)
+        peer_profile = profile
 
     return (
         <Fragment>
             
-            {profile === null || profile === undefined || profile.user == null ? (
+            {peer_profile === null || peer_profile === undefined || peer_profile.user == null ? (
                 <Spinner />
             ) : (
                 <Fragment> 
 
                     {auth.isAuthenticated &&
                     auth.loading === false &&
-                    auth.user._id === profile.user._id && (
+                    auth.user._id === peer_profile.user._id && (
 
                         <Link to="/edit_profile" className="btn btn-dark">
                             Edit Profile
@@ -36,15 +42,21 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
                     )}
                     
                     <div className="profile-grid my-1">
-                        <ProfileTop profile={profile} />
-                        <ProfileAbout profile={profile} />
+                        <ProfileTop
+                            profile={peer_profile}
+                            user={(match.params.id === null || match.params.id === undefined)
+                                ? auth.user : peer_profile.user } />
+                        <ProfileAbout
+                            profile={peer_profile}
+                            name={(match.params.id === null || match.params.id === undefined)
+                                ? auth.user.name : peer_profile.user.name } />
                     </div>
 
                     <div className="profile-exp bg-white p-2">
                         <h2 className="text-primary">Expertise</h2>
-                        {profile.expertise.length > 0 ? (
+                        {peer_profile.expertise.length > 0 ? (
                             <Fragment>
-                            {profile.expertise.map((expertise) => (
+                            {peer_profile.expertise.map((expertise) => (
                                 <ProfileExpertise
                                 key={expertise._id}
                                 expertise={expertise}
@@ -73,4 +85,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 });
   
-export default connect(mapStateToProps, { getProfileById })(Profile);
+export default connect(mapStateToProps, { getProfileById, getCurrentProfile })(Profile);
