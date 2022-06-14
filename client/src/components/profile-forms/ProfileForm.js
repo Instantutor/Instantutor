@@ -222,12 +222,12 @@ const ProfileForm = ({
           </Fragment>
         )} */}
 
-        <button
+        {profile && <button
           onClick={() => window.history.back(-1)}
           className="btn btn-dark"
         >
           Go Back
-        </button>
+        </button> }
         <input type="submit" className="btn btn-primary my-1" />
         {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
           Delete Account
