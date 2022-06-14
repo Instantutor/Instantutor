@@ -121,6 +121,8 @@ router.get("/", auth, async (req, res) => {
 });
 */
 
+// @route: GET api/requst/open/
+// @desc: Get a list of all open requests
 router.get("/open", auth, async(req,res) => {
   try {
     const open = await Request.find({ status: "open" });
