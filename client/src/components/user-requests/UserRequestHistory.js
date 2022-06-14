@@ -31,7 +31,6 @@ const UserRequestHistory = ({ getRequestHistory,
                 req_history === null || req_history === undefined || req_history.length < 1 ? (    
                     
                     <div>
-                        <h1 className="large text-primary">Oops!</h1>
                         <h1 className="text-primary">Looks like u did not post any requests yet...</h1>
                     </div>
                     
@@ -39,7 +38,6 @@ const UserRequestHistory = ({ getRequestHistory,
                 ) : (
                     <div className='request'>
     
-                        <h1 className="large text-primary">Request History</h1>
                         {req_history.map(request => (
                             <RequestItem key={request._id} item={request} />
                         ))}
@@ -49,13 +47,6 @@ const UserRequestHistory = ({ getRequestHistory,
                 )
             )}
 
-            <Link to="/dashboard" className="btn btn-light">
-                Back to dashboard
-            </Link>
-
-            <Link to="/make_request" className="btn btn-light">
-                Make a Request
-            </Link>
         </Fragment>
     )
 }

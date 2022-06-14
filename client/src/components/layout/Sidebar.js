@@ -17,7 +17,7 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
     </div>
     <div className="sidebar-wrapper ps-container ps-theme-default">
         <ul className="nav">
-            <li className={selected === "dashboard" && "active"}>
+            <li className={selected === "dashboard" ? "active" : ""}>
                 <Link to="/dashboard">
                     <i>
                       <img src={selected === "dashboard"
@@ -37,8 +37,8 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
                 </Link>
             </li> */}
 
-            <li className={selected === "profile" && "active"}>
-                <Link to={profile ? `/profile/${auth.user._id}` : "/create_profile"}>
+            <li className={selected === "profile" ? "active" : ""}>
+                <Link to={profile && auth.user ? `/profile/${ auth.user._id }` : "/create_profile"}>
                     <i>
                       <img src={selected === "profile"
                         ? require('../../assets/Instantutor Icons/Portfolio Orange.png')
@@ -49,8 +49,8 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
                 </Link>
             </li>
 
-            {profile && <li className={selected === "history" && "active"}>
-                <Link to="/requests" style={{"maxWidth": "80%"}}>
+            {profile && <li className={selected === "history" ? "active" : ""}>
+                <Link to="/request_history" >
                     <i>
                       <img src={selected === "history"
                         ? require('../../assets/Instantutor Icons/History Orange.png')
@@ -61,7 +61,7 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
                 </Link>
             </li> }
 
-            {profile && <li className={selected === "browse" && "active"}>
+            {profile && <li className={selected === "browse" ? "active" : ""}>
                 <Link to="/peer_request">
                     <i>
                       <img src={selected === "browse"
