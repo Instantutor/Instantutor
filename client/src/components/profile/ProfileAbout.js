@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 // Show profile's Bio and Skills
 
 const ProfileAbout = ({
-    profile: {
-        bio,
-        expertise,
-        user: { name }
-    }
+    profile : {bio, expertise} , name
 }) => (
   <div className='profile-about bg-light p-2'>
     {bio && (
