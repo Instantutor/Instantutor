@@ -505,24 +505,77 @@ router.put("/cancel/:request_id", auth, async (req, res) => {
   //remove request from tutors received requests
 });
 
-// @route: PUT api/request/rate/:request_id
-// @desc:  Adds a rating to the relevent request
+// @route: PUT api/request/rate_tutor/:request_id
+// @desc:  Adds a rating to a request from the student side
 // @access Private
-router.put("/rate/:request_id", auth, async(req, res) => {
+router.put("/rate_tutor/:request_id", auth, async(req, res) => {
   const {
     rating
   } = req.body;
 
   try {
-    requestMatch = await RequestRelate.findOne({ _id: req.params.request_id });
+    // Changing the request status
+    const request_id = req.params.request_id;
+    var request = await Request.findOne({ _id: request_id });
+    if (!request) {
+      res.status(404).json({ error: { msg: "No request found with that id." } });
+    }
+    request.status = "rated";
+    await request.save();
+    // Adding rating to request relate
+    requestMatch = await RequestRelate.findOne({ user: request.user });
     if (requestMatch) {
-      if (rating) requestMatch["rating"] = rating;
+      if (rating) {
+        const rateIndex = requestMatch.closed_requests.findIndex(
+          request => request._id == request_id);
+        if (rateIndex != -1)
+          requestMatch.closed_requests[rateIndex].tutor_rating = req.body.rating;
+      }
       requestMatch.save();
 
       res.json({ msg: "Rating added", updated_request: requestMatch });
     } else {
       res.status(400).json({ error: "Request ID is invalid" });
     }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: PUT api/request/rate_student/:request_id
+// @desc:  Adds a rating to a request from the tutor side
+// @access Private
+router.put("/rate_student/:request_id", auth, async(req, res) => {
+  const {
+    rating
+  } = req.body;
+
+  try {
+    const request_id = req.params.request_id;
+    var request = await Request.findOne({ _id: request_id });
+    if (!request) {
+      res.status(404).json({ error: { msg: "No request found with that id." } });
+    }
+
+    var requestMatch = await RequestRelate.findOne({ user: request.user });
+
+    if (requestMatch) {
+      if (rating) {
+        const rateIndex = requestMatch.closed_requests.findIndex(
+          request => request._id == request_id);
+        if (rateIndex != -1) {
+          requestMatch.closed_requests[rateIndex].student_rating = rating;
+          requestMatch.closed_requests[rateIndex].state = "RATED";
+        }
+      }
+      requestMatch.save();
+
+      res.json({ msg: "Rating added", updated_request: requestMatch });
+    } else {
+      res.status(400).json({ error: "Request ID is invalid" });
+    }
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -542,7 +595,7 @@ router.put("/close/:request_id", auth, async (req, res) => {
     const request_id = req.params.request_id;
     var request = await Request.findOne({ _id: request_id });
     if (!request) {
-      res.json({ error: { msg: "No request found with that id." } });
+      res.status(404).json({ error: { msg: "No request found with that id." } });
     }
     request.status = "closed";
     // if (rating) requestMatch["rating"].push({stars: rating});
