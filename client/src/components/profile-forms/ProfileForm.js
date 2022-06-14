@@ -6,6 +6,7 @@ import { createProfile, getCurrentProfile } from '../../actions/profile';
 import { deleteAccount } from '../../actions/profile';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
+const courses = require("../../course_list.json");
 
 const initialState = {
   degree: '',
@@ -102,15 +103,12 @@ const ProfileForm = ({
         </div>
 
         <div className="form-group">
-          <input
-            type="text"
-            placeholder="* Major"
-            name="major"
-            value={major}
-            onChange={onChange}
-          />
+          <select name="major" value={major} onChange={onChange}>
+            <option>* Select Your Major</option>
+            {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
+          </select>
           <small className="form-text">
-            Please tell us your major of study; Please use comma separated values (eg. MATH,CSCI,...) and enter 'School' if you are a school student.
+            Please tell us your major of study
           </small>
         </div>
 
