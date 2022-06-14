@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 
-const Sidebar = ({logout}) => {
+const Sidebar = ({logout, profile }) => {
   return (
     <div className="sidebar" data-color="black" style={{padding: 0}}>
     <div className="logo">  
@@ -37,7 +37,7 @@ const Sidebar = ({logout}) => {
             <li>
                 <Link to="/edit_profile">
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Portfolio Black.jpg')}
+                      <img src={require('../../assets/Instantutor Icons/Portfolio Black_ccexpress.png')}
                       style={{"marginLeft": "13px"}} />
                     </i>
                     <p className="sidebar_font">Your Profile</p>

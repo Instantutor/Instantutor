@@ -148,16 +148,20 @@ const ProfileForm = ({
           <small className="form-text">Tell us a little about yourself </small>
         </div>
 
-        {/* <div className="my-2">
-          <button
+        <div className="my-2">
+          {/* <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
             type="button"
             className="btn btn-light"
           >
             Add Social Network Links
           </button>
-          <span>Optional</span>
-        </div> */}
+          <span>Optional</span> */}
+          {role !== "Student" &&
+            <Link to="/add_expertise" className="btn btn-light"
+            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </Link>
+          }
+        </div>
 
         {/* {displaySocialInputs && (
           <Fragment>
