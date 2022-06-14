@@ -29,12 +29,7 @@ const PeerRequestPage = ({
         <Spinner />
       ) : peer_requests === null || peer_requests === undefined || peer_requests.length < 1 ? (
         <div>
-          <h1 className="large text-primary">
-            Oops! No requests for you now...
-          </h1>
-          <h1 className="text-primary">
-            A notification will be sent to you once we find requests for you!
-          </h1>
+            <h2 className="large text-primary">Oops! No Requests for you, for now...</h2>
         </div>
       ) : (
         <div>
@@ -53,14 +48,6 @@ const PeerRequestPage = ({
         </div>
       )}
 
-      <Link to="/dashboard" className="btn btn-light">
-        Back To Dashboard
-      </Link>
-
-      <button 
-        onClick = {updateCheckTime} 
-        className = 'btn btn-dark'>Mark as checked
-      </button>
     </Fragment>
   );
 };
