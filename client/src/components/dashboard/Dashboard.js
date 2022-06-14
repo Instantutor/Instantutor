@@ -106,7 +106,6 @@ Dashboard.propTypes = {
   getRequestHistory: PropTypes.func.isRequired,
   checkNewPeerRequest: PropTypes.func.isRequired,
   getConfirmedTutors: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   user_requests: PropTypes.object.isRequired,

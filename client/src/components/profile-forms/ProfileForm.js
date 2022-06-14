@@ -105,7 +105,7 @@ const ProfileForm = ({
         <div className="form-group">
           <select name="major" value={major} onChange={onChange}>
             <option>* Select Your Major</option>
-            {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
+            {courses.subject_list.map(subj => <option key={subj} value={subj}>{subj}</option>)}
           </select>
           <small className="form-text">
             Please tell us your major of study
@@ -222,6 +222,12 @@ const ProfileForm = ({
           </Fragment>
         )} */}
 
+        <button
+          onClick={() => window.history.back(-1)}
+          className="btn btn-dark"
+        >
+          Go Back
+        </button>
         <input type="submit" className="btn btn-primary my-1" />
         {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
           Delete Account

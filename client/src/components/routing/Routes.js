@@ -74,6 +74,7 @@ const Routes = () => {
                 {/* <SidebarRoute privateR exact path="/search" component={Search} /> */}
 
                 <SidebarRoute exact path="/profile/:id" component={Profile} />
+                {/* <SidebarRoute exact path="/profile" component={Profile} /> */}
                 <SidebarRoute privateR exact path="/create_profile" component={ProfileForm} />
                 <SidebarRoute privateR exact path="/edit_profile" component={ProfileForm} />
 

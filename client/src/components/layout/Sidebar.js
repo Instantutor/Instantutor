@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 
-const Sidebar = ({logout, profile }) => {
+const Sidebar = ({logout, profile : {profile}, auth}) => {
+
   return (
     <div className="sidebar" data-color="black" style={{padding: 0}}>
     <div className="logo">  
@@ -35,7 +36,7 @@ const Sidebar = ({logout, profile }) => {
             </li> */}
 
             <li>
-                <Link to="/edit_profile">
+                <Link to={profile ? `/profile/${auth.user._id}` : "/create_profile"}>
                     <i>
                       <img src={require('../../assets/Instantutor Icons/Portfolio Black_ccexpress.png')}
                       style={{"marginLeft": "13px"}} />
@@ -104,7 +105,8 @@ const Sidebar = ({logout, profile }) => {
 }
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { logout })(Sidebar);
