@@ -1,12 +1,12 @@
-/* Global Styles
+
 :root {
-  --primary-color: #17a2b8;
+  --primary-color: #F29141;
   --dark-color: #343a40;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
   --success-color: #28a745;
 }
-
+/* Global Styles
 * {
   box-sizing: border-box;
   margin: 0;
@@ -34,6 +34,10 @@ img {
   width: 100%;
 } */
 
+.main-panel {
+  padding: 0 2rem;
+}
+
 /* Utilities */
 /* .container {
   max-width: 1100px;
@@ -47,7 +51,7 @@ img {
 } */
 
 /* Text Styles*/
-/* .x-large {
+.x-large {
   font-size: 4rem;
   line-height: 1.2;
   margin-bottom: 1rem;
@@ -74,10 +78,10 @@ img {
 
 .text-dark {
   color: var(--dark-color);
-} */
+} 
 
 /* Padding */
-/* .p {
+.p {
   padding: 0.5rem;
 }
 .p-1 {
@@ -100,10 +104,10 @@ img {
 }
 .py-3 {
   padding: 3rem 0;
-} */
+}
 
 /* Margin */
-/* .m {
+ .m {
   margin: 0.5rem;
 }
 .m-1 {
@@ -126,9 +130,9 @@ img {
 }
 .my-3 {
   margin: 3rem 0;
-} */
-
-/* .btn {
+}
+/*
+ .btn {
   display: inline-block;
   background: var(--light-color);
   color: #333;
@@ -140,6 +144,7 @@ img {
   transition: opacity 0.2s ease-in;
   outline: none;
 }
+*/
 
 .badge {
   font-size: 0.8rem;
@@ -224,20 +229,20 @@ img {
   height: 1px;
   background: #ccc;
   margin: 1.5rem 0;
-} */
+}
 
 /* Overlay */
-/* .dark-overlay {
+.dark-overlay {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-} */
+}
 
 /* Forms */
-/* .form .form-group {
+.form .form-group {
   margin: 1.2rem 0;
 }
 
@@ -298,7 +303,7 @@ button {
 
 .table th {
   background: var(--light-color);
-} */
+}
 
 /* Navbar */
 /* .navbar {
@@ -415,7 +420,7 @@ button {
 } */
 
 /* Profiles Page */
-/* .profile {
+.profile {
   display: grid;
   grid-template-columns: 2fr 4fr 2fr;
   align-items: center;
@@ -423,10 +428,10 @@ button {
   padding: 1rem;
   line-height: 1.8;
   margin-bottom: 1rem;
-} */
+}
 
 /* Profile Page */
-/* .profile-grid {
+.profile-grid {
   display: grid;
   grid-template-areas:
     "top top"
@@ -516,17 +521,17 @@ button {
 .profile-github > div:last-child {
   flex: 3;
   flex-basis: 20%;
-} */
+}
 
 /* Requests */
-/* .request-header {
+.request-header {
   display: inline-block;
 }
 
 .request-header-right {
   display: inline-block;
   float: right;
-} */
+}
 
 /* Posts Page */
 /* .post-form .post-form-header {
@@ -564,7 +569,7 @@ button {
 } */
 
 /* Search Bar Styles */
-/* .searchbar {
+.searchbar {
   width: 100%;
   height: auto;
   margin: 0 auto;
@@ -577,10 +582,10 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   font-family: Arial, Helvetica, sans-serif;
-} */
+}
 
 /* Timepicker Styles */
-/* .timepicker {
+.timepicker {
   table-layout: fixed;
   margin-left: auto;
   margin-right: auto;
@@ -597,10 +602,10 @@ button {
   text-align: center;
   vertical-align: center;
   padding: 5px;
-} */
+}
 
 /* Autocomplete Input Styles*/
-/* .autocomplete {
+.autocomplete {
   position: relative;
   text-align: left;
 }
@@ -631,7 +636,7 @@ button {
 .autocomplete .selected {
   color: white;
   background-color: rgb(30, 144, 255);
-} */
+}
 
 /* Calendar Styles */
 /* .calendar {
@@ -889,6 +894,7 @@ input[type="checkbox"] {
   width: 25px;
   height: 25px;
   /* background-color only for content */
+  padding: 0px;
   background-clip: content-box;
   border: 1.5px solid #bbbbbb;
   border-radius: 6px;
@@ -899,7 +905,7 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked {
-  background-color: #17a2b8;
+  background-color: var(--primary-color);
   border: 0px;
 }
 button.btn-confirm {
