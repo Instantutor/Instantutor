@@ -3,36 +3,9 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Spinner from '../layout/Spinner'
-import { getRequestHistory } from '../../actions/request'
+import { getRequestHistory, createRequest } from '../../actions/request'
 import RequestItem from '../user-requests/UserRequestItem'
 import UserRequest from '../dashboard/UserRequest'
-
-
-
-//dropdown button
-/*
-const Button = ({ color, text, onClick }) => {
-  return (
-    <button
-      onClick={onClick}
-      style={{ backgroundColor: color }}
-      className='btn'
-    >
-      {text}
-    </button>
-  )
-}
-
-Button.defaultProps = {
-  color: 'steelblue',
-}
-
-Button.propTypes = {
-  text: PropTypes.string,
-  color: PropTypes.string,
-  onClick: PropTypes.func,
-}
-*/
 
 
 
@@ -46,10 +19,10 @@ const DashBoard = ({
   
 }) => {
   const [showRequests, setShowRequests] = useState(true) //for dropdown menu 
-  const dropDown = ()=>{
-    setShowRequests(!showRequests)
-  }
-
+  const dropDown = ()=>{setShowRequests(!showRequests)}
+  const [buttonText, setButtonText] = useState(true) //change button text
+  const changeText = ()=>{setButtonText(!buttonText)}
+  
   useEffect(async () => {
     /*await (match.params.id ? 
             getRequestHistory(match.params.id) : 
@@ -59,35 +32,44 @@ const DashBoard = ({
   }, [getRequestHistory, match.params.id, user]);
   
   return (
-    //dropdown bar
-    //<Button/>
-
     <Fragment>
       <h1 className='large text-primary'>DashBoard</h1>
 
-      <button onClick={()=>dropDown()}>
-        DropDownMenu
+      <button
+        className='btn btn-primary'
+        onClick={() => {
+          dropDown()
+          changeText()
+        }}
+      >
+        {buttonText ? 'Close Requests' : 'Expand Requests'}
       </button>
-      {showRequests ? 
-          (loading ? (
-            <Spinner />
-          ) : req_history === null ||
-            req_history === undefined ||
-            req_history.length < 1 ? (
-            <div>
-              <h1 className='large text-primary'>Oops!</h1>
-              <h1 className='text-primary'>
-                Looks like u did not post any requests yet...
-              </h1>
-            </div>
-          ) : (
-            <div className='request '>
-              {req_history.map((request) => (
-                <RequestItem key={request._id} item={request} />
-              ))}
-            </div>
-          )) : null
-      }
+      <Link
+        to={`/make_request`}
+        className='btn btn-info'
+      >
+        Create Request
+      </Link>
+      {showRequests ? (
+        loading ? (
+          <Spinner />
+        ) : req_history === null ||
+          req_history === undefined ||
+          req_history.length < 1 ? (
+          <div>
+            <h1 className='large text-primary'>Oops!</h1>
+            <h1 className='text-primary'>
+              Looks like u did not post any requests yet...
+            </h1>
+          </div>
+        ) : (
+          <div className='request '>
+            {req_history.map((request) => (
+              <RequestItem key={request._id} item={request} />
+            ))}
+          </div>
+        )
+      ) : null}
 
       {/* <Link to="/dashboard" className="btn btn-light">
                 Back to dashboard
