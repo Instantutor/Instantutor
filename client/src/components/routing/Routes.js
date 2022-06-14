@@ -56,7 +56,6 @@ class SearchContainer extends Component {
 const Routes = () => {
     return (
         <Fragment>
-            <Alert />
             <Switch>
                 <LandingRoute exact path="/" />
                 <NavbarRoute exact path="/register" component={Register} />
