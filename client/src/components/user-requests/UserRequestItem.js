@@ -30,7 +30,7 @@ const UserRequestItem = ({
   return (
     <div className="profile-exp bg-white p-2 request item user-req">
       <div className="request content">
-        <h3 className="text-dark request-header">Request: {request}</h3>
+        <h3 className="text-dark request header">Request: {request}</h3>
         {request_status == "open" ? (
           <span className="request-header-right">
             <Link to={`/edit_request/${_id}`} className="btn btn-primary">

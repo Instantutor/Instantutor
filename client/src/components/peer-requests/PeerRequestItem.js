@@ -33,6 +33,8 @@ const PeerRequestItem = ({
 }) => {
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
+  console.log(status);
+  console.log(state);
   return (
     <div className="profile-exp bg-white p-2 request item peer-req">
       <div className="request content">
@@ -47,7 +49,7 @@ const PeerRequestItem = ({
             : ""}
         </i> */}
 
-        <h3 className="text-dark request-header"> Request: {request ? request : "N/A"}</h3>
+        <h3 className="text-dark request header"> Request: {request ? request : "N/A"}</h3>
 
         <p className="request">
           <strong>Name: </strong> {name}
@@ -72,13 +74,14 @@ const PeerRequestItem = ({
         <hr className="request"></hr>
 
         {state === "CHECKING" ? (
-          <div>
+          <div class="request btns">
             <button
               onClick={function () {
                 updateTutorResponse("ACCEPT", _id);
               }}
-              className="btn btn-success"
+              className="btn btn-success request accept"
             >
+              {/* <img src={require('../../assets/Instantutor Icons/check-solid.svg')} className="svg"/> */}
               Accept
             </button>
 
@@ -86,24 +89,25 @@ const PeerRequestItem = ({
               onClick={function () {
                 updateTutorResponse("DENY", _id);
               }}
-              className="btn btn-danger"
+              className="btn btn-danger request deny"
             >
               Deny
             </button>
 
             <button
               //onClick = {()}
-              className="btn btn"
+              className="btn request chat"
             >
               {" "}
-              Chat with the poster
+              Chat
             </button>
           </div>
         ) : selected_tutor == tutor_id ? (
           <div>
-            <p>You have been selected for this request!</p>{" "}
-            <p> You may now begin instruction with this student.</p>
-            {currentStatus == "tutoring" ? (
+            {/* <p>You have been selected for this request!</p>{" "}
+            <p> You may now begin instruction with this student.</p> */}
+            Status:
+            {currentStatus == "tutoring" ? ( // if tutoring
               <div>
                 <span className="request-header-right">
                   <button
@@ -115,6 +119,7 @@ const PeerRequestItem = ({
                         setCurrentStatus("closed");
                       }
                     }}
+                    title="Close Request"
                   >
                     Close Request
                   </button>
@@ -125,12 +130,13 @@ const PeerRequestItem = ({
                     onClick={() => {
                       cancelRequest(_id, setCurrentStatus);
                     }}
+                    title="Cancel Session(s)"
                   >
                     Cancel Session(s)
                   </button>
                 </span>
               </div>
-            ) : (
+            ) : ( // if not tutoring
               <div></div>
             )}
           </div>
@@ -138,8 +144,8 @@ const PeerRequestItem = ({
           <div>The student has selected another tutor for this request.</div>
         ) : (
           <div>
-            Your response to this request is:{" "}
-            <i className="text-primary">{state}</i>
+            Status:
+            <i className="text-primary">{" " + stateToString(state)}</i>
           </div>
         )}
       </div>
@@ -154,6 +160,15 @@ PeerRequestItem.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
+
+const stateToString = (state) => {
+  if (state == 'DENY')
+    return "Denied";
+  else if (state == 'ACCEPT')
+    return "Accepted";
+  else
+    return "skiddledibap"; // error
+}
 
 export default connect(mapStateToProps, {
   updateTutorResponse,
