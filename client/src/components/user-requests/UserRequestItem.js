@@ -33,11 +33,11 @@ const UserRequestItem = ({
         <h3 className="text-dark request header">Request: {request}</h3>
         {request_status == "open" ? (
           <span className="request-header-right">
-            <Link to={`/edit_request/${_id}`} className="btn btn-primary">
+            <Link to={`/edit_request/${_id}`} className="btn btn-primary user request edit">
               Edit
             </Link>
             <button
-              className="btn btn-danger"
+              className="btn btn-danger user request delete"
               onClick={() => {
                 deleteRequest(_id);
               }}

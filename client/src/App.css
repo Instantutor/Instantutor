@@ -962,6 +962,7 @@ div.request.item {
   height: inherit;
   overflow: hidden;
   margin: 2px 4px 2px 4px;
+  padding: 0;
 }
 
 div.request.content {
@@ -997,11 +998,18 @@ div.request.btns {
   overflow: visible;
 }
 
-button.request {
+button.peer.request {
   width: calc(100% / 3 - 10px);
   padding: 0;
   position: relative;
   top: calc(-100% + (1.5em / 2) - 1px);
   height: 1.5em;
   margin-left: calc(10px / 3);
+}
+
+/* User Request Items/Page (lots already inherited from the above) */
+
+.btn.user.request {
+  width: 100px;
+  padding: 0;
 }

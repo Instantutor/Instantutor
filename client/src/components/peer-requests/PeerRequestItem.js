@@ -79,7 +79,7 @@ const PeerRequestItem = ({
               onClick={function () {
                 updateTutorResponse("ACCEPT", _id);
               }}
-              className="btn btn-success request accept"
+              className="btn btn-success peer request accept"
             >
               {/* <img src={require('../../assets/Instantutor Icons/check-solid.svg')} className="svg"/> */}
               Accept
@@ -89,14 +89,14 @@ const PeerRequestItem = ({
               onClick={function () {
                 updateTutorResponse("DENY", _id);
               }}
-              className="btn btn-danger request deny"
+              className="btn btn-danger peer request deny"
             >
               Deny
             </button>
 
             <button
               //onClick = {()}
-              className="btn request chat"
+              className="btn peer request chat"
             >
               {" "}
               Chat
@@ -107,6 +107,7 @@ const PeerRequestItem = ({
             {/* <p>You have been selected for this request!</p>{" "}
             <p> You may now begin instruction with this student.</p> */}
             Status:
+            <i className="text-primary">{" In Progress"}</i>
             {currentStatus == "tutoring" ? ( // if tutoring
               <div>
                 <span className="request-header-right">
@@ -145,7 +146,7 @@ const PeerRequestItem = ({
         ) : (
           <div>
             Status:
-            <i className="text-primary">{" " + stateToString(state)}</i>
+            <i className="text-primary">{" " + stateToString(state, status)}</i>
           </div>
         )}
       </div>
@@ -161,11 +162,13 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-const stateToString = (state) => {
+const stateToString = (state, status) => {
   if (state == 'DENY')
     return "Denied";
   else if (state == 'ACCEPT')
     return "Accepted";
+  else if (status == 'open' && state == 'CHECKING')
+    return "Pending";
   else
     return "skiddledibap"; // error
 }
