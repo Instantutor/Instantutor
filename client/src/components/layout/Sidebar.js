@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 
-const Sidebar = ({logout, profile : {profile}, auth}) => {
+const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
 
   return (
     <div className="sidebar" data-color="black" style={{padding: 0}}>
@@ -17,10 +17,12 @@ const Sidebar = ({logout, profile : {profile}, auth}) => {
     </div>
     <div className="sidebar-wrapper ps-container ps-theme-default">
         <ul className="nav">
-            <li className="active">
+            <li className={selected === "dashboard" && "active"}>
                 <Link to="/dashboard">
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Dashboard_Orange.png')}  />
+                      <img src={selected === "dashboard"
+                        ? require('../../assets/Instantutor Icons/Dashboard_Orange.png')
+                        : require('../../assets/Instantutor Icons/Dashboard Black.png')}  />
                     </i>
                     <p className="sidebar_font">Dashboard</p>
                 </Link>
@@ -35,34 +37,40 @@ const Sidebar = ({logout, profile : {profile}, auth}) => {
                 </Link>
             </li> */}
 
-            <li>
+            <li className={selected === "profile" && "active"}>
                 <Link to={profile ? `/profile/${auth.user._id}` : "/create_profile"}>
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Portfolio Black_ccexpress.png')}
+                      <img src={selected === "profile"
+                        ? require('../../assets/Instantutor Icons/Portfolio Orange.png')
+                        : require('../../assets/Instantutor Icons/Portfolio Black_ccexpress.png')}
                       style={{"marginLeft": "13px"}} />
                     </i>
                     <p className="sidebar_font">Your Profile</p>
                 </Link>
             </li>
 
-            <li>
+            {profile && <li className={selected === "history" && "active"}>
                 <Link to="/requests" style={{"maxWidth": "80%"}}>
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/History_Black.png')}
+                      <img src={selected === "history"
+                        ? require('../../assets/Instantutor Icons/History Orange.png')
+                        : require('../../assets/Instantutor Icons/History_Black.png')}
                       style={{"marginLeft": "11px"}} />
                     </i>
                     <p className="sidebar_font">Request History</p>
                 </Link>
-            </li>
+            </li> }
 
-            <li>
+            {profile && <li className={selected === "browse" && "active"}>
                 <Link to="/peer_request">
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Browse Black_ccexpress.png')} />
+                      <img src={selected === "browse"
+                        ? require('../../assets/Instantutor Icons/Browe Orange.jpg')
+                        : require('../../assets/Instantutor Icons/Browse Black_ccexpress.png')} />
                     </i>
                     <p className="sidebar_font">Browse Requests</p>
                 </Link>
-            </li>
+            </li> }
 
             {/* <li>
                 <a href="../examples/contact.html">

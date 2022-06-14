@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -44,6 +44,7 @@ const Dashboard = ({
       profile.role !== "Student" &&
       checkNewPeerRequest(user._id);
   }, [user, profile, peer_requests.loading]);
+
 
   return loading ? (
     <Spinner />
