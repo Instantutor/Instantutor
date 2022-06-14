@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
 const RoleButton = ({role, toggledRole, setRollToggle }) => {
-    console.log(role)
+
   return (
     <Fragment>
         <button
