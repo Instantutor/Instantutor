@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import Register from '../auth/Register';
 import Login from '../auth/Login';
-import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 
 // Edit Profile
@@ -13,8 +12,10 @@ import ExpertiseForm from '../profile-forms/ExpertiseForm';
 // Profile display
 import Profile from '../profile/Profile';
 
-//Force user to log in, protact dashboard
-import PrivateRoute from '../routing/PrivateRoute';
+// Wrappers for different layouts
+import LandingRoute from './LandingRoute';
+import NavbarRoute from './NavbarRoute';
+import SidebarRoute from './SidebarRoute';
 
 //Not found page
 import NotFound from '../layout/NotFound';
@@ -23,6 +24,7 @@ import NotFound from '../layout/NotFound';
 import UserRequest from '../user-requests/UserRequest';
 import UserRequestHistory from '../user-requests/UserRequestHistory';
 import UserRequestMatchedTutor from '../user-requests/UserRequestMatchedTutor';
+import RequestHistory from '../requests/RequestHistory';
 
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
 import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
@@ -33,6 +35,9 @@ import Search from '../search/Search';
 
 // Calendar
 import TempCalendarPage from '../calendar/TempCalendarPage'
+
+// Sidebar
+import Sidebar from '../layout/Sidebar';
 
 /*
 class SearchContainer extends Component {
@@ -47,33 +52,35 @@ class SearchContainer extends Component {
 
 const Routes = () => {
     return (
-        <section className="container">
-            <Alert />
+        <Fragment>
             <Switch>
-                <Route exact path="/register" component={Register}></Route>
-                <Route exact path="/login" component={Login}></Route>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <LandingRoute exact path="/" />
+                <NavbarRoute exact path="/register" component={Register} />
+                <NavbarRoute exact path="/login" component={Login} />
+                <SidebarRoute selected="dashboard" privateR exact path="/dashboard" component={Dashboard} />
 
-                <PrivateRoute exact path="/make_request" component={UserRequest} />
-                <PrivateRoute exact path="/edit_request/:id" component={UserRequest} />
-                <PrivateRoute exact path="/requests" component={UserRequestHistory} />
-                <PrivateRoute exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
-                <PrivateRoute exact path="/finalize_request/:id" component={FinalizeRequestPage} />
-                <PrivateRoute exact path="/peer_request" component={PeerRequestPage} />
+                <SidebarRoute selected="dashboard" privateR exact path="/make_request" component={UserRequest} />
+                <SidebarRoute selected="dashboard" privateR exact path="/edit_request/:id" component={UserRequest} />
+                <SidebarRoute selected="history" privateR exact path="/requests" component={UserRequestHistory} />
+                <SidebarRoute selected="history" privateR exact path="/request_history" component={RequestHistory} />
+                <SidebarRoute selected="dashboard" privateR exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
+                <SidebarRoute selected="dashboard" privateR exact path="/finalize_request/:id" component={FinalizeRequestPage} />
+                <SidebarRoute selected="browse" privateR exact path="/peer_request" component={PeerRequestPage} />
 
-                {/* <PrivateRoute exact path="/calendar" component={TempCalendarPage} /> */}
+                {/* <SidebarRoute privateR exact path="/calendar" component={TempCalendarPage} /> */}
 
-                {/* <PrivateRoute exact path="/search" component={Search} /> */}
+                {/* <SidebarRoute privateR exact path="/search" component={Search} /> */}
 
-                <Route exact path="/profile/:id" component={Profile} />
-                <PrivateRoute exact path="/create_profile" component={ProfileForm} />
-                <PrivateRoute exact path="/edit_profile" component={ProfileForm} />
+                <SidebarRoute selected="profile" exact path="/profile/:id" component={Profile} />
+                {/* <SidebarRoute exact path="/profile" component={Profile} /> */}
+                <SidebarRoute selected="profile" privateR exact path="/create_profile" component={ProfileForm} />
+                <SidebarRoute selected="profile" privateR exact path="/edit_profile" component={ProfileForm} />
 
-                <PrivateRoute exact path="/add_expertise" component={ExpertiseForm} />
-                <PrivateRoute exact path="/edit_expertise/:id" component={ExpertiseForm} />
+                <SidebarRoute selected="profile" privateR exact path="/add_expertise" component={ExpertiseForm} />
+                <SidebarRoute selected="profile" privateR exact path="/edit_expertise/:id" component={ExpertiseForm} />
                 <Route component={NotFound} />
             </Switch>
-        </section>
+        </Fragment>
     )
 }              
 

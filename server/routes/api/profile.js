@@ -316,11 +316,14 @@ router.put(
       .withMessage("The subject chosen is not an RPI major"),
     check("degree", "Degree is required").not().isEmpty(),
     check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
-      .custom((course, {req}) =>  "area" in req.body)
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
       .withMessage("Area must be selected if you want to select a course").bail()
-      .custom((course, {req}) => courses.subject_list.includes(req.body.area))
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
       .withMessage("Subject must be valid if you want to select a course").bail()
-      .custom((course, {req}) => courses.course_list[req.body.area].includes(course))
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
       .withMessage("The course chose is not a valid RPI course"),
   ],
   async (req, res) => {
@@ -336,7 +339,7 @@ router.put(
       degree,
       description,
     };
-    newExp.relatedCourses = [relatedCourses]
+    newExp.relatedCourses = relatedCourses
 
     // Get new expertise and put it into the array of expertise.
     try {
@@ -390,12 +393,14 @@ router.put(
       .withMessage("If you are changing the area you must also change the course"),
     check("degree", "Degree is required").not().isEmpty(),
     check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
-      .custom((course, {req}) =>  "area" in req.body)
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
       .withMessage("Area must be included if you want to change the course").bail()
-      .custom((course, {req}) => courses.subject_list.includes(req.body.area))
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
       .withMessage("Area must be valid if you want to change the course").bail()
-      .custom((course, {req}) =>  course ? 
-        courses.course_list[req.body.area].includes(course) : true)
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
       .withMessage("The course chosen is not a valid RPI course"),
   ],
   async (req, res) => {
@@ -412,7 +417,7 @@ router.put(
         degree,
         description,
       };
-      updatedExp.relatedCourses = [relatedCourses];
+      updatedExp.relatedCourses = relatedCourses;
 
       const profile = await Profile.findOne({ user: req.user.id });
 

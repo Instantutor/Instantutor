@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import formData from "../profile-forms/ProfileForm";
 import { createRequest, editRequest, getRequestHistory } from "../../actions/request";
-import "../../App.css";
 const courses = require("../../course_list.json");
 
 const UserRequest = ({ createRequest,

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -8,17 +8,14 @@ import { getRequestHistory } from "../../actions/request";
 
 import { checkNewPeerRequest, getConfirmedTutors } from "../../actions/request";
 
-import DashboardActions from "./DashboardActions";
 import Spinner from "../layout/Spinner";
 
 import Expertise from "./Expertise";
 import UserRequest from "./UserRequest";
-//import { render } from 'react-dom';
 
 const Dashboard = ({
   getCurrentProfile,
   getRequestHistory,
-  deleteAccount,
   checkNewPeerRequest,
   getConfirmedTutors,
 
@@ -47,6 +44,7 @@ const Dashboard = ({
       profile.role !== "Student" &&
       checkNewPeerRequest(user._id);
   }, [user, profile, peer_requests.loading]);
+
 
   return loading ? (
     <Spinner />
@@ -77,7 +75,7 @@ const Dashboard = ({
             </Fragment>
           </p>
 
-          <DashboardActions role={profile.role} />
+          {/* <DashboardActions role={profile.role} /> */}
 
           {profile.role !== "Student" ? (
             <Expertise expertise={profile.expertise} />
@@ -91,12 +89,6 @@ const Dashboard = ({
             <UserRequest user_request={user_requests.request_history} />
           )}
 
-          <div className="my-2">
-            <button className="btn btn-danger" onClick={() => deleteAccount()}>
-              <i className="fas fa-user-minus"></i>
-              Delete My Account
-            </button>
-          </div>
         </Fragment>
       ) : (
         <Fragment>
@@ -115,7 +107,6 @@ Dashboard.propTypes = {
   getRequestHistory: PropTypes.func.isRequired,
   checkNewPeerRequest: PropTypes.func.isRequired,
   getConfirmedTutors: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   user_requests: PropTypes.object.isRequired,
@@ -131,7 +122,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getCurrentProfile,
-  deleteAccount,
   getRequestHistory,
   checkNewPeerRequest,
   getConfirmedTutors,

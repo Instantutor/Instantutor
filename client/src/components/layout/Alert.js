@@ -19,4 +19,23 @@ const mapStateToProps = state => ({
     alerts: state.alert
 });
 
+/*
+function AlertError() {
+    const [show, setShow] = useState(true);
+  
+    if (show) {
+      return (
+        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+          <Alert.Heading>Error</Alert.Heading>
+          <p>
+            Your password is shorter than 6 characters long
+          </p>
+        </Alert>
+      );
+    }
+    return <Button onClick={() => setShow(true)}>Show Alert</Button>;
+}*/
+  
+//render(<AlertDismissibleExample />);
+
 export default connect(mapStateToProps)(Alert);

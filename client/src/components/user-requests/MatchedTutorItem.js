@@ -75,7 +75,6 @@ class MatchedTutorItem extends React.Component {
 
         <Link
           to={`/profile/${_id}`}
-          target="_blank"
           className="btn btn-primary"
         >
           <i className="fas fa-user-circle"> </i> View Profile

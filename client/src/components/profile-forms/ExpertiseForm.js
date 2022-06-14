@@ -1,15 +1,16 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Button } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExpertise, getCurrentProfile } from '../../actions/profile';
+import ExpertiseBox from './ExpertiseBox';
 const courses = require("../../course_list.json");
 
 const initialState = {
   area: '',
   degree: '',
   description: '',
-  relatedCourses: ''
+  relatedCourses: []
 };
 
 
@@ -22,6 +23,7 @@ const ExpertiseForm = (
     })  => {
 
     const [formData, setFormData] = useState(initialState);
+    const [course, setCourse] = useState("");
     const { area, degree, description, relatedCourses} = formData;
     
     // Check if expertise_id in URL esists
@@ -61,6 +63,19 @@ const ExpertiseForm = (
     const onChange = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const changeSubject = e =>
+      setFormData({ ...formData, [e.target.name]: e.target.value, relatedCourses: [] });
+    
+    const addCourse = (e, course) => {
+      if (course == "") return;
+      if (!(formData.relatedCourses.includes(course)))
+        setFormData({ ...formData, relatedCourses: [ ...formData.relatedCourses, course]});
+    }
+
+    const removeCourse = (e, course) => {
+      setFormData({ ...formData, relatedCourses: formData.relatedCourses.filter(val => val != course)});
+    }
+
     return (
         <Fragment>
         <h1 className="large text-primary">Manage your Expertise</h1>
@@ -76,7 +91,7 @@ const ExpertiseForm = (
           }}
         >
           <div className="form-group">
-            <select name="area" value={area} onChange={onChange}>
+            <select name="area" value={area} onChange={changeSubject}>
             <option value="">Area of expertise</option>
               {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
             </select>
@@ -99,16 +114,29 @@ const ExpertiseForm = (
           </div>
           
           <div className="form-group">
-            <select name="relatedCourses" value={relatedCourses} onChange={onChange}>
-              <option value="">Related course</option>
-                {area in courses.course_list
-                  ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
-                  : null
-                }
-            </select>
+            <div className="add-course">
+              <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
+                <option value="">Related course</option>
+                  {area in courses.course_list
+                    ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
+                    : null
+                  }
+              </select>
+              <div className="add-expertise" onClick={e => addCourse(e, course)}>
+                <i className="fas fa-plus"></i>
+                  {" Add a course "}
+              </div>
+            </div>
             <small className="form-text">
-              * Fill in a course related to this area of expertise
+              * Choose courses to add
             </small>
+            <div>
+            <fieldset>
+              {relatedCourses !== null && relatedCourses !== undefined
+              && relatedCourses.length > 0 ? relatedCourses.map(course => 
+              <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
+            </fieldset>
+            </div>
           </div>
 
           <div className="form-group">
