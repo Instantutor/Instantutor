@@ -50,7 +50,7 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
             </li>
 
             {profile && <li className={selected === "history" ? "active" : ""}>
-                <Link to="/requests" style={{"maxWidth": "80%"}}>
+                <Link to="/request_history" >
                     <i>
                       <img src={selected === "history"
                         ? require('../../assets/Instantutor Icons/History Orange.png')

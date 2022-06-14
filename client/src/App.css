@@ -638,6 +638,37 @@ button {
   background-color: rgb(30, 144, 255);
 }
 
+/* Role Button Styles */
+.role-button {
+  width: 120px;
+  padding: 0.5rem 2rem;
+  text-align: center;
+  align-items: center;
+  margin: 1rem 0;
+  border-width: 0;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.role-button.tutor {
+  border-radius: 100em 0 0 100em;
+}
+
+.role-button.student {
+  border-radius: 0 100em 100em 0;
+}
+
+.role-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.role-button.inactive {
+  background-color: var(--dark-color);
+  color: white;
+  cursor: not-allowed;
+}
+
 /* Calendar Styles */
 /* .calendar {
   display: grid;
