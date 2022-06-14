@@ -34,7 +34,83 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
 
     return (
         <Fragment>
-            <h1 className="large text-primary">Sign Up</h1>
+            <div className="container">
+            
+            <div className="row">
+
+                <article className="col-xs-12 maincontent">
+                    <h6></h6>
+                    <div className="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div className="panel panel-default">
+                            <div className="panel-body">
+                                <h5 className="thin text-center">Create a new account</h5>
+                                <form>
+                                    <div className="top-margin">
+                                        <label>Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Name"
+                                            name="name"
+                                            value={name}
+                                            onChange={e => onChange(e)}
+                                            className="form-control"
+                                        />
+                                    </div>
+
+                                    <div className="top-margin">
+                                        <label>Email Address</label>
+                                        <input
+                                            type="email"
+                                            placeholder="Email Address"
+                                            name="email"
+                                            value={email}
+                                            onChange={e => onChange(e)}
+                                            className="form-control"
+                                        />
+                                    </div>
+
+                                    <div className="top-margin">
+                                        <label>Password </label>
+                                        <input
+                                            type="password"
+                                            placeholder="Password"
+                                            name="password"
+                                            value={password}
+                                            onChange={e => onChange(e)}
+                                            minLength="6"
+                                            className="form-control"
+                                        />
+                                    </div>
+
+                                    <div className="top-margin">
+                                        <label>Confirm Password</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            name="password2"
+                                            value={password2}
+                                            onChange={e => onChange(e)}
+                                            minLength="6"
+                                            className="form-control"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Link to="/login" style={{"marginLeft": "365px"}}> Existing User?</Link>
+                                    </div>	
+                                    <div className="text-center">
+                                        <button className="btn btn-action" type="submit" onClick={onSubmit}>Register</button>
+                                    </div>
+                                    </form></div>
+                                
+                            </div>
+                        </div>
+
+                    </article></div>
+
+            </div>
+
+            {/* <h1 className="large text-primary">Sign Up</h1>
             <p className="lead">
                 <i className="fas fa-user"></i> Create Your Account
             </p>
@@ -61,7 +137,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                         Gravatar email
                 </small>
                 </div>
-                {/*
+                
                 <div className="form-group">
                 <label htmlFor="role">Please choose a role:</label>
                 <select id="role" name="role" onChange={e => onChange(e)}>
@@ -71,7 +147,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                     <option value="both">Both</option>
                 </select>
                 </div>
-                */}
+               
                 <div className="form-group">
                     <input
                         type="password"
@@ -95,7 +171,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             </form>
             <p className="my-1">
                 Already have an account? <Link to="/login">Sign In</Link>
-            </p>
+            </p> */}
+
         </Fragment>);
 };
 
