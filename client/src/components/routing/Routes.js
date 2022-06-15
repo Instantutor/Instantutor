@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 
 import Register from '../auth/Register';
 import Login from '../auth/Login';
-import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 
 // Edit Profile
@@ -12,9 +11,6 @@ import ExpertiseForm from '../profile-forms/ExpertiseForm';
 
 // Profile display
 import Profile from '../profile/Profile';
-
-//Force user to log in, protact dashboard
-import PrivateRoute from '../routing/PrivateRoute';
 
 // Wrappers for different layouts
 import LandingRoute from './LandingRoute';
@@ -28,6 +24,7 @@ import NotFound from '../layout/NotFound';
 import UserRequest from '../user-requests/UserRequest';
 import UserRequestHistory from '../user-requests/UserRequestHistory';
 import UserRequestMatchedTutor from '../user-requests/UserRequestMatchedTutor';
+import RequestHistory from '../requests/RequestHistory';
 
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
 import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
@@ -65,6 +62,7 @@ const Routes = () => {
                 <SidebarRoute selected="dashboard" privateR exact path="/make_request" component={UserRequest} />
                 <SidebarRoute selected="dashboard" privateR exact path="/edit_request/:id" component={UserRequest} />
                 <SidebarRoute selected="history" privateR exact path="/requests" component={UserRequestHistory} />
+                <SidebarRoute selected="history" privateR exact path="/request_history" component={RequestHistory} />
                 <SidebarRoute selected="dashboard" privateR exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <SidebarRoute selected="dashboard" privateR exact path="/finalize_request/:id" component={FinalizeRequestPage} />
                 <SidebarRoute selected="browse" privateR exact path="/peer_request" component={PeerRequestPage} />
