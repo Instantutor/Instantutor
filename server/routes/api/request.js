@@ -168,7 +168,7 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
-
+    reqs.sort((a, b)  => b.last_edit_time - a.last_edit_time);
     // get tutoring_requests
     for (i in requestUser.tutoring_requests) {
       temp = await Request.findOne({
@@ -181,7 +181,6 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
-
     // get closed requests
     for (i in requestUser.closed_requests) {
       temp = await Request.findOne({
@@ -243,8 +242,7 @@ router.get("/received/:user_id", auth, async (req, res) => {
     }
 
     // Sort the peered requests such that the newest one be the first
-    reqs.sort((a, b)  => b.last_edit_time - a.last_edit_time);
-
+    // reqs.sort((a, b)  => {b.last_edit_time <= a.last_edit_time});
     res.json({
       peer_requests: reqs,
       new_request: num_new_request,
