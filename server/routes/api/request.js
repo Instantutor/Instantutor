@@ -533,7 +533,7 @@ router.put("/rate_tutor/:request_id", auth, async(req, res) => {
       }
       requestMatch.save();
 
-      res.json({ msg: "Rating added", updated_request: requestMatch });
+      res.json({ msg: "Tutor rating added" });
     } else {
       res.status(400).json({ error: "Request ID is invalid" });
     }
@@ -571,7 +571,7 @@ router.put("/rate_student/:request_id", auth, async(req, res) => {
       }
       requestMatch.save();
 
-      res.json({ msg: "Rating added", updated_request: requestMatch });
+      res.json({ msg: "Student rating added" });
     } else {
       res.status(400).json({ error: "Request ID is invalid" });
     }
