@@ -6,7 +6,9 @@ import {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 } from "../../actions/request";
+import Rating from "../requests/Rating";
 
 const PeerRequestItem = ({
   user,
@@ -30,9 +32,13 @@ const PeerRequestItem = ({
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest,
 }) => {
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
+  const [rating, setRating] = useState({ rating: 3 });
+
+
   return (
     <div className="profile-exp bg-white p-2">
       <div>
@@ -40,10 +46,10 @@ const PeerRequestItem = ({
           className="text-primary"
           style={{ paddingRight: "5px", float: "right" }}
         >
-          {currentStatus == "tutoring" && selected_tutor == tutor_id
+          {currentStatus === "tutoring" && selected_tutor === tutor_id
             ? "INSTRUCTION IN PROGRESS"
-            : currentStatus == "canceled" || currentStatus == "closed"
-            ? currentStatus.toUpperCase()
+            : currentStatus === "canceled" || currentStatus === "closed"
+            ? "WAITING ON STUDENT FEEDBACK"
             : ""}
         </i>
 
@@ -95,7 +101,7 @@ const PeerRequestItem = ({
             </button>
 
             <button
-              //onClick = {()}
+              // onClick = {() => console.log("click")}
               className="btn btn"
             >
               {" "}
@@ -104,8 +110,10 @@ const PeerRequestItem = ({
           </div>
         ) : selected_tutor == tutor_id ? (
           <div>
-            <p>You have been selected for this request!</p>{" "}
-            <p> You may now begin instruction with this student.</p>
+            {currentStatus == "tutoring" && <Fragment>
+              <p>You have been selected for this request!</p>{" "}
+              <p> You may now proceed instructing this student</p>
+            </Fragment> }
             {currentStatus == "tutoring" ? (
               <div>
                 <span className="request-header-right">
@@ -133,7 +141,24 @@ const PeerRequestItem = ({
                   </button>
                 </span>
               </div>
-            ) : (
+            ) : currentStatus === "closed" || currentStatus === "rated" ? (
+              <div>
+                <span className="request-header-right">
+                  <button
+                    className="btn btn-dark"
+                    onClick={() => {
+                      ratePeerRequest(_id, rating);
+                    }}
+                  >
+                    {state === "RATED" ? "Change Rating" : "Rate Request" }
+                  </button>
+                </span>
+                <span className="request-header-right">
+                  <Rating rating={rating.rating} setRating={setRating} />
+                </span>
+              </div>
+            )
+            : (
               <div></div>
             )}
           </div>
@@ -141,8 +166,8 @@ const PeerRequestItem = ({
           <div>The student has selected another tutor for this request.</div>
         ) : (
           <div>
-            Your response to this request is:{" "}
-            <i className="text-primary">{state}</i>
+            Your chose to {" "}
+            <i className="text-primary">{state}</i> {" "} this request
           </div>
         )}
       </div>
@@ -162,4 +187,5 @@ export default connect(mapStateToProps, {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 })(PeerRequestItem);

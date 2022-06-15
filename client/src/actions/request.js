@@ -397,9 +397,15 @@ export const closeRequest = (request_id) => async (dispatch) => {
     return false;
   }
 };
-export const ratePeerRequest = (request_id) => async (dispatch) => {
+export const ratePeerRequest = (request_id, rating) => async (dispatch) => {
   try {
-    const res = await axios.put(`/api/request/rate_student/${request_id}`);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    
+    const res = await axios.put(`/api/request/rate_student/${request_id}`, rating, config);
     dispatch({
       type: RATE_PEER_REQUEST,
       payload: request_id,
@@ -414,9 +420,15 @@ export const ratePeerRequest = (request_id) => async (dispatch) => {
     return false;
   }
 };
-export const rateUserRequest = (request_id) => async (dispatch) => {
+export const rateUserRequest = (request_id, rating) => async (dispatch) => {
   try {
-    const res = await axios.put(`/api/request/rate_student/${request_id}`);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    
+    const res = await axios.put(`/api/request/rate_student/${request_id}`, rating, config);
     dispatch({
       type: RATE_USER_REQUEST,
       payload: request_id,
