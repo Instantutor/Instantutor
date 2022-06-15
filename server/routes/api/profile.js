@@ -163,8 +163,8 @@ router.get("/tutors", async (req, res) => {
 router.get("/names", async (req, res) => {
   try {
     const profiles = await Profile.find().populate("user", ["name"]);
-    console.log(profiles);
-    res.json(profiles);
+    console.log(profiles.map((profile) => profile.user.name));
+    res.json(profiles.map((profile) => profile.user.name));
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
