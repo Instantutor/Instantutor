@@ -521,6 +521,7 @@ router.put("/rate_tutor/:request_id", auth, async(req, res) => {
       res.status(404).json({ error: { msg: "No request found with that id." } });
     }
     request.status = "rated";
+    request.tutor_rating = rating;
     await request.save();
     // Adding rating to request relate
     requestMatch = await RequestRelate.findOne({ user: request.user });

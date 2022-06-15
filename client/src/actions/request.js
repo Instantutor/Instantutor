@@ -420,7 +420,7 @@ export const ratePeerRequest = (request_id, rating) => async (dispatch) => {
     return false;
   }
 };
-export const rateUserRequest = (request_id, rating) => async (dispatch) => {
+export const rateTutorRequest = (request_id, rating) => async (dispatch) => {
   try {
     const config = {
       headers: {
@@ -428,7 +428,7 @@ export const rateUserRequest = (request_id, rating) => async (dispatch) => {
       },
     };
     
-    const res = await axios.put(`/api/request/rate_student/${request_id}`, rating, config);
+    const res = await axios.put(`/api/request/rate_tutor/${request_id}`, rating, config);
     dispatch({
       type: RATE_USER_REQUEST,
       payload: request_id,

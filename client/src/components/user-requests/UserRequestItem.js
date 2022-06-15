@@ -7,7 +7,9 @@ import {
   deleteRequest,
   getRequestHistory,
   cancelRequest,
+  rateTutorRequest
 } from "../../actions/request";
+import Rating from "../requests/Rating";
 
 const UserRequestItem = ({
   item: {
@@ -21,12 +23,16 @@ const UserRequestItem = ({
     help_time,
     number_sessions,
     last_edit_time,
+    tutor_rating
   },
   deleteRequest,
   getRequestHistory,
   cancelRequest,
+  rateTutorRequest
 }) => {
   const [request_status, setStatus] = useState(status);
+  const [rating, setRating] = useState({"rating": tutor_rating});
+  console.log(tutor_rating)
   return (
     <div className="profile-exp bg-white p-2">
       <div>
@@ -79,32 +85,35 @@ const UserRequestItem = ({
         </p>
         {/* TODO: add option to review session if status == "closed" */}
         {/* TODO: add option to chat with tutor here too if status == "tutoring" */}
-        {request_status == "open" ? (
+        {request_status === "open" ? (
           <Link
             to={`/request_matched_tutors/${_id}`}
             className="btn btn-dark"
             style={{ float: "right" }}
           >
-            {request.selected_tutor == undefined
+            {request.selected_tutor === undefined || request.selected_tutor === null
               ? "Check Tutors"
               : "Your Tutor"}
           </Link>
-        ) : (
-          <span className="request-header-right">
-            {request_status == "tutoring" ? (
+        ) : request_status === "closed" || request_status == "rated" ? (
+          <div>
+            <span className="request-header-right">
               <button
-                className="btn btn-danger"
+                className="btn btn-dark"
                 onClick={() => {
-                  cancelRequest(_id, setStatus);
+                  rateTutorRequest(_id, rating);
                 }}
               >
-                Cancel Session(s)
+                {status === "rated" ? "Change Rating" : "Rate Request" }
               </button>
-            ) : (
+            </span>
+            <span className="request-header-right">
+              <Rating rating={rating.rating} setRating={setRating} />
+            </span>
+          </div>
+        ) : (
               <span></span>
             )}
-          </span>
-        )}
       </div>
     </div>
   );
@@ -118,4 +127,5 @@ export default connect(null, {
   deleteRequest,
   getRequestHistory,
   cancelRequest,
+  rateTutorRequest
 })(UserRequestItem);

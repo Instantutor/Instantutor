@@ -166,8 +166,9 @@ const PeerRequestItem = ({
           <div>The student has selected another tutor for this request.</div>
         ) : (
           <div>
-            Your chose to {" "}
+            You're choice was to {" "}
             <i className="text-primary">{state}</i> {" "} this request
+            {state == "ACCEPT" && <p>Now you need to wait on the student to confirm</p>}
           </div>
         )}
       </div>
