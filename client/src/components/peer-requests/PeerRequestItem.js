@@ -6,7 +6,9 @@ import {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 } from "../../actions/request";
+import Rating from "../requests/Rating";
 
 const PeerRequestItem = ({
   user,
@@ -30,11 +32,13 @@ const PeerRequestItem = ({
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest,
 }) => {
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
-  console.log(status);
-  console.log(state);
+  const [rating, setRating] = useState({ rating: 3 });
+
+
   return (
     <div className="profile-exp bg-white p-2 request item peer-req">
       <div className="request content">
@@ -42,10 +46,10 @@ const PeerRequestItem = ({
           className="text-primary"
           style={{ paddingRight: "5px", float: "right" }}
         >
-          {currentStatus == "tutoring" && selected_tutor == tutor_id
+          {currentStatus === "tutoring" && selected_tutor === tutor_id
             ? "INSTRUCTION IN PROGRESS"
-            : currentStatus == "canceled" || currentStatus == "closed"
-            ? currentStatus.toUpperCase()
+            : currentStatus === "canceled" || currentStatus === "closed"
+            ? "WAITING ON STUDENT FEEDBACK"
             : ""}
         </i> */}
 
@@ -139,7 +143,24 @@ const PeerRequestItem = ({
                   </button>
                 {/* </span> */}
               </div>
-            ) : ( // if not tutoring
+            ) : currentStatus === "closed" || currentStatus === "rated" ? (
+              <div>
+                <span className="request-header-right">
+                  <button
+                    className="btn btn-dark"
+                    onClick={() => {
+                      ratePeerRequest(_id, rating);
+                    }}
+                  >
+                    {state === "RATED" ? "Change Rating" : "Rate Request" }
+                  </button>
+                </span>
+                <span className="request-header-right">
+                  <Rating rating={rating.rating} setRating={setRating} />
+                </span>
+              </div>
+            )
+            : (
               <div></div>
             )}
           </div>
@@ -179,4 +200,5 @@ export default connect(mapStateToProps, {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 })(PeerRequestItem);
