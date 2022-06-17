@@ -3,8 +3,10 @@
   --primary-color: #F29141;
   --dark-color: #343a40;
   --light-color: #f4f4f4;
-  --danger-color: #dc3545;
-  --success-color: #28a745;
+  /* --danger-color: #dc3545; */
+  --danger-color: #E65953;
+  /* --success-color: #28a745; */
+  --success-color: #AFD437;
 }
 /* Global Styles
 * {
@@ -1001,10 +1003,31 @@ div.request.btns {
 button.peer.request {
   width: calc(100% / 3 - 10px);
   padding: 0;
-  position: relative;
-  top: calc(-100% + (1.5em / 2) - 1px);
   height: 1.5em;
-  margin-left: calc(10px / 3);
+  margin-left: calc((100% - 3 * (100% / 3 - 10px)) / 4);
+}
+
+div.status.not-in-progress {
+  height: calc(1em + 3px);
+}
+
+p.status-in-progress {
+  display: inline-block;
+  width: 119px;
+  margin-left: 0;
+  margin-top: -10px;
+}
+
+div.inprogress.btns {
+  display: inline-block;
+  width: calc(100% - 119px - 10px);
+  margin-left: 10px;
+}
+
+div.inprogress.btns button {
+  display: inline-block;
+  width: calc(100% / 2 - 5px);
+  margin-left: 5px;
 }
 
 /* User Request Items/Page (lots already inherited from the above) */

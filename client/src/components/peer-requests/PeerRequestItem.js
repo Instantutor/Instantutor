@@ -103,16 +103,18 @@ const PeerRequestItem = ({
             </button>
           </div>
         ) : selected_tutor == tutor_id ? (
-          <div>
+          <div className="peer request btns">
+            <p className="peer request status-in-progress">
             {/* <p>You have been selected for this request!</p>{" "}
             <p> You may now begin instruction with this student.</p> */}
             Status:
             <i className="text-primary">{" In Progress"}</i>
+            </p>
             {currentStatus == "tutoring" ? ( // if tutoring
-              <div>
-                <span className="request-header-right">
+              <div className="peer reqest inprogress btns">
+                {/* <span className="request-header-right"> */}
                   <button
-                    className="btn btn-dark"
+                    className="btn btn-dark peer request closereq"
                     onClick={async () => {
                       const went_through = await closeRequest(_id);
                       //TODO: Consider not changing state until we know request went through
@@ -122,20 +124,20 @@ const PeerRequestItem = ({
                     }}
                     title="Close Request"
                   >
-                    Close Request
+                    Close
                   </button>
-                </span>
-                <span className="request-header-right">
+                {/* </span> */}
+                {/* <span className="request-header-right"> */}
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-danger peer request cancel"
                     onClick={() => {
                       cancelRequest(_id, setCurrentStatus);
                     }}
                     title="Cancel Session(s)"
                   >
-                    Cancel Session(s)
+                    Cancel
                   </button>
-                </span>
+                {/* </span> */}
               </div>
             ) : ( // if not tutoring
               <div></div>
@@ -144,7 +146,7 @@ const PeerRequestItem = ({
         ) : selected_tutor != undefined && selected_tutor != tutor_id ? (
           <div>The student has selected another tutor for this request.</div>
         ) : (
-          <div>
+          <div className="status not-in-progress">
             Status:
             <i className="text-primary">{" " + stateToString(state, status)}</i>
           </div>
