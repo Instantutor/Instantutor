@@ -122,21 +122,6 @@ router.get("/", auth, async (req, res) => {
 */
 
 
-//@route: GET api/request/:id
-//@desc: Get a request by user id
-//@access Private
-router.get("/", auth, async (req, res) => {
-  try {
-    const reqs = await Request.find({ user: req.user.id });
-    res.json(reqs);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-}
-);  
-
-
 router.get("/requestID/:request_id", auth, async (req, res) => {
   //Get all requests for which tutor qualifies or has been chosen]
   /* Should consider simply adding a field in database for user
