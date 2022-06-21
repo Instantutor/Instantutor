@@ -20,6 +20,9 @@ import {
   CLOSE_REQUEST_ERROR,
   CANCEL_REQUEST,
   CANCEL_REQUEST_ERROR,
+  RATE_PEER_REQUEST,
+  RATE_USER_REQUEST,
+  RATE_REQUEST_ERROR
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -382,13 +385,59 @@ export const closeRequest = (request_id) => async (dispatch) => {
     //console.log(res.data);
     dispatch({
       type: CLOSE_REQUEST,
-      payload: res.data,
+      payload: request_id,
     });
     dispatch(setAlert(`You have successfully closed that request.`, "success"));
     return true;
   } catch (err) {
     dispatch({
       type: CLOSE_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+    return false;
+  }
+};
+export const ratePeerRequest = (request_id, rating) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    
+    const res = await axios.put(`/api/request/rate_student/${request_id}`, rating, config);
+    dispatch({
+      type: RATE_PEER_REQUEST,
+      payload: request_id,
+    });
+    dispatch(setAlert(`You have succesfully rated that student.`, "success"));
+    return true;
+  } catch (err) {
+    dispatch({
+      type: RATE_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+    return false;
+  }
+};
+export const rateTutorRequest = (request_id, rating) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    
+    const res = await axios.put(`/api/request/rate_tutor/${request_id}`, rating, config);
+    dispatch({
+      type: RATE_USER_REQUEST,
+      payload: request_id,
+    });
+    dispatch(setAlert(`You have successfully rated that tutor.`, "success"));
+    return true;
+  } catch (err) {
+    dispatch({
+      type: RATE_REQUEST_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
     return false;
