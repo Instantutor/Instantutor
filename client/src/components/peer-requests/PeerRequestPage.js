@@ -29,37 +29,21 @@ const PeerRequestPage = ({
         <Spinner />
       ) : peer_requests === null || peer_requests === undefined || peer_requests.length < 1 ? (
         <div>
-          <h1 className="large text-primary">
-            Oops! No requests for you now...
-          </h1>
-          <h1 className="text-primary">
-            A notification will be sent to you once we find requests for you!
-          </h1>
+            <h2 className="large text-primary">Oops! No Requests for you, for now...</h2>
         </div>
       ) : (
-        <div className="request">
-          <h1 className="large text-primary">Request for you!</h1>
-          <i className="fas fa-clock"></i> Last checked time: 
-          <i className="text-primary">{new Date(last_check_time).toLocaleString()}</i> 
-          <small> (Click "mark as checked" to make sure you checked all new requests!) </small>
-
-          {peer_requests.slice(0, num_new_request).map((peer_request) => (
-            <PeerRequestItem key={peer_request.id} item={peer_request} />
-          ))}
-          {peer_requests.slice(num_new_request).map((peer_request) => (
-            <PeerRequestItem key={peer_request.id} item={peer_request} />
-          ))}
+        <div>
+          <div className="request">
+            {peer_requests.slice(0, num_new_request).map((peer_request) => (
+              <PeerRequestItem key={peer_request.id} item={peer_request} />
+            ))}
+            {peer_requests.slice(num_new_request).map((peer_request) => (
+              <PeerRequestItem key={peer_request.id} item={peer_request} />
+            ))}
+          </div>
         </div>
       )}
 
-      <Link to="/dashboard" className="btn btn-light">
-        Back To Dashboard
-      </Link>
-
-      <button 
-        onClick = {updateCheckTime} 
-        className = 'btn btn-dark'>Mark as checked
-      </button>
     </Fragment>
   );
 };

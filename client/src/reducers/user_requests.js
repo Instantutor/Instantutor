@@ -9,6 +9,7 @@ import {
   GET_CONFIRMED_TUTORS_ERROR,
   DISPERSE_FINAL_REQUEST,
   DISPERSE_REQUEST_ERROR,
+  RATE_USER_REQUEST,
   LOGOUT,
   ACCOUNT_DELETED,
 } from "../actions/types";
@@ -62,6 +63,13 @@ export default function (state = initialState, action) {
           request._id != payload.deleted_request._id),
         loading: false
       }
+
+    case RATE_USER_REQUEST:
+      return {
+        ...state,
+        request_history: state.request_history.map(request =>
+          request._id === payload ? {...request, status: "rated"} : request )
+      };
 
     case DISPERSE_REQUEST_ERROR:
     case GET_CONFIRMED_TUTORS_ERROR:

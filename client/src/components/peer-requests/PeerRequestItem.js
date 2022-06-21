@@ -6,7 +6,9 @@ import {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 } from "../../actions/request";
+import Rating from "../requests/Rating";
 
 const PeerRequestItem = ({
   user,
@@ -30,58 +32,60 @@ const PeerRequestItem = ({
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest,
 }) => {
   const tutor_id = user._id;
   const [currentStatus, setCurrentStatus] = useState(status);
+  const [rating, setRating] = useState({ rating: 3 });
+
+
   return (
-    <div className="profile-exp bg-white p-2">
-      <div>
-        <i
+    <div className="profile-exp bg-white p-2 request item peer-req">
+      <div className="request content">
+        {/* <i
           className="text-primary"
           style={{ paddingRight: "5px", float: "right" }}
         >
-          {currentStatus == "tutoring" && selected_tutor == tutor_id
+          {currentStatus === "tutoring" && selected_tutor === tutor_id
             ? "INSTRUCTION IN PROGRESS"
-            : currentStatus == "canceled" || currentStatus == "closed"
-            ? currentStatus.toUpperCase()
+            : currentStatus === "canceled" || currentStatus === "closed"
+            ? "WAITING ON STUDENT FEEDBACK"
             : ""}
-        </i>
+        </i> */}
 
-        <h3 className="text-dark"> Request: {request ? request : "N/A"}</h3>
+        <h3 className="text-dark request header"> Request: {request ? request : "N/A"}</h3>
 
-        <p>
+        <p className="request">
           <strong>Name: </strong> {name}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Subject: </strong> {subject ? subject : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Course: </strong> {course ? course : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Topic: </strong> {topic ? topic : "N/A"}
         </p>
 
-        <p>
+        <p className="request">
           <strong>Number of sessions: </strong> {number_sessions ? number_sessions : "N/A"}
         </p>
-
-        <p>
-          <strong>Last edit: </strong>{" "}
-          {new Date(last_edit_time).toLocaleString()}
-        </p>
+        
+        <hr className="request"></hr>
 
         {state === "CHECKING" ? (
-          <div>
+          <div class="request btns">
             <button
               onClick={function () {
                 updateTutorResponse("ACCEPT", _id);
               }}
-              className="btn btn-success"
+              className="btn btn-success peer request accept"
             >
+              {/* <img src={require('../../assets/Instantutor Icons/check-solid.svg')} className="svg"/> */}
               Accept
             </button>
 
@@ -89,28 +93,32 @@ const PeerRequestItem = ({
               onClick={function () {
                 updateTutorResponse("DENY", _id);
               }}
-              className="btn btn-danger"
+              className="btn btn-danger peer request deny"
             >
               Deny
             </button>
 
             <button
               //onClick = {()}
-              className="btn btn"
+              className="btn peer request chat"
             >
               {" "}
-              Chat with the poster
+              Chat
             </button>
           </div>
         ) : selected_tutor == tutor_id ? (
-          <div>
-            <p>You have been selected for this request!</p>{" "}
-            <p> You may now begin instruction with this student.</p>
-            {currentStatus == "tutoring" ? (
-              <div>
-                <span className="request-header-right">
+          <div className="peer request btns">
+            <p className="peer request status-in-progress">
+            {/* <p>You have been selected for this request!</p>{" "}
+            <p> You may now begin instruction with this student.</p> */}
+            Status:
+            <i className="text-primary">{" In Progress"}</i>
+            </p>
+            {currentStatus == "tutoring" ? ( // if tutoring
+              <div className="peer reqest inprogress btns">
+                {/* <span className="request-header-right"> */}
                   <button
-                    className="btn btn-dark"
+                    className="btn btn-dark peer request closereq"
                     onClick={async () => {
                       const went_through = await closeRequest(_id);
                       //TODO: Consider not changing state until we know request went through
@@ -118,31 +126,50 @@ const PeerRequestItem = ({
                         setCurrentStatus("closed");
                       }
                     }}
+                    title="Close Request"
                   >
-                    Close Request
+                    Close
                   </button>
-                </span>
-                <span className="request-header-right">
+                {/* </span> */}
+                {/* <span className="request-header-right"> */}
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-danger peer request cancel"
                     onClick={() => {
                       cancelRequest(_id, setCurrentStatus);
                     }}
+                    title="Cancel Session(s)"
                   >
-                    Cancel Session(s)
+                    Cancel
+                  </button>
+                {/* </span> */}
+              </div>
+            ) : currentStatus === "closed" || currentStatus === "rated" ? (
+              <div>
+                <span className="request-header-right">
+                  <button
+                    className="btn btn-dark"
+                    onClick={() => {
+                      ratePeerRequest(_id, rating);
+                    }}
+                  >
+                    {state === "RATED" ? "Change Rating" : "Rate Request" }
                   </button>
                 </span>
+                <span className="request-header-right">
+                  <Rating rating={rating.rating} setRating={setRating} />
+                </span>
               </div>
-            ) : (
+            )
+            : (
               <div></div>
             )}
           </div>
         ) : selected_tutor != undefined && selected_tutor != tutor_id ? (
           <div>The student has selected another tutor for this request.</div>
         ) : (
-          <div>
-            Your response to this request is:{" "}
-            <i className="text-primary">{state}</i>
+          <div className="status not-in-progress">
+            Status:
+            <i className="text-primary">{" " + stateToString(state, status)}</i>
           </div>
         )}
       </div>
@@ -158,8 +185,20 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
+const stateToString = (state, status) => {
+  if (state == 'DENY')
+    return "Denied";
+  else if (state == 'ACCEPT')
+    return "Accepted";
+  else if (status == 'open' && state == 'CHECKING')
+    return "Pending";
+  else
+    return "skiddledibap"; // error
+}
+
 export default connect(mapStateToProps, {
   updateTutorResponse,
   cancelRequest,
   closeRequest,
+  ratePeerRequest
 })(PeerRequestItem);

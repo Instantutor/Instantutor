@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
 
-const Sidebar = ({logout}) => {
+const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
+
   return (
     <div className="sidebar" data-color="black" style={{padding: 0}}>
     <div className="logo">  
@@ -16,10 +17,12 @@ const Sidebar = ({logout}) => {
     </div>
     <div className="sidebar-wrapper ps-container ps-theme-default">
         <ul className="nav">
-            <li className="active">
+            <li className={selected === "dashboard" ? "active" : ""}>
                 <Link to="/dashboard">
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Dashboard_Orange.png')}  />
+                      <img src={selected === "dashboard"
+                        ? require('../../assets/Instantutor Icons/Dashboard_Orange.png')
+                        : require('../../assets/Instantutor Icons/Dashboard Black.png')}  />
                     </i>
                     <p className="sidebar_font">Dashboard</p>
                 </Link>
@@ -34,34 +37,40 @@ const Sidebar = ({logout}) => {
                 </Link>
             </li> */}
 
-            <li>
-                <Link to="/edit_profile">
+            <li className={selected === "profile" ? "active" : ""}>
+                <Link to={profile && auth.user ? `/profile/${ auth.user._id }` : "/create_profile"}>
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Portfolio Black.jpg')}
+                      <img src={selected === "profile"
+                        ? require('../../assets/Instantutor Icons/Portfolio Orange.png')
+                        : require('../../assets/Instantutor Icons/Portfolio Black_ccexpress.png')}
                       style={{"marginLeft": "13px"}} />
                     </i>
                     <p className="sidebar_font">Your Profile</p>
                 </Link>
             </li>
 
-            <li>
-                <Link to="/requests" style={{"maxWidth": "80%"}}>
+            {profile && <li className={selected === "history" ? "active" : ""}>
+                <Link to="/request_history" >
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/History_Black.png')}
+                      <img src={selected === "history"
+                        ? require('../../assets/Instantutor Icons/History Orange.png')
+                        : require('../../assets/Instantutor Icons/History_Black.png')}
                       style={{"marginLeft": "11px"}} />
                     </i>
                     <p className="sidebar_font">Request History</p>
                 </Link>
-            </li>
+            </li> }
 
-            <li>
+            {profile && <li className={selected === "browse" ? "active" : ""}>
                 <Link to="/peer_request">
                     <i>
-                      <img src={require('../../assets/Instantutor Icons/Browse Black_ccexpress.png')} />
+                      <img src={selected === "browse"
+                        ? require('../../assets/Instantutor Icons/Browe Orange.jpg')
+                        : require('../../assets/Instantutor Icons/Browse Black_ccexpress.png')} />
                     </i>
                     <p className="sidebar_font">Browse Requests</p>
                 </Link>
-            </li>
+            </li> }
 
             {/* <li>
                 <a href="../examples/contact.html">
@@ -104,7 +113,8 @@ const Sidebar = ({logout}) => {
 }
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { logout })(Sidebar);

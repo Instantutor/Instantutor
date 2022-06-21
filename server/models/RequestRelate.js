@@ -17,8 +17,13 @@ const RequestRelateSchema = new Schema({
       request_id: {
         type: String,
       },
-      rating: {
-        type: String
+      tutor_rating: {
+        type: Number,
+        default: -1
+      },
+      student_rating: {
+        type: Number,
+        default: -1
       }
     },
   ],
