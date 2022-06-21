@@ -265,11 +265,12 @@ router.put(
       role,
     };
 
-    // Get new role and put it into the array of role.
+    // Get new role and change old
     try {
       const profile = await Profile.findOne({ user: req.user.id });
 
-      profile.role.unshift(newExp);
+      //profile.role.unshift(newExp);
+      profile.role = role;
 
       await profile.save();
 
@@ -345,7 +346,22 @@ router.put(
     try {
       const profile = await Profile.findOne({ user: req.user.id });
 
-      profile.expertise.unshift(newExp);
+      //if area exists in profile.expertise, update its info
+      const index = profile.expertise.findIndex( exp => exp.area == newExp.area);
+      if (index > -1) {
+        profile.expertise[index].degree = newExp.degree;
+        profile.expertise[index].description = newExp.description;
+        //loop through related courses and add them to the array
+        for (let i = 0; i < newExp.relatedCourses.length; i++) {
+          if (!profile.expertise[index].relatedCourses.includes(newExp.relatedCourses[i])) {
+            profile.expertise[index].relatedCourses.push(newExp.relatedCourses[i]);
+          }
+        }
+      }
+      //else, add it to the array
+      else {
+        profile.expertise.unshift(newExp);
+      }
 
       await profile.save();
 
@@ -426,7 +442,22 @@ router.put(
         .map((item) => item.id)
         .indexOf(req.params.expertise_id);
 
-      profile.expertise[updateIndex] = updatedExp;
+      //if area exists in profile.expertise, update its info
+      const index = profile.expertise.findIndex( exp => exp.area == updatedExp.area);
+      if (index > -1) {
+        profile.expertise[index].degree = updatedExp.degree;
+        profile.expertise[index].description = updatedExp.description;
+        //loop through related courses and add them to the array
+        for (let i = 0; i < relatedCourses.length; i++) {
+          if (!profile.expertise[index].relatedCourses.includes(relatedCourses[i])) {
+            profile.expertise[index].relatedCourses.push(relatedCourses[i]);
+          }
+        }
+      }
+      //else, add it to the array
+      else {
+        profile.expertise[updateIndex] = updatedExp;
+      }
 
       await profile.save();
 
