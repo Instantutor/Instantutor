@@ -21,15 +21,6 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "5000:5000"
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/ngnix.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "80:80"
-    depends_on:
-      - server
-      - client
 # networks:
 #   full-app:
 #     driver: bridge
