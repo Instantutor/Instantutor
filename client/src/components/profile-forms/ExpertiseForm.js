@@ -12,26 +12,26 @@ const initialState = {
 };
 
 const ExpertiseForm = (
-    { addExpertise, 
-      match, 
-      profile: { profile, loading }, 
-      getCurrentProfile, 
-      history 
+    { addExpertise,
+      match,
+      profile: { profile, loading },
+      getCurrentProfile,
+      history
     })  => {
 
     const [formData, setFormData] = useState(initialState);
     const [allCourses, setAllCourses] = useState([]);
     const { area, degree, description, course} = formData;
-    
+
     // Check if expertise_id in URL esists
     let expertise_id = match.params.id
-    
+
     // Fill the form with data if id is provided
     useEffect(() => {
       if (expertise_id){
 
         //console.log(expertise_id);
-        
+
         if (! profile)
           getCurrentProfile();
 
@@ -59,7 +59,7 @@ const ExpertiseForm = (
 
     const onChange = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value,});
-    
+
     const addCourse = (e, course) => {
       if (course == "") return;
       if (!(allCourses.includes(course))) {
@@ -74,11 +74,6 @@ const ExpertiseForm = (
 
     return (
         <Fragment>
-        <h1 className="large text-primary">Manage your Expertise</h1>
-        <p className="lead">
-          <i className="fas fa-code-branch" /> Add any expertise to show you can be a tutor.
-        </p>
-        <small>* = required field</small>
         <form
           className="form"
           onSubmit={e => {
@@ -95,7 +90,7 @@ const ExpertiseForm = (
               * What subject is an area of your expertise
             </small>
           </div>
-          
+
           <div className="form-group">
             <div className="add-course">
               <select name="course" value={course} onChange={onChange}>
@@ -116,16 +111,13 @@ const ExpertiseForm = (
             <div>
             <fieldset>
               {allCourses !== null && allCourses !== undefined
-              && allCourses.length > 0 ? allCourses.map(form => 
+              && allCourses.length > 0 ? allCourses.map(form =>
               <ExpertiseBox area={form.area} course={form.course} removeCourse={removeCourse} />) : null}
             </fieldset>
             </div>
           </div>
 
-          <input type="submit" className="btn btn-primary my-1" />
-          <Link className="btn btn-light my-1" to="/dashboard">
-            Go Back
-          </Link>
+         
         </form>
       </Fragment>
     )

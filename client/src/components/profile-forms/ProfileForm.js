@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+import ExpertiseForm from './ExpertiseForm';
+import Button from './Button';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
 
@@ -223,6 +225,7 @@ const ProfileForm = ({
           Go Back
         </Link>
       </form>
+
     </Fragment>
   );
 };
