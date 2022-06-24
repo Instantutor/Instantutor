@@ -28,12 +28,17 @@ router.post(
         .custom(subject => courses.subject_list.includes(subject))
         .withMessage("The subject chosen is not an RPI major"),
       check("course").not().isEmpty().withMessage("Related course is required").bail()
-        .custom((course, {req}) =>  "subject" in req.body)
+        .custom((course, { req }) => "subject" in req.body)
         .withMessage("Subject must be selected if you want to select a course").bail()
-        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .custom((course, { req }) => courses.subject_list.includes(req.body.subject))
         .withMessage("Subject must be valid if you want to select a course").bail()
-        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .custom((course, { req }) => courses.course_list[req.body.subject].includes(course))
         .withMessage("The course chose is not a valid RPI course"),
+      check("num_sessions")
+        .custom((num_sessions, { req }) => num_sessions < 0)
+        .withMessage("Number of sessions must be positive")
+        .custom((num_sessions, { req }) => num_sessions == 0)
+        .withMessage("Number of sessions must be greater than 0"),
     ],
   ],
 
@@ -169,7 +174,7 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
-    reqs.sort((a, b)  => b.last_edit_time - a.last_edit_time);
+    reqs.sort((a, b) => b.last_edit_time - a.last_edit_time);
     // get tutoring_requests
     for (i in requestUser.tutoring_requests) {
       temp = await Request.findOne({
@@ -258,34 +263,39 @@ router.get("/received/:user_id", auth, async (req, res) => {
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
 // @access Private
-router.put("/edit/:request_id", 
+router.put("/edit/:request_id",
   [
     auth,
     [
       check("subject")
         .custom(subject => subject ? courses.subject_list.includes(subject) : true)
         .withMessage("The subject chosen is not an RPI major")
-        .custom((subject, {req}) => subject ? "course" in req.body : true)
+        .custom((subject, { req }) => subject ? "course" in req.body : true)
         .withMessage("If you are changing the subject you must also change the course"),
       check("course")
-        .custom((course, {req}) =>  "subject" in req.body)
+        .custom((course, { req }) => "subject" in req.body)
         .withMessage("Subject must be included if you want to change the course").bail()
-        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .custom((course, { req }) => courses.subject_list.includes(req.body.subject))
         .withMessage("Subject must be valid if you want to change the course").bail()
-        .custom((course, {req}) =>  course ? 
+        .custom((course, { req }) => course ?
           courses.course_list[req.body.subject].includes(course) : true)
         .withMessage("The course chosen is not a valid RPI course"),
+      check("num_sessions")
+        .custom((num_sessions, { req }) => num_sessions < 0)
+        .withMessage("Number of sessions must be positive")
+        .custom((num_sessions, { req }) => num_sessions == 0)
+        .withMessage("Number of sessions must be greater than 0"),
     ],
   ]
-  
-    , async (req, res) => {
+
+  , async (req, res) => {
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    
+
     const {
       request,
       subject,
@@ -319,7 +329,7 @@ router.put("/edit/:request_id",
       console.error(err.message);
       res.status(500).send("Server Error");
     }
-});
+  });
 
 // @route: POST api/request/disperse
 // @desc:  Adds request id to each confirmed tutor's active_request
@@ -489,7 +499,7 @@ router.put("/cancel/:request_id", auth, async (req, res) => {
 // @route: PUT api/request/rate_tutor/:request_id
 // @desc:  Adds a rating to a request from the student side
 // @access Private
-router.put("/rate_tutor/:request_id", auth, async(req, res) => {
+router.put("/rate_tutor/:request_id", auth, async (req, res) => {
   const {
     rating
   } = req.body;
@@ -528,7 +538,7 @@ router.put("/rate_tutor/:request_id", auth, async(req, res) => {
 // @route: PUT api/request/rate_student/:request_id
 // @desc:  Adds a rating to a request from the tutor side
 // @access Private
-router.put("/rate_student/:request_id", auth, async(req, res) => {
+router.put("/rate_student/:request_id", auth, async (req, res) => {
   const {
     rating
   } = req.body;
@@ -557,7 +567,7 @@ router.put("/rate_student/:request_id", auth, async(req, res) => {
     } else {
       res.status(400).json({ error: "Request ID is invalid" });
     }
-    
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
