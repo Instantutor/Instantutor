@@ -28,53 +28,44 @@ graph TD
     click I "https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#tutor-cancels"
     click J "https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#request-closed"
     click K "https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#student-rated"
-    click M "https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#tutor-rates"
+    click M "https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#tutor-rated"
 ```
 
 ### New request made
-status: open
+* status: open
 
 ### Tutor sees request
-status: open
-
-state: CHECKING
+* status: open
+* state: CHECKING
 
 ### Tutor accepted
-status: open
-
-state: ACCEPT
+* status: open
+* state: ACCEPT
 
 ### Tutor denied
-status: open
-
-state: DENY
+* status: open
+* state: DENY
 
 ### Tutoring in progress
-status: tutoring
+* status: tutoring
+* state: ACCEPT
 
-state: ACCEPT
+### Student canceled
+* status: deny
+* state: ACCEPT
 
-### Student cancels
-status: deny
-
-state: ACCEPT
-
-### Tutor cancels
-status: tutoring
-
-state: DENY
+### Tutor canceled
+* status: tutoring
+* state: DENY
 
 ### Request closed
-status: closed
-
-state: ACCEPT
+* status: closed
+* state: ACCEPT
 
 ### Student rated
-status: rated
-
-state: ACCEPT
+* status: rated
+* state: ACCEPT
 
 ### Tutor rated
-status: closed
-
-state: RATED
+* status: closed
+* state: RATED
