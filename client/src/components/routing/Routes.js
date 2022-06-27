@@ -25,6 +25,7 @@ import UserRequest from '../user-requests/UserRequest';
 import UserRequestHistory from '../user-requests/UserRequestHistory';
 import UserRequestMatchedTutor from '../user-requests/UserRequestMatchedTutor';
 import RequestHistory from '../requests/RequestHistory';
+import TestGuidePage from '../test-guide/TestGuidePage';
 
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
 import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
@@ -66,6 +67,7 @@ const Routes = () => {
                 <SidebarRoute selected="dashboard" privateR exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <SidebarRoute selected="dashboard" privateR exact path="/finalize_request/:id" component={FinalizeRequestPage} />
                 <SidebarRoute selected="browse" privateR exact path="/peer_request" component={PeerRequestPage} />
+                <SidebarRoute selected="testguide" privateR exact path="/test_guide" component={TestGuidePage} />
 
                 {/* <SidebarRoute privateR exact path="/calendar" component={TempCalendarPage} /> */}
 

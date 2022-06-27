@@ -529,7 +529,7 @@ button {
 }
 
 .request-header-right {
-  display: inline-block;
+  /* display: inline-block; */
   float: right;
 }
 
@@ -958,4 +958,30 @@ button.btn-confirm {
   cursor: pointer;
   border: 1px solid var(--primary-color);
   transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s;
+}
+
+/* Test Guide Page/Step */
+button.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  font-size: 1em;
+}
+
+button.collapsible.active, button.collapsible:hover {
+  background-color: #555;
+}
+
+div.collapsible.content {
+  min-height: initial;
+  display: none;
+  overflow: hidden;
+  margin-top: 10px;
+  height: 0px;
+  /* max-height: 0; */
+  transition: max-height 0.2s ease-out;
 }
