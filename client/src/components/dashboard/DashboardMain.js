@@ -5,12 +5,7 @@ import { Link } from 'react-router-dom'
 import RequestItem from '../user-requests/UserRequestItem'
 import UserRequest from '../dashboard/UserRequest'
 
-const DashboardMain = ({
-  user,
-  req_history = [],
-  loading = true,
-  match,
-}) => {
+const DashboardMain = ({ user, req_history = [], loading = true, match, dropCreateRequest }) => {
   const [showRequests, setShowRequests] = useState(true) //for dropdown menu
   const dropDown = () => {
     setShowRequests(!showRequests)
@@ -19,7 +14,7 @@ const DashboardMain = ({
   const changeText = () => {
     setButtonText(!buttonText)
   }
-  
+
   return (
     <div>
       <h3
@@ -31,12 +26,9 @@ const DashboardMain = ({
       >
         {buttonText ? 'Close Requests' : 'Expand Requests'}
       </h3>
-      <Link
-        to={`/make_request`}
-        //className='btn btn-info'
-      >
-        Create Request
-      </Link>
+      <button className='btn btn-primary' onClick={() => dropCreateRequest()}>
+        Make Request
+      </button>
       {showRequests ? (
         loading ? (
           <Spinner />

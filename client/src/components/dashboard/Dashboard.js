@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import Spinner from '../layout/Spinner'
 import { getRequestHistory, createRequest } from '../../actions/request'
 import RequestItem from '../user-requests/UserRequestItem'
-import UserRequest from '../dashboard/UserRequest'
+import UserRequest from '../user-requests/UserRequest'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import DashboardMain from './DashboardMain'
@@ -20,18 +20,28 @@ const DashBoard = ({
   useEffect(async () => {
     ;(await user) && getRequestHistory(user._id)
   }, [getRequestHistory, match.params.id, user])
-  const openRequest = () => {}
+
+  const [createRequest, setCreateRequest] = useState(true)
+  const dropCreateRequest = () => {
+    setCreateRequest(!createRequest)
+  }
+
   return (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
-      <DashboardMain
-        user={user}
-        req_history={req_history}
-        loading={loading}
-        match={match}
-      />
-    </Fragment>
 
+      {createRequest ? (
+        <UserRequest match={match} setCreateRequest={setCreateRequest} />
+      ) : (
+        <DashboardMain
+          user={user}
+          req_history={req_history}
+          loading={loading}
+          match={match}
+          dropCreateRequest={dropCreateRequest}
+        />
+      )}
+    </Fragment>
   )
 }
 
