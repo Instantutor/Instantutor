@@ -4,37 +4,25 @@ import Spinner from '../layout/Spinner'
 import { Link } from 'react-router-dom'
 import RequestItem from '../user-requests/UserRequestItem'
 import UserRequest from '../dashboard/UserRequest'
+import Dropdown from './Dropdown'
 
-const DashboardMain = ({
-  user,
-  req_history = [],
-  loading = true,
-  match,
-}) => {
+const DashboardMain = ({ user, req_history = [], loading = true, match }) => {
   const [showRequests, setShowRequests] = useState(true) //for dropdown menu
-  const dropDown = () => {
-    setShowRequests(!showRequests)
-  }
-  const [buttonText, setButtonText] = useState(true) //change button text
-  const changeText = () => {
-    setButtonText(!buttonText)
-  }
-  
+  //   const dropDown = () => {
+  //     setShowRequests(!showRequests)
+  //   }
+
   return (
     <div>
-      
-      <h3
-        //className='btn btn-primary'
-        onClick={() => {
-          dropDown()
-          changeText()
-        }}
-      >
-        {buttonText ? 'Close Requests' : 'Expand Requests'}
-      </h3>
       <Link className='btn btn-primary' to='/make_request'>
         Make Request
       </Link>
+      <Dropdown
+        text={'Your Current Request'}
+        state={showRequests}
+        setState={setShowRequests}
+      />
+
       {showRequests ? (
         loading ? (
           <Spinner />
