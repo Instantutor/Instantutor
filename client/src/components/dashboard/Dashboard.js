@@ -21,11 +21,14 @@ const DashBoard = ({
     ;(await user) && getRequestHistory(user._id)
   }, [getRequestHistory, match.params.id, user])
 
-  const [createRequest, setCreateRequest] = useState(true)
-  const dropCreateRequest = () => {
-    setCreateRequest(!createRequest)
-  }
+  useEffect(async () => {
+    setCreateRequest(match.path != '/dashboard')
+  }, [match.path])
 
+  const [createRequest, setCreateRequest] = useState(match.path != '/dashboard')
+
+
+  //console.log(match)
   return (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
@@ -38,7 +41,7 @@ const DashBoard = ({
           req_history={req_history}
           loading={loading}
           match={match}
-          dropCreateRequest={dropCreateRequest}
+          //dropCreateRequest={dropCreateRequest}
         />
       )}
     </Fragment>

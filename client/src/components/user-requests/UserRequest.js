@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import formData from '../profile-forms/ProfileForm'
@@ -18,7 +18,6 @@ const UserRequest = ({
   user,
   history,
   match,
-  setCreateRequest,
 }) => {
   const [requestData, setRequestData] = useState({
     request: '',
@@ -247,12 +246,12 @@ const UserRequest = ({
             <input type='submit' className='btn btn-primary my-1' />
           </form>
 
-          <button
-            onClick={() => setCreateRequest(false)}
+          <Link
+            to='/dashboard'
             className='btn btn-primarydark'
           >
             Go Back
-          </button>
+          </Link>
         </Fragment>
       )}
     </>
