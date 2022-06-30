@@ -1047,3 +1047,11 @@ div.inprogress.btns button {
   width: 100px;
   padding: 0;
 }
+
+/*drop down component */
+.dashboard-dropdown {
+  text-align: center;
+}
+.dashboard-dropdown h3 i{
+  padding-left: 10px;
+}
