@@ -123,48 +123,42 @@ router.post(
   }
 );
 
-// @route: GET api/profile
-// @desc:  Get all profile
-// @access Public
+/**
+ * @route GET api/profile
+ * @desc:  Get all profiles with optional parameters to make output short,
+ * get the first output, and any additional queries
+ * @access Public
+ * e.g. get api/profile?role=tutor&short=t&single=t
+ */
 router.get("/", async (req, res) => {
   try {
-    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
-    res.json(profiles);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
+    // Deciding and executing the query
+    var mongo_query = {}
 
-// @route: GET api/profile/tutors
-// @desc:  Get all tutors
-// @access Public
-router.get("/tutors", async (req, res) => {
-  try {
-    const tutors = await Profile.find({ role: {$in: ['Both','Tutor']}}).populate("user",["name","avatar"]);
-    let data = [];
-    for (var i = 0; i < tutors.length; i++){
-      if (tutors[i].user?.name){
-        let tutor = tutors[i].user;
-        data.push({ tutor });
+    if (req.query.role) {
+      if (req.query.role == "Tutor") mongo_query.role = {$in: ['Both','Tutor']}
+      else if (req.query.role == "Student") mongo_query.role = {$in: ['Both','Student']}
+      else if (req.query.role == "Both") mongo_query.role = {$in: ['Both']}
+    }
+
+    // console.log(req.query)
+
+    for (property in req.query) {
+      if (property != "role" && property != "short" && property != "single") {
+        mongo_query[property] = req.query[property]
+        console.log(mongo_query)
       }
     }
-    res.json(data);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
 
+    var profiles = await Profile.find(mongo_query).populate("user", ["name", "avatar"]);
 
-// @route: GET api/profile/names
-// @desc:  Get all profile names
-// @access Pubic
-router.get("/names", async (req, res) => {
-  try {
-    const profiles = await Profile.find().populate("user", ["name"]);
-    console.log(profiles.map((profile) => profile.user.name));
-    res.json(profiles.map((profile) => profile.user.name));
+    // additional optons
+    if (req.query.short && req.query.short == 't')
+      profiles = profiles.map(profile => profile.user)
+    if (req.query.single && req.query.single == 't')
+      profiles = profiles[0]
+
+    res.json(profiles);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -194,32 +188,6 @@ router.get("/search", async (req, res) => {
     res.json(filtered);
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Server Error");
-  }
-});
-
-// @route: GET api/profile/user/user_id
-// @desc:  Get profile by user ID
-// @access Public
-router.get("/user/:user_id", async (req, res) => {
-  try {
-    const profile = await Profile.findOne({
-      user: req.params.user_id,
-    }).populate("user", ["name", "avatar"]);
-
-    if (!profile)
-      return res.status(400).json({
-        msg: "profile not found",
-      });
-
-    res.json(profile);
-  } catch (err) {
-    console.error(err.message);
-
-    if (err.kind == "ObjectId") {
-      return res.status(400).json({ msg: "profile not found" });
-    }
-
     res.status(500).send("Server Error");
   }
 });

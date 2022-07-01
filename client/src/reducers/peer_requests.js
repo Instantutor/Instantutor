@@ -1,8 +1,10 @@
 import {
   CHECK_NEW_PEER_REQUEST,
+  GET_OPEN_PEER_REQUESTS,
   PEER_REQUEST_ERROR,
   DISPERSE_REQUESTS,
   DISPERSE_FINAL_REQUEST,
+  ADD_TO_PEER_REQUEST,
   DISPERSE_REQUEST_ERROR,
   UPDATE_PROFILE,
   LOGOUT,
@@ -16,6 +18,7 @@ import {
 
 const initialState = {
   peer_requests: [],
+  open_requests: [],
   num_new_request: 0,
   last_check_time: null,
   loading: true,
@@ -33,6 +36,12 @@ export default function (state = initialState, action) {
         last_check_time: payload.last_checked,
         loading: false,
       };
+    
+    case GET_OPEN_PEER_REQUESTS:
+      return {
+        ...state,
+        open_requests: payload
+      }
 
     case UPDATE_CHECK_TIME:
       return {

@@ -111,20 +111,34 @@ router.post(
   }
 );
 
-/*
-// @route: GET api/request/
-// @desc:  Get a list of all requests
-// @access Private
-router.get("/", auth, async (req, res) => {
+// @route: GET api/request
+// @desc:  Get a list of all requests, optional query for status
+// @access Public
+// e.g. get api/request?status=open
+router.get("/", async (req, res) => {
   try {
-    const reqs = await Request.find().sort({ date: -1 });
-    res.json(reqs);
+    var mongo_query = {}
+
+    if (req.query.status)
+      mongo_query = { status: req.query.status }
+    
+    // getting requests and limiting fields sent back
+    const requests = await Request
+      .find(mongo_query, { 
+        potential_tutors: 0,
+        bids: 0,
+        tutor_rating: 0,
+        status: 0,
+        last_edit_time: 0,
+        availability: 0})
+      .sort({ date: -1 });
+
+    res.json(requests);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
-*/
 
 
 router.get("/requestID/:request_id", auth, async (req, res) => {
@@ -330,6 +344,40 @@ router.put("/edit/:request_id",
       res.status(500).send("Server Error");
     }
   });
+
+// @route: PUT api/request/add_potential/:request_id
+// @desc:  Adds a tutor to the list of potential tutors for a request
+// @access Private
+router.put("/add_potential/:request_id", auth, async(req, res) => {
+    try {
+      requestMatch = await Request.findOne({ _id: req.params.request_id });
+      
+      // error checking
+      if (req.user.id == requestMatch.user) {
+        return res.status(400).json({ "msg": "User can not add self to tutor list" })
+      } else if (requestMatch.potential_tutors.find(
+        tutor => tutor._id == req.user.id
+      )) {
+        return res.status(400).json({ "msg": "User already in the potential tutor list" })
+      }
+
+      // find profile and add tutor
+      const profile = await Profile.findOne({ "user": req.user.id }).populate("user", ["name", "avatar"])
+      requestMatch.potential_tutors.push({ 
+        _id : profile.user._id,
+        name: profile.user.name,
+        avatar: profile.user.avatar,
+        state: 'UNSEND'})
+      requestMatch.save()
+
+      res.json({ 
+        "msg": "Success user added as a potential tutor",
+        updated_request: requestMatch })
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+})
 
 // @route: POST api/request/disperse
 // @desc:  Adds request id to each confirmed tutor's active_request

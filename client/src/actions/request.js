@@ -8,6 +8,7 @@ import {
   DELETE_USER_REQUEST,
   GET_CONFIRMED_TUTORS_ERROR,
   GET_CONFIRMED_TUTORS,
+  GET_OPEN_PEER_REQUESTS,
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
   UPDATE_CHECK_TIME,
@@ -22,7 +23,8 @@ import {
   CANCEL_REQUEST_ERROR,
   RATE_PEER_REQUEST,
   RATE_USER_REQUEST,
-  RATE_REQUEST_ERROR
+  RATE_REQUEST_ERROR,
+  ADD_TO_PEER_REQUEST
 } from "./types";
 
 export const createRequest = (requestData, history) => async (dispatch) => {
@@ -224,6 +226,50 @@ export const updateTutorResponse = (response, id) => async (dispatch) => {
   }
 };
 
+// Gets all peer requests that are open
+export const getOpenPeerRequests = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/request?status=open')
+
+    dispatch({
+      type: GET_OPEN_PEER_REQUESTS,
+      payload: res.data
+    })
+  } catch (err) {
+    console.error(err)
+    dispatch({
+      type: PEER_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+// A tutor can search for a student and add themselves to the request
+export const addToPeerRequest = (request_id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/request/add_potential/${request_id}`)
+
+    dispatch({
+      type: ADD_TO_PEER_REQUEST,
+      payload: res.data
+    })
+    dispatch(
+      setAlert("User has been notified", "success")
+    )
+  } catch (err) {
+    console.error(err.response)
+    dispatch({
+      type: PEER_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+    if (err.response.status == 400)
+      dispatch(
+        setAlert(err.response.data.msg, "danger")
+      )
+  }
+}
+
+// Dispatches 
 export const disperseToTutors =
   (
     tutor_choices,

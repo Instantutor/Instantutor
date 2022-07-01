@@ -62,7 +62,7 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
             </li> }
 
             {profile && <li className={selected === "browse" ? "active" : ""}>
-                <Link to="/peer_request">
+                <Link to="/browse">
                     <i>
                       <img src={selected === "browse"
                         ? require('../../assets/Instantutor Icons/Browe Orange.jpg')
