@@ -130,48 +130,42 @@ router.post(
   }
 );
 
-// @route: GET api/profile
-// @desc:  Get all profile
-// @access Public
+/**
+ * @route GET api/profile
+ * @desc:  Get all profiles with optional parameters to make output short,
+ * get the first output, and any additional queries
+ * @access Public
+ * e.g. get api/profile?role=tutor&short=t&single=t
+ */
 router.get("/", async (req, res) => {
   try {
-    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
-    res.json(profiles);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
+    // Deciding and executing the query
+    var mongo_query = {}
 
-// @route: GET api/profile/tutors
-// @desc:  Get all tutors
-// @access Public
-router.get("/tutors", async (req, res) => {
-  try {
-    const tutors = await Profile.find({ role: {$in: ['Both','Tutor']}}).populate("user",["name","avatar"]);
-    let data = [];
-    for (var i = 0; i < tutors.length; i++){
-      if (tutors[i].user?.name){
-        let tutor = tutors[i].user;
-        data.push({ tutor });
+    if (req.query.role) {
+      if (req.query.role == "Tutor") mongo_query.role = {$in: ['Both','Tutor']}
+      else if (req.query.role == "Student") mongo_query.role = {$in: ['Both','Student']}
+      else if (req.query.role == "Both") mongo_query.role = {$in: ['Both']}
+    }
+
+    // console.log(req.query)
+
+    for (property in req.query) {
+      if (property != "role" && property != "short" && property != "single") {
+        mongo_query[property] = req.query[property]
+        console.log(mongo_query)
       }
     }
-    res.json(data);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
 
+    var profiles = await Profile.find(mongo_query).populate("user", ["name", "avatar"]);
 
-// @route: GET api/profile/names
-// @desc:  Get all profile names
-// @access Pubic
-router.get("/names", async (req, res) => {
-  try {
-    const profiles = await Profile.find().populate("user", ["name"]);
-    console.log(profiles.map((profile) => profile.user.name));
-    res.json(profiles.map((profile) => profile.user.name));
+    // additional optons
+    if (req.query.short && req.query.short == 't')
+      profiles = profiles.map(profile => profile.user)
+    if (req.query.single && req.query.single == 't')
+      profiles = profiles[0]
+
+    res.json(profiles);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -201,32 +195,6 @@ router.get("/search", async (req, res) => {
     res.json(filtered);
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Server Error");
-  }
-});
-
-// @route: GET api/profile/user/user_id
-// @desc:  Get profile by user ID
-// @access Public
-router.get("/user/:user_id", async (req, res) => {
-  try {
-    const profile = await Profile.findOne({
-      user: req.params.user_id,
-    }).populate("user", ["name", "avatar"]);
-
-    if (!profile)
-      return res.status(400).json({
-        msg: "profile not found",
-      });
-
-    res.json(profile);
-  } catch (err) {
-    console.error(err.message);
-
-    if (err.kind == "ObjectId") {
-      return res.status(400).json({ msg: "profile not found" });
-    }
-
     res.status(500).send("Server Error");
   }
 });
@@ -272,11 +240,12 @@ router.put(
       role,
     };
 
-    // Get new role and put it into the array of role.
+    // Get new role and change old
     try {
       const profile = await Profile.findOne({ user: req.user.id });
 
-      profile.role.unshift(newExp);
+      //profile.role.unshift(newExp);
+      profile.role = role;
 
       await profile.save();
 
@@ -301,6 +270,193 @@ router.delete("/role/:exp_id", auth, async (req, res) => {
       .indexOf(req.params.exp_id);
 
     profile.role.splice(removeIndex, 1);
+
+    await profile.save();
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: PUT api/profile/expertise
+// @desc:  Add profile expertise
+// @access Private
+router.put(
+  "/expertise",
+  [
+    auth,
+    check("area").not().isEmpty().withMessage("Area is required").bail()
+      .custom(area => courses.subject_list.includes(area))
+      .withMessage("The subject chosen is not an RPI major"),
+    check("degree", "Degree is required").not().isEmpty(),
+    check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
+      .withMessage("Area must be selected if you want to select a course").bail()
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
+      .withMessage("Subject must be valid if you want to select a course").bail()
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
+      .withMessage("The course chose is not a valid RPI course"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { area, degree, relatedCourses, description } = req.body;
+
+    const newExp = {
+      area,
+      degree,
+      description,
+    };
+    newExp.relatedCourses = relatedCourses
+
+    // Get new expertise and put it into the array of expertise.
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      //if area exists in profile.expertise, update its info
+      const index = profile.expertise.findIndex( exp => exp.area == newExp.area);
+      if (index > -1) {
+        profile.expertise[index].degree = newExp.degree;
+        profile.expertise[index].description = newExp.description;
+        //loop through related courses and add them to the array
+        for (let i = 0; i < newExp.relatedCourses.length; i++) {
+          if (!profile.expertise[index].relatedCourses.includes(newExp.relatedCourses[i])) {
+            profile.expertise[index].relatedCourses.push(newExp.relatedCourses[i]);
+          }
+        }
+      }
+      //else, add it to the array
+      else {
+        profile.expertise.unshift(newExp);
+      }
+
+      await profile.save();
+
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+// @route: GET api/profile/expertise/:expertise_id
+// @desc:  Get expertise by its id
+// @access private
+router.get("/expertise/:expertise_id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    const expertiseIndex = profile.expertise
+      .map((item) => item.id)
+      .indexOf(req.params.expertise_id);
+
+    if (expertiseIndex === -1) {
+      throw { message: "Invalid expertise_id" };
+    }
+
+    res.json(profile.expertise[expertiseIndex]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route: PUT api/profile/expertise/:expertise_id
+// @desc:  Update profile expertise
+// @access Private
+router.put(
+  "/expertise/:expertise_id",
+  [
+    auth,
+    check("area").not().isEmpty().withMessage("Area is required").bail()
+      .custom(subject => subject ? courses.subject_list.includes(subject) : true)
+      .withMessage("The area chosen is not an RPI major")
+      .custom((subject, {req}) => subject ? "relatedCourses" in req.body : true)
+      .withMessage("If you are changing the area you must also change the course"),
+    check("degree", "Degree is required").not().isEmpty(),
+    check("relatedCourses").not().isEmpty().withMessage("Related courses are required").bail()
+      .custom((relatedCourses, {req}) =>  "area" in req.body)
+      .withMessage("Area must be included if you want to change the course").bail()
+      .custom((relatedCourses, {req}) => courses.subject_list.includes(req.body.area))
+      .withMessage("Area must be valid if you want to change the course").bail()
+      .custom((relatedCourses, {req}) => {
+        if (!relatedCourses) return true;
+        return relatedCourses.every(course => courses.course_list[req.body.area].includes(course));
+      })
+      .withMessage("The course chosen is not a valid RPI course"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { area, degree, relatedCourses, description } = req.body;
+
+      const updatedExp = {
+        area,
+        degree,
+        description,
+      };
+      updatedExp.relatedCourses = relatedCourses;
+
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      // Get the index of experience we want to update
+      const updateIndex = profile.expertise
+        .map((item) => item.id)
+        .indexOf(req.params.expertise_id);
+
+      //if area exists in profile.expertise, update its info
+      const index = profile.expertise.findIndex( exp => exp.area == updatedExp.area);
+      if (index > -1) {
+        profile.expertise[index].degree = updatedExp.degree;
+        profile.expertise[index].description = updatedExp.description;
+        //loop through related courses and add them to the array
+        for (let i = 0; i < relatedCourses.length; i++) {
+          if (!profile.expertise[index].relatedCourses.includes(relatedCourses[i])) {
+            profile.expertise[index].relatedCourses.push(relatedCourses[i]);
+          }
+        }
+      }
+      //else, add it to the array
+      else {
+        profile.expertise[updateIndex] = updatedExp;
+      }
+
+      await profile.save();
+
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+// @route: DELETE api/profile/expertise/:expertise:id
+// @desc:  Delete an expertise by ID
+// @access Private
+router.delete("/expertise/:expertise_id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    // Get the index of experience we want to remove
+    const removeIndex = profile.expertise
+      .map((item) => item.id)
+      .indexOf(req.params.expertise_id);
+
+    profile.expertise.splice(removeIndex, 1);
 
     await profile.save();
 
