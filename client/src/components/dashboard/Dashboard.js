@@ -1,15 +1,9 @@
 import React, { Fragment, useEffect, useState, setState } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import Spinner from '../layout/Spinner'
 import { getRequestHistory, createRequest } from '../../actions/request'
-import RequestItem from '../user-requests/UserRequestItem'
 import UserRequest from '../user-requests/UserRequest'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import DashboardMain from './DashboardMain'
-import Dropdown from './Dropdown'
 
 
 
@@ -21,7 +15,7 @@ const DashBoard = ({
   match,
 }) => {
   useEffect(async () => {
-    ;(await user) && getRequestHistory(user._id)
+    (await user) && getRequestHistory(user._id)
   }, [getRequestHistory, match.params.id, user])
 
   useEffect(async () => {

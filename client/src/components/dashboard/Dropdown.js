@@ -12,7 +12,7 @@ const Dropdown = ({ text, state, setState }) => {
           }}
         >
           {text}
-          <i class={`fas fa-caret-${state ? 'down' : 'left'}`}></i>
+          <i className={`fas fa-caret-${state ? 'down' : 'left'}`}></i>
         </h3>
       </div>
     )
