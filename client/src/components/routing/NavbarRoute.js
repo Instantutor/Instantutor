@@ -12,7 +12,7 @@ const NavbarRoute = ({
   return (
     <Fragment>
         <Navbar />
-        <header id="head" class="secondary"></header>
+        <header id="head" className="secondary"></header>
         <section className="container">
           <Alert />
           {privateR ? <PrivateRoute {...props} /> : <Route {...props}/>}

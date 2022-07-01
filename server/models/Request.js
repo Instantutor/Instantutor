@@ -56,6 +56,10 @@ const RequestSchema = new Schema({
   selected_tutor: {
     type: String,
   },
+  tutor_rating: {
+    type: Number,
+    default: -1
+  },
   bids: [
     {
       bidder_id: {

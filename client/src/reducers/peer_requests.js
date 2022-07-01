@@ -9,6 +9,9 @@ import {
   ACCOUNT_DELETED,
   UPDATE_CHECK_TIME,
   REQUEST_RESPONSE,
+  RATE_PEER_REQUEST,
+  RATE_USER_REQUEST,
+  RATE_REQUEST_ERROR
 } from "../actions/types";
 
 const initialState = {
@@ -37,6 +40,7 @@ export default function (state = initialState, action) {
         last_check_time: payload.last_check_time,
       };
 
+    case RATE_REQUEST_ERROR:
     case PEER_REQUEST_ERROR:
     case DISPERSE_REQUEST_ERROR:
       return {
@@ -56,6 +60,21 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
       };
+    
+    case RATE_PEER_REQUEST:
+      return {
+        ...state,
+        peer_requests: state.peer_requests.map(request =>
+          request._id === payload ? {...request, state: "RATED"} : request )
+      };
+
+    case RATE_USER_REQUEST:
+      return {
+        ...state,
+        peer_requests: state.peer_requests.map(request =>
+          request._id === payload ? {...request, status: "rated"} : request )
+      };
+
     case UPDATE_PROFILE:
     case LOGOUT:
     case ACCOUNT_DELETED:

@@ -4,6 +4,7 @@ import { createCalendar, deleteCalendar } from "./calendar";
 
 import {
   GET_PROFILE,
+  GET_PEER_PROFILE,
   PROFILE_ERROR,
   ACCOUNT_DELETED,
   UPDATE_PROFILE,
@@ -18,6 +19,7 @@ export const getCurrentProfile = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
+    console.log(err)
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
@@ -29,9 +31,9 @@ export const getCurrentProfile = () => async (dispatch) => {
 export const getProfileById = (userId) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/profile/user/${userId}`);
-    console.log(res.data);
+    // console.log(res.data);
     dispatch({
-      type: GET_PROFILE,
+      type: GET_PEER_PROFILE,
       payload: res.data,
     });
   } catch (err) {

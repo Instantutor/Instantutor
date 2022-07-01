@@ -42,6 +42,7 @@ const UserRequest = ({ user_request, deleteRequest }) => {
 
     return (
         <Fragment>
+
             <h2 className="my-2">Active Requests</h2>
 
             {JSON.stringify(user_request) !== '[]' ? (
@@ -65,6 +66,7 @@ const UserRequest = ({ user_request, deleteRequest }) => {
                     <p> You currently have no active request...</p>
                 </Fragment>
             )} 
+            <Link to="make_request" className='btn btn-dark' >Make a Request</Link>
         </Fragment>
     );
 };

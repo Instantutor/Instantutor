@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
 import ExpertiseForm from './ExpertiseForm';
 import Button from './Button';
+import { deleteAccount } from '../../actions/profile';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
+const courses = require("../../course_list.json");
 
 const initialState = {
   degree: '',
@@ -27,6 +29,7 @@ const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
+  deleteAccount,
   history
 }) => {
   const [formData, setFormData] = useState(initialState);
@@ -80,7 +83,7 @@ const ProfileForm = ({
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Edit Your Profile</h1>
+      <h1 className="large text-primary">{profile ? "Edit Your Profile" : "Create Your Profile"}</h1>
       <p className="lead">
         <i className="fas fa-user" /> Add some changes to your profile
       </p>
@@ -102,15 +105,12 @@ const ProfileForm = ({
         </div>
 
         <div className="form-group">
-          <input
-            type="text"
-            placeholder="* Major"
-            name="major"
-            value={major}
-            onChange={onChange}
-          />
+          <select name="major" value={major} onChange={onChange}>
+            <option>* Select Your Major</option>
+            {courses.subject_list.map(subj => <option key={subj} value={subj}>{subj}</option>)}
+          </select>
           <small className="form-text">
-            Please tell us your major of study; Please use comma separated values (eg. MATH,CSCI,...) and enter 'School' if you are a school student.
+            Please tell us your major of study
           </small>
         </div>
 
@@ -151,17 +151,21 @@ const ProfileForm = ({
         </div>
 
         <div className="my-2">
-          <button
+          {/* <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
             type="button"
             className="btn btn-light"
           >
             Add Social Network Links
           </button>
-          <span>Optional</span>
+          <span>Optional</span> */}
+          {role !== "Student" &&
+            <Link to="/add_expertise" className="btn btn-light"
+            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </Link>
+          }
         </div>
 
-        {displaySocialInputs && (
+        {/* {displaySocialInputs && (
           <Fragment>
             <div className="form-group social-input">
               <i className="fab fa-twitter fa-2x" />
@@ -218,12 +222,18 @@ const ProfileForm = ({
               />
             </div>
           </Fragment>
-        )}
+        )} */}
 
-        <input type="submit" className="btn btn-primary my-1" />
-        <Link className="btn btn-light my-1" to="/dashboard">
+        {profile && <button
+          onClick={() => window.history.back(-1)}
+          className="btn btn-dark"
+        >
           Go Back
-        </Link>
+        </button> }
+        <input type="submit" className="btn btn-primary my-1" />
+        {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
+          Delete Account
+        </button> }
       </form>
 
     </Fragment>
@@ -240,6 +250,6 @@ const mapStateToProps = state => ({
   profile: state.profile
 });
 
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+export default connect(mapStateToProps, { createProfile, getCurrentProfile, deleteAccount })(
   ProfileForm
 );
