@@ -111,10 +111,10 @@ router.post(
   }
 );
 
-// @route: GET api/request/
+// @route: GET api/request
 // @desc:  Get a list of all requests, optional query for status
 // @access Public
-// eg get api/request?status=open
+// e.g. get api/request?status=open
 router.get("/", async (req, res) => {
   try {
     var mongo_query = {}
