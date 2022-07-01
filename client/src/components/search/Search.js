@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { obtainResults,autoSuggestion} from '../../actions/search'
-import { getCurrentProfile } from '../../actions/profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchResultItem from './SearchResultItem';

@@ -1,19 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import { getCurrentProfile } from '../../actions/profile';
 
-const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
+const Sidebar = ({selected, logout, profile : {profile}, getCurrentProfile, auth}) => {
+
+  useEffect(() => {
+    getCurrentProfile()
+  }, [])
 
   return (
     <div className="sidebar" data-color="black" style={{padding: 0}}>
     <div className="logo">  
-        <a href="#" className="simple-text logo-mini">
+        <Link to="/dashboard" className="simple-text logo-mini">
             <img src={require('../../assets/Instantutor Icons/Instantutor.png')} />
-        </a>
-        <a href="#" className="simple-text logo-normal">
+        </Link>
+        <Link to="/dashboard" className="simple-text logo-normal">
             Instantutor
-        </a>
+        </Link>
     </div>
     <div className="sidebar-wrapper ps-container ps-theme-default">
         <ul className="nav">
@@ -92,11 +97,11 @@ const Sidebar = ({selected, logout, profile : {profile}, auth}) => {
             </li> */}
 
             <li>
-                <a onClick={logout} href="#!">
+                <Link onClick={logout} to="/">
                     <i> <img src={require('../../assets/Instantutor Icons/Logout_Black.png')}
                     style={{"marginLeft": "17px"}} /> </i>
                     <p className="sidebar_font">Log out</p>
-                </a>
+                </Link>
             </li>
 
         </ul>
@@ -117,4 +122,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logout })(Sidebar);
+export default connect(mapStateToProps, { logout, getCurrentProfile })(Sidebar);

@@ -12,7 +12,7 @@ const RequestHistory = ({ profile, getCurrentProfile, match }) => {
 
   var role = false
   
-  if (profile.role === 'Tutor') {
+  if (profile && profile.role === 'Tutor') {
     role = true
   }
   const [selectedRole, toggleSelectedRole] = useState(role)
