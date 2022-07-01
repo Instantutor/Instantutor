@@ -34,11 +34,12 @@ router.post(
         .withMessage("Subject must be valid if you want to select a course").bail()
         .custom((course, { req }) => courses.course_list[req.body.subject].includes(course))
         .withMessage("The course chose is not a valid RPI course"),
-      check("num_sessions")
-        .custom((num_sessions, { req }) => num_sessions < 0)
-        .withMessage("Number of sessions must be positive")
-        .custom((num_sessions, { req }) => num_sessions == 0)
-        .withMessage("Number of sessions must be greater than 0"),
+      // check("num_sessions")
+      //   .if((num_sessions) => (num_sessions == undefined || parseInt(num_sessions) == Nan))
+      //   .custom((num_sessions, { req }) => parseInt(num_sessions) < 0)
+      //   .withMessage("Number of sessions must be positive")
+      //   .custom((num_sessions, { req }) => parseInt(num_sessions) == 0)
+      //   .withMessage("Number of sessions must be greater than 0"),
     ],
   ],
 
@@ -294,11 +295,11 @@ router.put("/edit/:request_id",
         .custom((course, { req }) => course ?
           courses.course_list[req.body.subject].includes(course) : true)
         .withMessage("The course chosen is not a valid RPI course"),
-      check("num_sessions")
-        .custom((num_sessions, { req }) => num_sessions < 0)
-        .withMessage("Number of sessions must be positive")
-        .custom((num_sessions, { req }) => num_sessions == 0)
-        .withMessage("Number of sessions must be greater than 0"),
+      // check("num_sessions")
+      //   .custom((num_sessions, { req }) => num_sessions < 0)
+      //   .withMessage("Number of sessions must be positive")
+      //   .custom((num_sessions, { req }) => num_sessions == 0)
+      //   .withMessage("Number of sessions must be greater than 0"),
     ],
   ]
 
