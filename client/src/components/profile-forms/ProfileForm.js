@@ -75,12 +75,6 @@ const ProfileForm = ({
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Decide create new profile or update by the existance of profile
-  const onSubmit = e => {
-    e.preventDefault();
-    createProfile(formData, history, profile ? true : false);
-  };
-
   return (
     <Fragment>
       <h1 className="large text-primary">{profile ? "Edit Your Profile" : "Create Your Profile"}</h1>
@@ -89,7 +83,7 @@ const ProfileForm = ({
       </p>
       <small>* = required field</small>
 
-      <form className="form" onSubmit={onSubmit}>
+      <form className="form" onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
           <select name="degree" value={degree} onChange={onChange}>
             <option>* Select Your Degree</option>
@@ -160,8 +154,8 @@ const ProfileForm = ({
           </button>
           <span>Optional</span> */}
           {role !== "Student" &&
-            <Link to="/add_expertise" className="btn btn-light"
-            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </Link>
+            <button className="btn btn-light" onClick={() => console.log("click")}
+            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </button>
           }
         </div>
 
@@ -230,7 +224,9 @@ const ProfileForm = ({
         >
           Go Back
         </button> }
-        <input type="submit" className="btn btn-primary my-1" />
+        <input type="submit"
+          onClick={() => createProfile(formData, history, profile ? true : false)}
+          className="btn btn-primary my-1" />
         {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
           Delete Account
         </button> }
