@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+import ExpertiseForm from './ExpertiseForm';
+import Button from './Button';
 import { deleteAccount } from '../../actions/profile';
+import ExpertiseBox from './ExpertiseBox';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
 const courses = require("../../course_list.json");
@@ -16,11 +19,7 @@ const initialState = {
   classes: '',
   subjects: '',
   bio: '',
-  twitter: '',
-  facebook: '',
-  linkedin: '',
-  youtube: '',
-  instagram: ''
+  expertise: []
 };
 
 const ProfileForm = ({
@@ -32,7 +31,7 @@ const ProfileForm = ({
 }) => {
   const [formData, setFormData] = useState(initialState);
 
-  const [displaySocialInputs, toggleSocialInputs] = useState(false);
+  // const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
     if (!profile) getCurrentProfile();
@@ -63,21 +62,11 @@ const ProfileForm = ({
     classes,
     subjects,
     bio,
-    twitter,
-    facebook,
-    linkedin,
-    youtube,
-    instagram
+    expertise,
   } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  // Decide create new profile or update by the existance of profile
-  const onSubmit = e => {
-    e.preventDefault();
-    createProfile(formData, history, profile ? true : false);
-  };
 
   return (
     <Fragment>
@@ -87,7 +76,7 @@ const ProfileForm = ({
       </p>
       <small>* = required field</small>
 
-      <form className="form" onSubmit={onSubmit}>
+      <form className="form" onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
           <select name="degree" value={degree} onChange={onChange}>
             <option>* Select Your Degree</option>
@@ -158,8 +147,9 @@ const ProfileForm = ({
           </button>
           <span>Optional</span> */}
           {role !== "Student" &&
-            <Link to="/add_expertise" className="btn btn-light"
-            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </Link>
+            // <button className="btn btn-light" onClick={() => console.log("click")}
+            // ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </button>
+            <ExpertiseForm expertise={expertise} parentData={formData} setParentData={setFormData} />
           }
         </div>
 
@@ -228,11 +218,14 @@ const ProfileForm = ({
         >
           Go Back
         </button> }
-        <input type="submit" className="btn btn-primary my-1" />
+        <input type="submit"
+          onClick={() => createProfile(formData, history, profile ? true : false)}
+          className="btn btn-primary my-1" />
         {profile && <button className="btn btn-danger my-1" onClick={() => deleteAccount()}>
           Delete Account
         </button> }
       </form>
+
     </Fragment>
   );
 };

@@ -3,8 +3,10 @@
   --primary-color: #F29141;
   --dark-color: #343a40;
   --light-color: #f4f4f4;
-  --danger-color: #dc3545;
-  --success-color: #28a745;
+  /* --danger-color: #dc3545; */
+  --danger-color: #E65953;
+  /* --success-color: #28a745; */
+  --success-color: #AFD437;
 }
 /* Global Styles
 * {
@@ -958,4 +960,98 @@ button.btn-confirm {
   cursor: pointer;
   border: 1px solid var(--primary-color);
   transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s;
+}
+
+/* Peer Request Page/Items */
+div.request {
+  margin-top: 10px;
+}
+
+div.request.item {
+  width: 30%;
+  border: 1px solid black;
+  border-radius: 20px;
+  display: inline-block;
+  height: inherit;
+  overflow: hidden;
+  margin: 2px 4px 2px 4px;
+  padding: 0;
+}
+
+div.request.content {
+  padding: 10px;
+}
+
+h3.request.header { 
+  width: calc(100%);
+  height: 1em;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+hr.request { 
+  width: calc(100% + 20px);
+  margin-left: -10px;
+}
+
+.main-panel {
+  padding-left: 5%;
+}
+
+p.request {
+  margin-bottom: 0;
+}
+
+div.request.btns {
+  height: 1em;
+  overflow: visible;
+}
+
+button.peer.request {
+  width: calc(100% / 3 - 10px);
+  padding: 0;
+  height: 1.5em;
+  margin-left: calc((100% - 3 * (100% / 3 - 10px)) / 4);
+}
+
+div.status.not-in-progress {
+  height: calc(1em + 3px);
+}
+
+p.status-in-progress {
+  display: inline-block;
+  width: 119px;
+  margin-left: 0;
+  margin-top: -10px;
+}
+
+div.inprogress.btns {
+  display: inline-block;
+  width: calc(100% - 119px - 10px);
+  margin-left: 10px;
+}
+
+div.inprogress.btns button {
+  display: inline-block;
+  width: calc(100% / 2 - 5px);
+  margin-left: 5px;
+}
+
+/* User Request Items/Page (lots already inherited from the above) */
+
+.btn.user.request {
+  width: 100px;
+  padding: 0;
+}
+
+/*drop down component */
+.dashboard-dropdown {
+  text-align: center;
+}
+.dashboard-dropdown h3 i{
+  padding-left: 10px;
 }

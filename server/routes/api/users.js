@@ -8,7 +8,20 @@ const { check, validationResult } = require("express-validator");
 const normalize = require("normalize-url");
 const User = require("../../models/User");
 
-//@route GET api/users
+//@route  GET api/users
+//@desc   Get all users
+//@access Public
+//gets all users, uncomment to be used for testing
+/*router.get("/", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+}
+);*/
 
 // @route   POST api/users
 // @desc    Register user
