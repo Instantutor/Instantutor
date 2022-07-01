@@ -111,20 +111,28 @@ router.post(
   }
 );
 
-/*
 // @route: GET api/request/
-// @desc:  Get a list of all requests
-// @access Private
-router.get("/", auth, async (req, res) => {
+// @desc:  Get a list of all requests, optional query for status
+// @access Public
+// eg get api/request?status=open
+router.get("/", async (req, res) => {
   try {
-    const reqs = await Request.find().sort({ date: -1 });
-    res.json(reqs);
+    var mongo_query = {}
+
+    if (req.query.status)
+      mongo_query = { status: req.query.status }
+    
+    // getting requests and limiting fields sent back
+    const requests = await Request
+      .find(mongo_query, { user: 1, request: 1, course: 1, topic: 1, number_sessions: 1})
+      .sort({ date: -1 });
+
+    res.json(requests);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
-*/
 
 
 router.get("/requestID/:request_id", auth, async (req, res) => {
