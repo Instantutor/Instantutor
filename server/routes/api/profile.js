@@ -47,11 +47,11 @@ router.post(
       check("degree", "Degree is required").not().isEmpty(),
       check("major", "Major is required").not().isEmpty(),
       check("role", "Role is required").not().isEmpty(),
-      check("expertise", "Area and course for expertise items must be present to submit or resubmit")
-        .custom(obj => 
-            courses.subject_list.includes(obj.area) &&
-            courses.course_list[obj.area].includes(obj.course)
-          )
+      // check("expertise", "RPI subject and course for expertise items must be present to submit or resubmit")
+      //   .custom(obj => 
+      //       courses.subject_list.includes(obj.area) &&
+      //       courses.course_list[obj.area].includes(obj.course)
+      //     )
     ],
   ],
   async (req, res) => {

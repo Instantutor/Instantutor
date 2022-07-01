@@ -6,6 +6,7 @@ import { createProfile, getCurrentProfile } from '../../actions/profile';
 import ExpertiseForm from './ExpertiseForm';
 import Button from './Button';
 import { deleteAccount } from '../../actions/profile';
+import ExpertiseBox from './ExpertiseBox';
 // import { addUser } from '../../actions/search';
 //import formData from '../auth/Register';
 const courses = require("../../course_list.json");
@@ -18,11 +19,7 @@ const initialState = {
   classes: '',
   subjects: '',
   bio: '',
-  twitter: '',
-  facebook: '',
-  linkedin: '',
-  youtube: '',
-  instagram: ''
+  expertise: []
 };
 
 const ProfileForm = ({
@@ -34,7 +31,7 @@ const ProfileForm = ({
 }) => {
   const [formData, setFormData] = useState(initialState);
 
-  const [displaySocialInputs, toggleSocialInputs] = useState(false);
+  // const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
     if (!profile) getCurrentProfile();
@@ -65,11 +62,7 @@ const ProfileForm = ({
     classes,
     subjects,
     bio,
-    twitter,
-    facebook,
-    linkedin,
-    youtube,
-    instagram
+    expertise,
   } = formData;
 
   const onChange = e =>
@@ -154,8 +147,9 @@ const ProfileForm = ({
           </button>
           <span>Optional</span> */}
           {role !== "Student" &&
-            <button className="btn btn-light" onClick={() => console.log("click")}
-            ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </button>
+            // <button className="btn btn-light" onClick={() => console.log("click")}
+            // ><i className="fas fa-user-graduate text-primary"></i> Add Expertise </button>
+            <ExpertiseForm expertise={expertise} parentData={formData} setParentData={setFormData} />
           }
         </div>
 

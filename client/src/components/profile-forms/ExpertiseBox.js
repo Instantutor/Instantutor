@@ -1,10 +1,10 @@
 import React from 'react'
 
-const ExpertiseBox = ({area, course, removeCourse}) => {
+const ExpertiseBox = ({expertise, removeExpertise}) => {
   return (
     <span className="expertise-box">
-        {area}<b>|</b>{course}
-        <i className="fas fa-times" onClick={e => removeCourse(e, course)}/>
+        {expertise.area}<b>|</b>{expertise.course}
+        <i className="fas fa-times" onClick={e => removeExpertise(e, expertise)}/>
     </span>
   )
 }

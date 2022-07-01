@@ -11,76 +11,29 @@ const initialState = {
   course: "",
 };
 
-const ExpertiseForm = (
-    { addExpertise,
-      match,
-      profile: { profile, loading },
-      getCurrentProfile,
-      history
-    })  => {
-
+const ExpertiseForm = ({ expertise, parentData, setParentData })  => {
     const [formData, setFormData] = useState(initialState);
-    const [allCourses, setAllCourses] = useState([]);
-    const { area, degree, description, course} = formData;
-
-    // Check if expertise_id in URL esists
-    let expertise_id = match.params.id
-
-    // Fill the form with data if id is provided
-    useEffect(() => {
-      if (expertise_id){
-
-        //console.log(expertise_id);
-
-        if (! profile)
-          getCurrentProfile();
-
-        if (! loading && profile) {
-          const expertise_data = {...initialState};
-
-          const expertiseIndex = profile.expertise
-            .map((item) => item._id)
-            .indexOf(expertise_id);
-          const exist_expertise = profile.expertise[expertiseIndex];
-
-          for (const key in exist_expertise){
-            if (key in expertise_data){
-              expertise_data[key] = exist_expertise[key];
-            }
-          }
-
-          setFormData(expertise_data);
-        }
-      }
-      return () => {
-        setFormData({});
-      }
-    }, [loading, getCurrentProfile, profile, expertise_id]);
+    const { area, course} = formData;
 
     const onChange = e =>
-      setFormData({ ...formData, [e.target.name]: e.target.value,});
+      setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const addCourse = (e, course) => {
+    const addCourse = () => {
       if (course == "") return;
-      if (!(allCourses.includes(course))) {
-        setAllCourses([...allCourses, formData]);
-        setFormData({initialState});
-      }
+
+      if (expertise.includes(formData)) return;
+
+      setParentData({ ...parentData, "expertise" : [ ...expertise, formData] })
     }
 
-    const removeCourse = (e, course) => {
-      setAllCourses(allCourses.filter(val => val.course != course));
+    const removeExpertise = (e, exp) => {
+      let new_expertise = expertise.filter(obj => obj != exp)
+
+      setParentData({ ...parentData, "expertise" : new_expertise })
     }
 
     return (
         <Fragment>
-        <form
-          className="form"
-          onSubmit={e => {
-            e.preventDefault();
-            addExpertise(formData,  history, expertise_id);
-          }}
-        >
           <div className="form-group">
             <select name="area" value={area} onChange={onChange}>
             <option value="">Area of expertise</option>
@@ -100,7 +53,7 @@ const ExpertiseForm = (
                     : null
                   }
               </select>
-              <div className="add-expertise" onClick={e => addCourse(e, course)}>
+              <div className="add-expertise" onClick={addCourse}>
                 <i className="fas fa-plus"></i>
                   {" Add a course "}
               </div>
@@ -110,15 +63,13 @@ const ExpertiseForm = (
             </small>
             <div>
             <fieldset>
-              {allCourses !== null && allCourses !== undefined
-              && allCourses.length > 0 ? allCourses.map(form =>
-              <ExpertiseBox area={form.area} course={form.course} removeCourse={removeCourse} />) : null}
+              {expertise !== null && expertise !== undefined
+              && expertise.length > 0 ? expertise.map(form =>
+              <ExpertiseBox expertise={form} removeExpertise={removeExpertise} />) : null}
             </fieldset>
             </div>
           </div>
 
-         
-        </form>
       </Fragment>
     )
 }
