@@ -29,6 +29,8 @@ import RequestHistory from '../requests/RequestHistory';
 import PeerRequestPage from '../peer-requests/PeerRequestPage';
 import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage';
 
+// Browse
+import Browse from '../browse/Browse'
 
 // Search page
 import Search from '../search/Search';
@@ -65,7 +67,7 @@ const Routes = () => {
                 <SidebarRoute selected="history" privateR exact path="/request_history" component={RequestHistory} />
                 <SidebarRoute selected="dashboard" privateR exact path="/request_matched_tutors/:id" component={UserRequestMatchedTutor} />
                 <SidebarRoute selected="dashboard" privateR exact path="/finalize_request/:id" component={FinalizeRequestPage} />
-                <SidebarRoute selected="browse" privateR exact path="/peer_request" component={PeerRequestPage} />
+                {/* <SidebarRoute selected="browse" privateR exact path="/peer_request" component={PeerRequestPage} /> */}
 
                 {/* <SidebarRoute privateR exact path="/calendar" component={TempCalendarPage} /> */}
 
@@ -76,8 +78,11 @@ const Routes = () => {
                 <SidebarRoute selected="profile" privateR exact path="/create_profile" component={ProfileForm} />
                 <SidebarRoute selected="profile" privateR exact path="/edit_profile" component={ProfileForm} />
 
-                <SidebarRoute selected="profile" privateR exact path="/add_expertise" component={ExpertiseForm} />
-                <SidebarRoute selected="profile" privateR exact path="/edit_expertise/:id" component={ExpertiseForm} />
+                {/* <SidebarRoute selected="profile" privateR exact path="/add_expertise" component={ExpertiseForm} />
+                <SidebarRoute selected="profile" privateR exact path="/edit_expertise/:id" component={ExpertiseForm} /> */}
+
+                <SidebarRoute selected="browse" privateR exact path="/browse" component={Browse} />
+
                 <Route component={NotFound} />
             </Switch>
         </Fragment>

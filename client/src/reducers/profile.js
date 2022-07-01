@@ -1,6 +1,7 @@
 import { CLEAR_PROFILE, 
         GET_PROFILE,
         GET_PEER_PROFILE,
+        GET_TUTORS,
         PROFILE_ERROR, 
         UPDATE_PROFILE, 
         ACCOUNT_DELETED,
@@ -27,6 +28,11 @@ export default function (state = initialState, action) {
                 profile: payload,
                 loading: false
             };
+        case GET_TUTORS:
+            return {
+                ...state,
+                profiles: payload
+            }
         case GET_PEER_PROFILE:
             return {
                 ...state,
