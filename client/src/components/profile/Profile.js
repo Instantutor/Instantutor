@@ -52,7 +52,7 @@ const Profile = ({ getProfileById, getCurrentProfile, profile: { profile, peer_p
                                 ? auth.user.name : peer_profile.user.name } />
                     </div>
 
-                    <div className="profile-exp bg-white p-2">
+                    {/* <div className="profile-exp bg-white p-2">
                         <h2 className="text-primary">Expertise</h2>
                         {peer_profile.expertise.length > 0 ? (
                             <Fragment>
@@ -66,7 +66,7 @@ const Profile = ({ getProfileById, getCurrentProfile, profile: { profile, peer_p
                         ) : (
                             <h4>No experience credentials</h4>
                         )}
-                    </div>
+                    </div> */}
                 </Fragment>
             )}
         </Fragment>
