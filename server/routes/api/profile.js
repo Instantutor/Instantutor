@@ -141,15 +141,10 @@ router.get("/", async (req, res) => {
 // @access Public
 router.get("/tutors", async (req, res) => {
   try {
-    const tutors = await Profile.find({ role: {$in: ['Both','Tutor']}}).populate("user",["name","avatar"]);
-    let data = [];
-    for (var i = 0; i < tutors.length; i++){
-      if (tutors[i].user?.name){
-        let tutor = tutors[i].user;
-        data.push({ tutor });
-      }
-    }
-    res.json(data);
+    const tutors = await Profile
+      .find({ role: {$in: ['Both','Tutor']}})
+      .populate("user",["name","avatar"]);
+    res.json(tutors.map(tutor => tutor.user));
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -159,7 +154,7 @@ router.get("/tutors", async (req, res) => {
 
 // @route: GET api/profile/names
 // @desc:  Get all profile names
-// @access Pubic
+// @access Public
 router.get("/names", async (req, res) => {
   try {
     const profiles = await Profile.find().populate("user", ["name"]);

@@ -331,6 +331,40 @@ router.put("/edit/:request_id",
     }
   });
 
+// @route: PUT api/request/add_potential/:request_id
+// @desc:  Adds a tutor to the list of potential tutors for a request
+// @access Private
+router.put("/add_potential/:request_id", auth, async(req, res) => {
+    try {
+      requestMatch = await Request.findOne({ _id: req.params.request_id });
+      
+      // error checking
+      if (req.user.id == requestMatch.user) {
+        return res.status(400).json({ "msg": "User can not add self to tutor list" })
+      } else if (requestMatch.potential_tutors.find(
+        tutor => tutor._id == req.user.id
+      )) {
+        return res.status(400).json({ "msg": "User already in the potential tutor list" })
+      }
+
+      // find profile and add tutor
+      const profile = await Profile.findOne({ "user": req.user.id }).populate("user", ["name", "avatar"])
+      requestMatch.potential_tutors.push({ 
+        _id : profile.user._id,
+        name: profile.user.name,
+        avatar: profile.user.avatar,
+        state: 'UNSEND'})
+      requestMatch.save()
+
+      res.json({ 
+        "msg": "Success user added as a potential tutor",
+        updated_request: requestMatch })
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+})
+
 // @route: POST api/request/disperse
 // @desc:  Adds request id to each confirmed tutor's active_request
 // @access Private
