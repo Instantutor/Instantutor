@@ -28,12 +28,17 @@ router.post(
         .custom(subject => courses.subject_list.includes(subject))
         .withMessage("The subject chosen is not an RPI major"),
       check("course").not().isEmpty().withMessage("Related course is required").bail()
-        .custom((course, {req}) =>  "subject" in req.body)
+        .custom((course, { req }) => "subject" in req.body)
         .withMessage("Subject must be selected if you want to select a course").bail()
-        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .custom((course, { req }) => courses.subject_list.includes(req.body.subject))
         .withMessage("Subject must be valid if you want to select a course").bail()
-        .custom((course, {req}) => courses.course_list[req.body.subject].includes(course))
+        .custom((course, { req }) => courses.course_list[req.body.subject].includes(course))
         .withMessage("The course chose is not a valid RPI course"),
+      check("num_sessions")
+        .custom((num_sessions, { req }) => num_sessions < 0)
+        .withMessage("Number of sessions must be positive")
+        .custom((num_sessions, { req }) => num_sessions == 0)
+        .withMessage("Number of sessions must be greater than 0"),
     ],
   ],
 
@@ -106,38 +111,35 @@ router.post(
   }
 );
 
-/*
-// @route: GET api/request/
-// @desc:  Get a list of all requests
-// @access Private
-router.get("/", auth, async (req, res) => {
+// @route: GET api/request
+// @desc:  Get a list of all requests, optional query for status
+// @access Public
+// e.g. get api/request?status=open
+router.get("/", async (req, res) => {
   try {
-    const reqs = await Request.find().sort({ date: -1 });
-    res.json(reqs);
+    var mongo_query = {}
+
+    if (req.query.status)
+      mongo_query = { status: req.query.status }
+    
+    // getting requests and limiting fields sent back
+    const requests = await Request
+      .find(mongo_query, { 
+        potential_tutors: 0,
+        bids: 0,
+        tutor_rating: 0,
+        status: 0,
+        last_edit_time: 0,
+        availability: 0})
+      .sort({ date: -1 });
+
+    res.json(requests);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
-*/
 
-// @route: GET api/requst/open/
-// @desc: Get a list of all open requests
-router.get("/open", auth, async(req,res) => {
-  try {
-    const open = await Request.find({ status: "open" });
-    /*let open_requests = [];
-    open.forEach(function(object)){
-      open_requests.push({
-        
-      })
-    }*/
-    res.json(open);
-  } catch(err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-})
 
 router.get("/requestID/:request_id", auth, async (req, res) => {
   //Get all requests for which tutor qualifies or has been chosen]
@@ -186,7 +188,7 @@ router.get("/:user_id", auth, async (req, res) => {
       }
       reqs.push(temp);
     }
-    reqs.sort((a, b)  => b.last_edit_time - a.last_edit_time);
+    reqs.sort((a, b) => b.last_edit_time - a.last_edit_time);
     // get tutoring_requests
     for (i in requestUser.tutoring_requests) {
       temp = await Request.findOne({
@@ -275,34 +277,39 @@ router.get("/received/:user_id", auth, async (req, res) => {
 // @route: PUT api/request/edit/:request_id
 // @desc:  Alters the users request by the request id
 // @access Private
-router.put("/edit/:request_id", 
+router.put("/edit/:request_id",
   [
     auth,
     [
       check("subject")
         .custom(subject => subject ? courses.subject_list.includes(subject) : true)
         .withMessage("The subject chosen is not an RPI major")
-        .custom((subject, {req}) => subject ? "course" in req.body : true)
+        .custom((subject, { req }) => subject ? "course" in req.body : true)
         .withMessage("If you are changing the subject you must also change the course"),
       check("course")
-        .custom((course, {req}) =>  "subject" in req.body)
+        .custom((course, { req }) => "subject" in req.body)
         .withMessage("Subject must be included if you want to change the course").bail()
-        .custom((course, {req}) => courses.subject_list.includes(req.body.subject))
+        .custom((course, { req }) => courses.subject_list.includes(req.body.subject))
         .withMessage("Subject must be valid if you want to change the course").bail()
-        .custom((course, {req}) =>  course ? 
+        .custom((course, { req }) => course ?
           courses.course_list[req.body.subject].includes(course) : true)
         .withMessage("The course chosen is not a valid RPI course"),
+      check("num_sessions")
+        .custom((num_sessions, { req }) => num_sessions < 0)
+        .withMessage("Number of sessions must be positive")
+        .custom((num_sessions, { req }) => num_sessions == 0)
+        .withMessage("Number of sessions must be greater than 0"),
     ],
   ]
-  
-    , async (req, res) => {
+
+  , async (req, res) => {
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    
+
     const {
       request,
       subject,
@@ -336,7 +343,41 @@ router.put("/edit/:request_id",
       console.error(err.message);
       res.status(500).send("Server Error");
     }
-});
+  });
+
+// @route: PUT api/request/add_potential/:request_id
+// @desc:  Adds a tutor to the list of potential tutors for a request
+// @access Private
+router.put("/add_potential/:request_id", auth, async(req, res) => {
+    try {
+      requestMatch = await Request.findOne({ _id: req.params.request_id });
+      
+      // error checking
+      if (req.user.id == requestMatch.user) {
+        return res.status(400).json({ "msg": "User can not add self to tutor list" })
+      } else if (requestMatch.potential_tutors.find(
+        tutor => tutor._id == req.user.id
+      )) {
+        return res.status(400).json({ "msg": "User already in the potential tutor list" })
+      }
+
+      // find profile and add tutor
+      const profile = await Profile.findOne({ "user": req.user.id }).populate("user", ["name", "avatar"])
+      requestMatch.potential_tutors.push({ 
+        _id : profile.user._id,
+        name: profile.user.name,
+        avatar: profile.user.avatar,
+        state: 'UNSEND'})
+      requestMatch.save()
+
+      res.json({ 
+        "msg": "Success user added as a potential tutor",
+        updated_request: requestMatch })
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+})
 
 // @route: POST api/request/disperse
 // @desc:  Adds request id to each confirmed tutor's active_request
@@ -506,7 +547,7 @@ router.put("/cancel/:request_id", auth, async (req, res) => {
 // @route: PUT api/request/rate_tutor/:request_id
 // @desc:  Adds a rating to a request from the student side
 // @access Private
-router.put("/rate_tutor/:request_id", auth, async(req, res) => {
+router.put("/rate_tutor/:request_id", auth, async (req, res) => {
   const {
     rating
   } = req.body;
@@ -545,7 +586,7 @@ router.put("/rate_tutor/:request_id", auth, async(req, res) => {
 // @route: PUT api/request/rate_student/:request_id
 // @desc:  Adds a rating to a request from the tutor side
 // @access Private
-router.put("/rate_student/:request_id", auth, async(req, res) => {
+router.put("/rate_student/:request_id", auth, async (req, res) => {
   const {
     rating
   } = req.body;
@@ -574,7 +615,7 @@ router.put("/rate_student/:request_id", auth, async(req, res) => {
     } else {
       res.status(400).json({ error: "Request ID is invalid" });
     }
-    
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

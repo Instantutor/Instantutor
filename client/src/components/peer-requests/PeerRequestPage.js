@@ -32,14 +32,15 @@ const PeerRequestPage = ({
             <h2 className="large text-primary">Oops! No Requests for you, for now...</h2>
         </div>
       ) : (
-        <div className="request">
-
-          {peer_requests.slice(0, num_new_request).map((peer_request) => (
-            <PeerRequestItem key={peer_request.id} item={peer_request} />
-          ))}
-          {peer_requests.slice(num_new_request).map((peer_request) => (
-            <PeerRequestItem key={peer_request.id} item={peer_request} />
-          ))}
+        <div>
+          <div className="request">
+            {peer_requests.slice(0, num_new_request).map((peer_request) => (
+              <PeerRequestItem key={peer_request.id} item={peer_request} />
+            ))}
+            {peer_requests.slice(num_new_request).map((peer_request) => (
+              <PeerRequestItem key={peer_request.id} item={peer_request} />
+            ))}
+          </div>
         </div>
       )}
 
