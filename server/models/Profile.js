@@ -92,17 +92,10 @@ const ProfileSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      degree: {
+      course: {
         type: String,
-        required: true,
-      },
-      relatedCourses: {
-        type: [String],
-        required: true,
-      },
-      description: {
-        type: String,
-      },
+        required: true
+      }
     },
   ],
   requests: [],

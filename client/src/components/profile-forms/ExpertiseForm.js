@@ -7,91 +7,35 @@ import ExpertiseBox from './ExpertiseBox';
 const courses = require("../../course_list.json");
 
 const initialState = {
-  area: '',
-  degree: '',
-  description: '',
-  relatedCourses: []
+  area: "",
+  course: "",
 };
 
-
-const ExpertiseForm = (
-    { addExpertise, 
-      match, 
-      profile: { profile, loading }, 
-      getCurrentProfile, 
-      history 
-    })  => {
-
+const ExpertiseForm = ({ expertise, parentData, setParentData })  => {
     const [formData, setFormData] = useState(initialState);
-    const [course, setCourse] = useState("");
-    const { area, degree, description, relatedCourses} = formData;
-    
-    // Check if expertise_id in URL esists
-    let expertise_id = match.params.id
-    
-    // Fill the form with data if id is provided
-    useEffect(() => {
-      if (expertise_id){
-
-        //console.log(expertise_id);
-        
-        if (! profile)
-          getCurrentProfile();
-
-        if (! loading && profile) {
-          const expertise_data = {...initialState};
-
-          const expertiseIndex = profile.expertise
-            .map((item) => item._id)
-            .indexOf(expertise_id);
-          const exist_expertise = profile.expertise[expertiseIndex];
-
-          for (const key in exist_expertise){
-            if (key in expertise_data){
-              expertise_data[key] = exist_expertise[key];
-            }
-          }
-
-          setFormData(expertise_data);
-        }
-      }
-      return () => {
-        setFormData({});
-      }
-    }, [loading, getCurrentProfile, profile, expertise_id]);
+    const { area, course} = formData;
 
     const onChange = e =>
       setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const changeSubject = e =>
-      setFormData({ ...formData, [e.target.name]: e.target.value, relatedCourses: [] });
-    
-    const addCourse = (e, course) => {
+    const addCourse = () => {
       if (course == "") return;
-      if (!(formData.relatedCourses.includes(course)))
-        setFormData({ ...formData, relatedCourses: [ ...formData.relatedCourses, course]});
+
+      if (expertise.includes(formData)) return;
+
+      setParentData({ ...parentData, "expertise" : [ ...expertise, formData] })
     }
 
-    const removeCourse = (e, course) => {
-      setFormData({ ...formData, relatedCourses: formData.relatedCourses.filter(val => val != course)});
+    const removeExpertise = (e, exp) => {
+      let new_expertise = expertise.filter(obj => obj != exp)
+
+      setParentData({ ...parentData, "expertise" : new_expertise })
     }
 
     return (
         <Fragment>
-        <h1 className="large text-primary">Manage your Expertise</h1>
-        <p className="lead">
-          <i className="fas fa-code-branch" /> Add any expertise to show you can be a tutor.
-        </p>
-        <small>* = required field</small>
-        <form
-          className="form"
-          onSubmit={e => {
-            e.preventDefault();
-            addExpertise(formData,  history, expertise_id);
-          }}
-        >
           <div className="form-group">
-            <select name="area" value={area} onChange={changeSubject}>
+            <select name="area" value={area} onChange={onChange}>
             <option value="">Area of expertise</option>
               {courses.subject_list.map(subj => <option value={subj}>{subj}</option>)}
             </select>
@@ -101,28 +45,15 @@ const ExpertiseForm = (
           </div>
 
           <div className="form-group">
-            <select name="degree" value={degree} onChange={onChange}>
-              <option>Degree level</option>
-              <option value="Undergraduate">Undergraduate</option>
-              <option value="Postgraduate">Postgraduate</option>
-              <option value="PHD">PHD</option>
-              <option value="Worked">Worked</option>
-            </select>
-            <small className="form-text">
-              * Choose a degree level
-            </small>
-          </div>
-          
-          <div className="form-group">
             <div className="add-course">
-              <select name="relatedCourses" course={course} onChange={e => setCourse(e.target.value)}>
-                <option value="">Related course</option>
+              <select name="course" value={course} onChange={onChange}>
+                <option value="">Related courses</option>
                   {area in courses.course_list
-                    ? courses.course_list[area].map(course => <option value={course}>{course}</option>)
+                    ? courses.course_list[area].map(enteredCourse => <option value={enteredCourse}>{enteredCourse}</option>)
                     : null
                   }
               </select>
-              <div className="add-expertise" onClick={e => addCourse(e, course)}>
+              <div className="add-expertise" onClick={addCourse}>
                 <i className="fas fa-plus"></i>
                   {" Add a course "}
               </div>
@@ -132,31 +63,13 @@ const ExpertiseForm = (
             </small>
             <div>
             <fieldset>
-              {relatedCourses !== null && relatedCourses !== undefined
-              && relatedCourses.length > 0 ? relatedCourses.map(course => 
-              <ExpertiseBox area={area} course={course} removeCourse={removeCourse} />) : null}
+              {expertise !== null && expertise !== undefined
+              && expertise.length > 0 ? expertise.map(form =>
+              <ExpertiseBox expertise={form} removeExpertise={removeExpertise} />) : null}
             </fieldset>
             </div>
           </div>
 
-          <div className="form-group">
-            <textarea
-              name="description"
-              cols="30"
-              rows="5"
-              placeholder="Expertise Description"
-              value={description}
-              onChange={onChange}
-            />
-            <small className="form-text">
-              Your may show more about your expertise!
-            </small>
-          </div>
-          <input type="submit" className="btn btn-primary my-1" />
-          <Link className="btn btn-light my-1" to="/dashboard">
-            Go Back
-          </Link>
-        </form>
       </Fragment>
     )
 }
