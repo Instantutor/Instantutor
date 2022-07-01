@@ -141,7 +141,7 @@ router.get("/", async (req, res) => {
       else if (req.query.role == "Both") mongo_query.role = {$in: ['Both']}
     }
 
-    console.log(req.query)
+    // console.log(req.query)
 
     for (property in req.query) {
       if (property != "role" && property != "short" && property != "single") {

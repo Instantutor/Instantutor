@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 const TutorItem = ({ profile }) => {
@@ -17,6 +17,7 @@ const TutorItem = ({ profile }) => {
             >
             <i className="fas fa-user-circle"> </i> View Profile
             </Link>
+
         </div>
     )
 }

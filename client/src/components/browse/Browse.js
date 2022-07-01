@@ -49,4 +49,8 @@ const mapStateToProps = (state) => ({
     open_requests: state.peer_requests.open_requests
 })
 
-export default connect(mapStateToProps, { getTutors, getCurrentProfile, getOpenPeerRequests })(Browse)
+export default connect(mapStateToProps, { 
+    getTutors, 
+    getCurrentProfile, 
+    getOpenPeerRequests
+})(Browse)
