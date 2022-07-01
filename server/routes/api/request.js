@@ -124,7 +124,13 @@ router.get("/", async (req, res) => {
     
     // getting requests and limiting fields sent back
     const requests = await Request
-      .find(mongo_query, { user: 1, request: 1, course: 1, topic: 1, number_sessions: 1})
+      .find(mongo_query, { 
+        potential_tutors: 0,
+        bids: 0,
+        tutor_rating: 0,
+        status: 0,
+        last_edit_time: 0,
+        availability: 0})
       .sort({ date: -1 });
 
     res.json(requests);

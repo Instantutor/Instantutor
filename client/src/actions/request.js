@@ -8,6 +8,7 @@ import {
   DELETE_USER_REQUEST,
   GET_CONFIRMED_TUTORS_ERROR,
   GET_CONFIRMED_TUTORS,
+  GET_OPEN_PEER_REQUESTS,
   PEER_REQUEST_ERROR,
   CHECK_NEW_PEER_REQUEST,
   UPDATE_CHECK_TIME,
@@ -224,6 +225,25 @@ export const updateTutorResponse = (response, id) => async (dispatch) => {
   }
 };
 
+// Gets all peer requests that are open
+export const getOpenPeerRequests = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/request?status=open')
+
+    dispatch({
+      type: GET_OPEN_PEER_REQUESTS,
+      payload: res.data
+    })
+  } catch (err) {
+    console.error(err)
+    dispatch({
+      type: PEER_REQUEST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+// Dispatches 
 export const disperseToTutors =
   (
     tutor_choices,
