@@ -107,8 +107,8 @@ class Trie:
         
         
     # Deserializes the string from the file. Need to find a better way code this in a clean format.
-    def deserialize(self):
-        curr = self.root
+    def deserialize(self):  
+        curr = self.root            
         f = open("./algos/SearchBar/serializedtrie.json","r")
         
         trie = json.loads(f.read())
