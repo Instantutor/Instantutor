@@ -19,7 +19,7 @@ const Browse = ({
         getTutors();
         getCurrentProfile();
         getOpenPeerRequests();
-    }, [])
+    }, [getTutors, getCurrentProfile, getOpenPeerRequests])
 
     // by default role is false indicating student
     var role = false;
