@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const RequestSchema = new Schema({
-  user: {
+  student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
@@ -28,33 +28,24 @@ const RequestSchema = new Schema({
   number_sessions: {
     type: Number,
   },
-  last_edit_time: {
-    type: Date,
-    default: Date.now,
-  },
   status: {
     type: String,
     default: "open",
   },
-  potential_tutors: [
-    {
-      _id: {
-        type: String,
-      },
-      name: {
-        type: String,
-      },
-      avatar: {
-        type: String,
-      },
-      state: {
-        type: String,
-        default: "CHECKING",
-      },
-    },
-  ],
-  selected_tutor: {
+  state: {
     type: String,
+    default: "OPENED"
+  },
+  tutor: {
+    type: String,
+  },
+  pinged_tutors: [String], // tutors that the student pinged
+  accepted_tutors: [String], // tutors that accepted the request upon being pinged or by claiming interest in the browse requests page
+  denied_tutors: [String], // tutors who denied the request or immediately cancelled their acceptance
+  cancelled_tutors: [String], // tutors who cancelled their acceptance at any point
+  student_rating: {
+    type: Number,
+    default: -1
   },
   tutor_rating: {
     type: Number,
