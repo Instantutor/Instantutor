@@ -78,15 +78,27 @@ stateDiagram-v2
     
     state "Request: <br/> <pre> status: 'open' <br/> state: 'OPENED' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [empty] <br/> accepted_tutors: [empty] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as newReq
     
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'CANCELLED OPENED' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [empty] <br/> accepted_tutors: [empty] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as newReqCancelled
+    
     state "Request: <br/> <pre> status: 'open' <br/> state: 'CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [empty] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as pingedReq
     
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'CANCELLED CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [empty] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as pingedReqCancelled
+    
     state "Request: <br/> <pre> status: 'open' <br/> state: 'CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as tutorAAccept
+    
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'CANCELLED CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Tutor 'A' no longer sees request.</i>" as tutorAAcceptStuCancelled
+    
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [empty] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [tutorA_id] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Student sees tutor 'A' denied. Student <br/> must continue request with some other tutor.</i>" as tutorAAcceptTutACancelled
     
     state "Request: <br/> <pre> status: 'open' <br/> state: 'CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [empty] <br/> denied_tutors: [tutorA_id] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Tutor 'A' no longer sees request in their <br/> Student Requests list.</i>" as tutorADeny
     
     state "Request: <br/> <pre> status: 'open' <br/> state: 'CHECKING' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id, tutorB_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre>" as tutorBAccept
     
     state "Request: <br/> <pre> status: 'open' <br/> state: 'ASSIGNED' <br/> student: 'student_id' <br/> tutor: 'tutorA_id' <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id, tutorB_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Tutor 'B' no longer sees request in their <br/> Student Requests list.</i>" as tutorASelected
+    
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'CANCELLED ASSIGNED' <br/> student: 'student_id' <br/> tutor: 'tutorA_id' <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id, tutorB_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Tutor 'A' is informed of the cancellation <br/> and no longer sees the request.</i>" as tutorASelectedStuCancelled
+    
+    state "Request: <br/> <pre> status: 'open' <br/> state: 'ASSIGNED' <br/> student: 'student_id' <br/> tutor: null <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id, tutorB_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [tutorA_id] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Student is informed and must proceed <br/> request with a different tutor.</i>" as tutorASelectedTutACancelled
     
     state "Request: <br/> <pre> status: 'open' <br/> state: 'FULFILLED' <br/> student: 'student_id' <br/> tutor: 'tutorA_id' <br/> pinged_tutors: [tutorA_id, tutorB_id] <br/> accepted_tutors: [tutorA_id, tutorB_id] <br/> denied_tutors: [empty] <br/> cancelled_tutors: [empty] <br/> stu_rating: null <br/> tut_rating: null </pre> <hr/> <i>Note: Student and tutor 'A' both see request <br/> with rating question.</i>" as reqFulfilled
     
@@ -113,5 +125,20 @@ stateDiagram-v2
     reqRatedTutor --> reqRatedBoth: Student rates request.
     reqRatedBoth --> reqClosed: Request is finished and closed once both ratings are in.
     
+    newReq --> newReqCancelled: Student cancels request.
+    pingedReq --> pingedReqCancelled: Student cancels request.
+    
+    tutorAAccept --> tutorAAcceptStuCancelled: Student cancels request.
+    tutorAAccept --> tutorAAcceptTutACancelled: Tutor 'A' cancels acceptance.
+    
+    tutorASelected --> tutorASelectedStuCancelled: Student cancels request.
+    tutorASelected --> tutorASelectedTutACancelled: Tutor 'A' cancels acceptance.
+    
     
 ```
+
+## Cancellation Cases
+ * If tutor is not in accepted list and is in cancelled list, they cancelled before being selected by the student.
+ * If tutor is in accepted list AND in cancelled list, tutor cancelled after student selected them to be tutored by.
+ * If `state` begins with `CANCELLED`, the request was cancelled by the student at whatever stage is the word following `CANCELLED`.
+
