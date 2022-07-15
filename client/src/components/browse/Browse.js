@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import TutorItem from './TutorItem'
 import RequestItem from './RequestItem'
 import RoleButton from '../layout/RoleButton'
+import Spinner from '../layout/Spinner'
 import { getTutors, getCurrentProfile } from '../../actions/profile'
 import { getOpenPeerRequests } from '../../actions/request'
 
@@ -18,7 +19,7 @@ const Browse = ({
         getTutors();
         getCurrentProfile();
         getOpenPeerRequests();
-    }, [])
+    }, [getTutors, getCurrentProfile, getOpenPeerRequests])
 
     // by default role is false indicating student
     var role = false;
@@ -37,8 +38,12 @@ const Browse = ({
                 toggledRole={selectedRole}
                 setRollToggle={toggleSelectedRole} /> 
             { !selectedRole ? 
-                profiles.map((profile, num) => <TutorItem profile={profile} key={num} />) :
-                open_requests.map((request, num) => <RequestItem peer_request={request} key={num} />)}
+                profiles 
+                    ? profiles.map((profile, num) => <TutorItem profile={profile} key={num} />)
+                    : <Spinner />:
+                open_requests
+                    ? open_requests.map((request, num) => <RequestItem peer_request={request} key={num} />)
+                    : <Spinner />}
         </div>
     )
 }
