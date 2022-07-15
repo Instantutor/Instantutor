@@ -28,26 +28,22 @@ const ProfileSchema = new mongoose.Schema({
   experience: [
     {
       title: {
-        type: String,
-        required: true,
+        type: String
       },
       company: {
-        type: String,
-        required: true,
+        type: String
       },
       location: {
         type: String,
       },
       from: {
-        type: Date,
-        required: true,
+        type: Date
       },
       to: {
         type: Date,
       },
       current: {
-        type: Boolean,
-        default: false,
+        type: Boolean
       },
       description: {
         type: String,
@@ -98,28 +94,6 @@ const ProfileSchema = new mongoose.Schema({
       }
     },
   ],
-  requests: [],
-  social: {
-    youtube: {
-      type: String,
-    },
-    twitter: {
-      type: String,
-    },
-    facebook: {
-      type: String,
-    },
-    linkedin: {
-      type: String,
-    },
-    instagram: {
-      type: String,
-    },
-  },
 
-  date: {
-    type: Date,
-    default: Date.now,
-  },
 });
 module.exports = Profile = mongoose.model("profile", ProfileSchema);
