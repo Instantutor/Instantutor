@@ -143,3 +143,11 @@ stateDiagram-v2
  * If `state` begins with `CANCELLED`, the request was cancelled by the student at whatever stage is the word following `CANCELLED`.
  * Deleted requests are requests with `status` `close` and a `state` beginning with the word `CANCELLED`.
 
+## Requests for Users
+ * Keep list of "pointers" to requests up to a week prior for each student for request history
+ * For browsing student requests on tutor view, query database everytime to load page
+ * Student can check for tutors in two ways:
+    * `Check for tutors` button on request which queries database for recommended tutors and displays tutors, which the student can ping with the current request autoselected
+    * `Browse tutors` page, which displays all tutors, and student can select which request they want to ping for before pining a tutor
+    * Both of the above pages will be generated fresh on each load by querying the database
+    * Each request possesses a `pinged_tutors` list, which will always be displayed with the tutor acceptance status inside the request
