@@ -16,10 +16,8 @@ const Browse = ({
     getOpenPeerRequests }) => {
 
     useEffect(() => {
-        getTutors();
         getCurrentProfile();
-        getOpenPeerRequests();
-    }, [getTutors, getCurrentProfile, getOpenPeerRequests])
+    }, [getCurrentProfile])
 
     // by default role is false indicating student
     var role = false;
@@ -27,6 +25,14 @@ const Browse = ({
         role = true;
 
     const [selectedRole, toggleSelectedRole] = useState(role);
+    console.log(profiles)
+
+    useEffect(() => {
+        if (!selectedRole)
+            getTutors();
+        else
+            getOpenPeerRequests();
+    }, [selectedRole, getTutors, getOpenPeerRequests])
 
     return (
         <div>
@@ -39,7 +45,7 @@ const Browse = ({
                 setRollToggle={toggleSelectedRole} /> 
             { !selectedRole ? 
                 profiles 
-                    ? profiles.map((profile, num) => <TutorItem profile={profile} key={num} />)
+                    ? profiles.map((profile, num) => profile != null && <TutorItem profile={profile} key={num} />)
                     : <Spinner />:
                 open_requests
                     ? open_requests.map((request, num) => <RequestItem peer_request={request} key={num} />)
