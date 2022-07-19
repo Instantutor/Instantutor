@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// refer to https://github.com/Instantutor/Instantutor/blob/main/Lifecycle.md#new-diagram
 const RequestSchema = new Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,

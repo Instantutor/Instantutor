@@ -27,10 +27,10 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
   },
 
-  // list of references to requests in database
+  // list of references (request_id) to requests in database
   stu_request_history: [mongoose.Schema.Types.ObjectId],
 
-  // list of references to requests in database
+  // list of references (request_id) to requests in database
   tut_request_history: [mongoose.Schema.Types.ObjectId],
 });
 

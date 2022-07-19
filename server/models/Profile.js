@@ -15,6 +15,8 @@ const ProfileSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
+    enum: ["Tutor", "Student", "Both"],
+    default: "Student"
   },
   major: {
     type: [String],
@@ -26,18 +28,23 @@ const ProfileSchema = new mongoose.Schema({
   bio: {
     type: String,
   },
-  expertise: [
-    {
-      area: {
-        type: String,
-        required: true,
+
+  // only filled if role is "Tutor" or "Both"
+  tutor: {
+    expertise: [
+      {
+        area: {
+          type: String,
+          required: true,
+        },
+        course: {
+          type: String,
+          required: true
+        }
       },
-      course: {
-        type: String,
-        required: true
-      }
-    },
-  ],
+    ],
+    default: null // if role is "Student"
+  },
 
 });
 module.exports = Profile = mongoose.model("profile", ProfileSchema);
