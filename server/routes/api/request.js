@@ -36,7 +36,7 @@ router.post(
         .withMessage("The course chose is not a valid RPI course"),
       check("number_sessions")
       .custom((number_sessions, { req }) => number_sessions > 0)
-      .withMessage("Number of sessions must be greater than 0"),
+      .withMessage("Number of sessions must be greater than 0 and/or must be a value"),
     ],
   ],
 
@@ -294,7 +294,7 @@ router.put("/edit/:request_id",
         .withMessage("The course chosen is not a valid RPI course"),
       check("number_sessions")
       .custom((number_sessions, { req }) => number_sessions > 0)
-      .withMessage("Number of sessions must be greater than 0"),
+      .withMessage("Number of sessions must be greater than 0 and/or must be a value"),
     ],
   ]
 
@@ -617,8 +617,8 @@ router.put("/rate_student/:request_id", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-
-  /*const {
+/*
+  const {
     rating
   } = req.body;
 
