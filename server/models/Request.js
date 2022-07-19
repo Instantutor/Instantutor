@@ -30,13 +30,16 @@ const RequestSchema = new Schema({
   },
   status: {
     type: String,
+    enum: ["open", "close"],
     default: "open",
   },
   state: {
     type: String,
+    enum: ["OPENED", "CANCELLED OPENED", "CHECKING", "CANCELLED CHECKING",
+            "ASSIGNED", "CANCELLED ASSIGNED", "FULFILLED"],
     default: "OPENED"
   },
-  tutor: {
+  tutor: { // tutor assigned to request
     type: String,
   },
   pinged_tutors: [String], // tutors that the student pinged
@@ -51,16 +54,6 @@ const RequestSchema = new Schema({
     type: Number,
     default: -1
   },
-  bids: [
-    {
-      bidder_id: {
-        type: String,
-      },
-      fee: {
-        type: String,
-      },
-    },
-  ],
 });
 
 module.exports = mongoose.model("request", RequestSchema);

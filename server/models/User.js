@@ -11,29 +11,26 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  verified: {
-    type: Boolean,
-    default: true,
-  },
   password: {
     type: String,
     required: true,
   },
-  avatar: {
-    type: String,
+  verify_code: {
+    type: String
+  },
+  verified: {
+    type: Boolean,
+    default: false,
   },
   date: {
     type: Date,
     default: Date.now,
   },
-  verify_code: {
-    type: String,
-  },
 
-  // list of references to requests in database up to 1 week ago to put in user's student request history
+  // list of references to requests in database
   stu_request_history: [mongoose.Schema.Types.ObjectId],
 
-  // list of references to requests in database up to 1 week ago to put in user's tutor request history
+  // list of references to requests in database
   tut_request_history: [mongoose.Schema.Types.ObjectId],
 });
 
