@@ -34,11 +34,9 @@ router.post(
         .withMessage("Subject must be valid if you want to select a course").bail()
         .custom((course, { req }) => courses.course_list[req.body.subject].includes(course))
         .withMessage("The course chose is not a valid RPI course"),
-      check("num_sessions")
-        .custom((num_sessions, { req }) => num_sessions < 0)
-        .withMessage("Number of sessions must be positive")
-        .custom((num_sessions, { req }) => num_sessions == 0)
-        .withMessage("Number of sessions must be greater than 0"),
+      check("number_sessions")
+      .custom((number_sessions, { req }) => number_sessions > 0)
+      .withMessage("Number of sessions must be greater than 0"),
     ],
   ],
 
