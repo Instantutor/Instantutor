@@ -71,7 +71,7 @@ graph TD
 * status: closed
 * state: RATED
 
-
+## New Diagram
 ```mermaid
 stateDiagram-v2
     state "START" as start
@@ -137,13 +137,13 @@ stateDiagram-v2
     
 ```
 
-## Cancellation Cases
+### Cancellation Cases
  * If tutor is not in accepted list and is in cancelled list, they cancelled before being selected by the student.
  * If tutor is in accepted list AND in cancelled list, tutor cancelled after student selected them to be tutored by.
  * If `state` begins with `CANCELLED`, the request was cancelled by the student at whatever stage is the word following `CANCELLED`.
  * Deleted requests are requests with `status` `close` and a `state` beginning with the word `CANCELLED`.
 
-## Requests for Users
+### Requests for Users
  * Keep list of "pointers" to requests up to a week prior for each student for request history
  * For browsing student requests on tutor view, query database everytime to load page
  * Student can check for tutors in two ways:
