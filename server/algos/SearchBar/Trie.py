@@ -51,7 +51,11 @@ class Trie:
 
     def Build(self, word: str) -> None:
         curr = self.root
-        for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
+        #for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
+        for i in word:
+            old = curr
+            curr = curr.children[i]
+            curr.parent = old
         curr.confirmation = True
 
 
@@ -108,8 +112,9 @@ class Trie:
         
     # Deserializes the string from the file. Need to find a better way code this in a clean format.
     def deserialize(self):  
-        curr = self.root            
-        f = open("./algos/SearchBar/serializedtrie.json","r")
+        curr = self.root
+        #print(curr)            
+        f = open("serializedtrie.json","r")
         
         trie = json.loads(f.read())
         #Rendundant?

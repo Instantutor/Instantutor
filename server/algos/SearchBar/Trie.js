@@ -1,11 +1,12 @@
 
 'use strict'; 
-
-//MAIN
+const DefaultMap = require('./DefaultMap');
+const fs = require('fs');
+const { readFileSync } = require('fs');
 
 class TrieNode {
     constructor(children) {
-        this.children = dict(TrieNode);
+        this.children = new DefaultMap((TrieNode) => []);
         this.confirmation = false; 
         this.parent = null; 
     }
@@ -15,7 +16,7 @@ class TrieNode {
         for(child in this.children.keys()) {
             childnode = this.children[child]; 
             add = this.children[child].toString(); 
-            if(this.children.length == 0)
+            if(this.children.size == 0)
                 add = ""; 
             ans.at[-1] += '\n"' + child.toString() + '":[\n'; 
             assert(childnode); 
@@ -35,7 +36,7 @@ class TrieNode {
 
 class Trie {
     constructor() {
-        this.root = TrieNode(); 
+        this.root = new TrieNode(); 
     }
 
     get string() {
@@ -43,6 +44,15 @@ class Trie {
     }
 
     //BUILD
+    Build(word) {
+        let curr = this.root;
+        for(let i = 0; i < word.length; i++) {
+            let old = curr;
+            curr = curr.children[i]; //undefined
+            curr.parent = old; 
+        }
+        curr.confirmation = true;
+    }
 
     printAll() {
         curr = this.root; 
@@ -82,7 +92,7 @@ class Trie {
     serialize() {
         let data = JSON.stringify(this); 
         const fs = require('fs'); 
-        fs.writeFile('./algos/SearchBar/serializedtrie.json', data, 'utf8', callback);
+        fs.writeFile('./serializedtrie.json', data, 'utf8', callback);
     }
 
     convertdict(trie, par) {
@@ -100,22 +110,57 @@ class Trie {
     }
 
     deserialize() {
-        curr = this.root; 
+        let curr = this.root;
 
-        const fs = require('fs');
+        const data = readFileSync('./serializedtrie.json');
+        //let trie = new Trie;
+        var trie = (JSON.parse(data));
+        console.log(trie);
+        console.log(trie['t']);
+        console.log(trie['t'][1]);
+        //console.log(trie.keys.length());
+        for(keys in trie) console.log(keys);
 
-        fs.readFile('./algos/SearchBar/serializedtrie.json', 'utf8', function readFileCallback(err, data) {
-            if(err) 
-                console.log(err); 
-            else {
-                trie = JSON.parse(data); 
-                for(key in trie.keys()) {
-                    curr.children[key] = self.convertdict(trie[key][1], curr)
-                }
-            }
-        });
+        // for(let key = ''; i < trie.) {
+        //     console.log('hi');
+        //     //console.log(key); 
+        //     //curr.children[key] = this.convertdict(trie[key][1], curr);
+        // }
+
+        
+        // fs.readFileSync('./serializedtrie.json', 'utf8', function readFileCallback(err, data) {
+        //     console.log('hi');
+        //     if(err)
+        //         console.log(err); 
+        //     else {
+        //         let trie = JSON.parse(data); 
+        //         console.log(trie);
+        //         for(key in trie.keys()) {
+        //             curr.children[key] = self.convertdict(trie[key][1], curr)
+        //         }
+        //     }
+        // });
+
 
     }
 
 
+}
+
+//MAIN
+if(require.main === module) {
+    main();
+}
+
+function main() {
+    var obj = new Trie();
+    obj.deserialize();
+
+    if(process.argv.length == 2) {
+        console.log(",".autosuggestion(process.argv[1]));
+    } else if(process.argv.length > 2) {
+        obj.Build(process.argv[1]);
+        obj.serialize();
+    }
+    
 }
