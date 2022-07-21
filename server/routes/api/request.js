@@ -34,11 +34,9 @@ router.post(
         .withMessage("Subject must be valid if you want to select a course").bail()
         .custom((course, { req }) => courses.course_list[req.body.subject].includes(course))
         .withMessage("The course chose is not a valid RPI course"),
-      check("num_sessions")
-        .custom((num_sessions, { req }) => num_sessions < 0)
-        .withMessage("Number of sessions must be positive")
-        .custom((num_sessions, { req }) => num_sessions == 0)
-        .withMessage("Number of sessions must be greater than 0"),
+      check("number_sessions")
+      .custom((number_sessions, { req }) => number_sessions > 0)
+      .withMessage("Number of sessions must be greater than 0 and/or must be a value"),
     ],
   ],
 
@@ -294,11 +292,9 @@ router.put("/edit/:request_id",
         .custom((course, { req }) => course ?
           courses.course_list[req.body.subject].includes(course) : true)
         .withMessage("The course chosen is not a valid RPI course"),
-      check("num_sessions")
-        .custom((num_sessions, { req }) => num_sessions < 0)
-        .withMessage("Number of sessions must be positive")
-        .custom((num_sessions, { req }) => num_sessions == 0)
-        .withMessage("Number of sessions must be greater than 0"),
+      check("number_sessions")
+      .custom((number_sessions, { req }) => number_sessions > 0)
+      .withMessage("Number of sessions must be greater than 0 and/or must be a value"),
     ],
   ]
 
@@ -570,6 +566,7 @@ router.put("/rate_tutor/:request_id", auth, async (req, res) => {
           request => request._id == request_id);
         if (rateIndex != -1)
           requestMatch.closed_requests[rateIndex].tutor_rating = req.body.rating;
+          requestMatch.closed_requests[rateIndex].state = "RATED";
       }
       requestMatch.save();
 
@@ -581,12 +578,48 @@ router.put("/rate_tutor/:request_id", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+
 });
 
 // @route: PUT api/request/rate_student/:request_id
 // @desc:  Adds a rating to a request from the tutor side
 // @access Private
 router.put("/rate_student/:request_id", auth, async (req, res) => {
+  //add rating from tutor to student
+  /*const {
+    rating
+  } = req.body;
+
+  try {
+    // Changing the request status
+    const request_id = req.params.request_id;
+    var request = await Request.findOne({ _id: request_id });
+    if (!request) {
+      res.status(404).json({ error: { msg: "No request found with that id." } });
+    }
+    request.status = "rated";
+    request.student_rating = rating;
+    await request.save();
+    // Adding rating to request relate
+    requestMatch = await RequestRelate.findOne({ user: request.user });
+    if (requestMatch) {
+      if (rating) {
+        const rateIndex = requestMatch.closed_requests.findIndex(
+          request => request._id == request_id);
+        if (rateIndex != -1)
+          requestMatch.closed_requests[rateIndex].student_rating = req.body.rating;
+      }
+      requestMatch.save();
+
+      res.json({ msg: "Student rating added" });
+    } else {
+      res.status(400).json({ error: "Request ID is invalid" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }*/
+
   const {
     rating
   } = req.body;
