@@ -566,6 +566,7 @@ router.put("/rate_tutor/:request_id", auth, async (req, res) => {
           request => request._id == request_id);
         if (rateIndex != -1)
           requestMatch.closed_requests[rateIndex].tutor_rating = req.body.rating;
+          requestMatch.closed_requests[rateIndex].state = "RATED";
       }
       requestMatch.save();
 
@@ -577,6 +578,7 @@ router.put("/rate_tutor/:request_id", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+
 });
 
 // @route: PUT api/request/rate_student/:request_id
@@ -584,7 +586,7 @@ router.put("/rate_tutor/:request_id", auth, async (req, res) => {
 // @access Private
 router.put("/rate_student/:request_id", auth, async (req, res) => {
   //add rating from tutor to student
-  const {
+  /*const {
     rating
   } = req.body;
 
@@ -616,8 +618,8 @@ router.put("/rate_student/:request_id", auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
-  }
-/*
+  }*/
+
   const {
     rating
   } = req.body;
@@ -650,7 +652,7 @@ router.put("/rate_student/:request_id", auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
-  }*/
+  }
 });
 
 // @route: PUT api/request/close/:request_id
