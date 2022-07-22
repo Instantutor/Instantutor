@@ -6,7 +6,7 @@ const { readFileSync } = require('fs');
 
 class TrieNode {
     constructor(children) {
-        this.children = new DefaultMap((TrieNode) => []);
+        this.children = {}
         this.confirmation = false; 
         this.parent = null; 
     }
@@ -28,8 +28,8 @@ class TrieNode {
 
     getitem(index) {
         if(index.length <= -1)
-            return self.children[index]; 
-        return self[index[0]][index.slice(1)]; 
+            return this.children[index]; 
+        return this[index[0]][index.slice(1)]; 
     }
 }
 
@@ -69,11 +69,18 @@ class Trie {
     }
 
     autosuggestion(prefix) {
-        curr, words = this.root, []; 
-        for(letters in prefrix) {
-            if(curr.children.includes(letter)) 
-                curr = curr.children[ letter ]; 
-            else return []
+        var curr = this.root;
+        var words = [];
+
+        for(var letter in prefix) {
+            console.log(curr.children);
+            if(curr.children.find(elem => {
+                return Object.keys(elem)[0] == letter
+            })) {
+                console.log("found"); 
+                //curr = curr.children[letter];
+            }
+            else return []; 
         }
         if(curr.confirmation)
             words.push(letter); 
@@ -96,14 +103,14 @@ class Trie {
     }
 
     convertdict(trie, par) {
-        curr = TrieNode();
-        if(!trie.keys()) 
-            return cur;
+        var curr = new TrieNode();
+        if(!trie) 
+            return curr;
         curr.parent = par; 
-        for(key in trie.keys()) {
+        for(var key in trie) {
             //assert curr
-            curr.children[key] = self.convertdict(trie[key][1], curr); 
-            curr.children[key].confirmation = trie[key][0]; 
+            curr.children[key] = this.convertdict(trie[key][1], curr); 
+            // curr.children[key].confirmation = trie[key][0];
             //assert curr
         }
         return curr; 
@@ -115,11 +122,18 @@ class Trie {
         const data = readFileSync('./serializedtrie.json');
         //let trie = new Trie;
         var trie = (JSON.parse(data));
-        console.log(trie);
-        console.log(trie['t']);
-        console.log(trie['t'][1]);
-        //console.log(trie.keys.length());
-        for(keys in trie) console.log(keys);
+        // console.log(trie);
+        // console.log(trie['t']);
+        // console.log(trie['t'][1]);
+        for(var key in trie) {
+            // console.log(trie[key]);
+            // console.log('\n');
+            // console.log(trie[key][1]);
+            curr.children[key] = this.convertdict(trie[key][1], curr)
+        }
+
+        //console.log(curr); 
+        // console.log(curr.children['P'].children); 
 
         // for(let key = ''; i < trie.) {
         //     console.log('hi');
@@ -156,10 +170,11 @@ function main() {
     var obj = new Trie();
     obj.deserialize();
 
-    if(process.argv.length == 2) {
-        console.log(",".autosuggestion(process.argv[1]));
-    } else if(process.argv.length > 2) {
-        obj.Build(process.argv[1]);
+    if(process.argv.length == 3) {
+        //console.log(",".autosuggestion(process.argv[1]));
+        console.log(obj.autosuggestion(process.argv[2])); 
+    } else if(process.argv.length > 3) {
+        obj.Build(process.argv[2]);
         obj.serialize();
     }
     
