@@ -6,7 +6,7 @@ const { readFileSync } = require('fs');
 
 class TrieNode {
     constructor(children) {
-        this.children = {}
+        this.children = [];
         this.confirmation = false; 
         this.parent = null; 
     }
@@ -48,7 +48,7 @@ class Trie {
         let curr = this.root;
         for(let i = 0; i < word.length; i++) {
             let old = curr;
-            curr = curr.children[i]; //undefined
+            curr = curr.children[i]; 
             curr.parent = old; 
         }
         curr.confirmation = true;
@@ -71,23 +71,28 @@ class Trie {
     autosuggestion(prefix) {
         var curr = this.root;
         var words = [];
+        var temp_word = []
 
-        for(var letter in prefix) {
-            console.log(curr.children);
-            if(curr.children.find(elem => {
-                return Object.keys(elem)[0] == letter
-            })) {
-                console.log("found"); 
-                //curr = curr.children[letter];
+        // Traversing the structure based on prefix
+        for(var i in prefix) {
+            // Checking if current prefix letter is in children of current node and traversing/pushing to temp words
+            if(Object.keys(curr.children).find(elem => elem == prefix[i])) {
+                curr = curr.children[prefix[i]];
+                temp_word.push(prefix[i])
             }
-            else return []; 
+            else
+                return []; 
         }
+
+        // Edge case for if we've already reached a valid word
         if(curr.confirmation)
-            words.push(letter); 
-        dfs = [[curr.children, ""]]; 
-        while(dfs) {
-            kids, appender = dfs.pop(); 
-            for(kid in kids) {
+            words.push(prefix); 
+
+        // DFS
+        var dfs = [[curr.children, ""]]; 
+        while(dfs.length > 0) {
+            var [kids, appender] = dfs.pop();
+            for(var kid in kids) {
                 dfs.push([ kids[ kid ].children, appender + kid ]); 
                 if(kids[ kid ].confirmation) 
                     words.push(prefix + appender + kid); 
@@ -104,14 +109,12 @@ class Trie {
 
     convertdict(trie, par) {
         var curr = new TrieNode();
-        if(!trie) 
+        if(Object.keys(trie).length == 0) 
             return curr;
-        curr.parent = par; 
+        curr.parent = par;
         for(var key in trie) {
-            //assert curr
             curr.children[key] = this.convertdict(trie[key][1], curr); 
-            // curr.children[key].confirmation = trie[key][0];
-            //assert curr
+            curr.children[key].confirmation = trie[key][0];
         }
         return curr; 
     }
@@ -120,42 +123,10 @@ class Trie {
         let curr = this.root;
 
         const data = readFileSync('./serializedtrie.json');
-        //let trie = new Trie;
         var trie = (JSON.parse(data));
-        // console.log(trie);
-        // console.log(trie['t']);
-        // console.log(trie['t'][1]);
         for(var key in trie) {
-            // console.log(trie[key]);
-            // console.log('\n');
-            // console.log(trie[key][1]);
             curr.children[key] = this.convertdict(trie[key][1], curr)
         }
-
-        //console.log(curr); 
-        // console.log(curr.children['P'].children); 
-
-        // for(let key = ''; i < trie.) {
-        //     console.log('hi');
-        //     //console.log(key); 
-        //     //curr.children[key] = this.convertdict(trie[key][1], curr);
-        // }
-
-        
-        // fs.readFileSync('./serializedtrie.json', 'utf8', function readFileCallback(err, data) {
-        //     console.log('hi');
-        //     if(err)
-        //         console.log(err); 
-        //     else {
-        //         let trie = JSON.parse(data); 
-        //         console.log(trie);
-        //         for(key in trie.keys()) {
-        //             curr.children[key] = self.convertdict(trie[key][1], curr)
-        //         }
-        //     }
-        // });
-
-
     }
 
 
@@ -171,7 +142,6 @@ function main() {
     obj.deserialize();
 
     if(process.argv.length == 3) {
-        //console.log(",".autosuggestion(process.argv[1]));
         console.log(obj.autosuggestion(process.argv[2])); 
     } else if(process.argv.length > 3) {
         obj.Build(process.argv[2]);
