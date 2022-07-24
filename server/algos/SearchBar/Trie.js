@@ -45,10 +45,15 @@ class Trie {
 
     //BUILD
     Build(word) {
-        let curr = this.root;
+        var curr = this.root;
         for(let i = 0; i < word.length; i++) {
-            let old = curr;
-            curr = curr.children[i]; 
+            var old = curr;
+            if(!Object.keys(curr.children).find(elem => elem == word[i])) {
+                curr.children[word[i]] = new TrieNode();
+                curr.children[word[i]].parent = curr;
+                curr.children[word[i]].confirmation = false; 
+            }
+            curr = curr.children[word[i]]; 
             curr.parent = old; 
         }
         curr.confirmation = true;
@@ -102,9 +107,10 @@ class Trie {
     }
 
     serialize() {
-        let data = JSON.stringify(this); 
-        const fs = require('fs'); 
-        fs.writeFile('./serializedtrie.json', data, 'utf8', callback);
+        var data = JSON.stringify(this.root);
+        console.log(data)
+        // const fs = require('fs'); 
+        // fs.writeFile('./serializedtrie.json', data, 'utf8', err => console.log(err));
     }
 
     convertdict(trie, par) {

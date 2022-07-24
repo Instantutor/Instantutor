@@ -8,7 +8,7 @@ import json
 # Declaration for nodes of the Trie
 class TrieNode:
     def __init__(self):
-        self.children = defaultdict(TrieNode)
+        self.children = dict()
         self.confirmation = False
         self.parent = None
         
@@ -54,6 +54,10 @@ class Trie:
         #for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
         for i in word:
             old = curr
+            if (not (i in curr.children)):
+                curr.children[i] = TrieNode()
+                curr.children[i].parent = curr
+                curr.children[i].confirmation = False
             curr = curr.children[i]
             curr.parent = old
         curr.confirmation = True
@@ -92,7 +96,7 @@ class Trie:
     # *** I wrote an algorithinm that sort of encrypts this Trie into a string and stored in this same folder (serializedtrie.json) FOR NOW. The original idea is to convert this file into bits and stored Disk or Cache so we can retrieve the file quickly from memory. We can definitely use MongoDB In Storage Memory Store or even push this file into the Data Base in JSON. Having the file here is temporary, so it makes the entire process slow and I need to find a way to create a Persistent Trie/Data Structure which will be difficult. I need to do this in order to quickly update the previous Trie instead of going through the entire process of serializing and deserializng the DS over and over. There will need to be automation for when there is an updated profile to the trie, so this is extremely important to do. As of right now, the names of the profiles have been hardcoded. I am going to leave it as is and come back to it later
 
     def serialize(self) -> str:
-        f = open("./algos/SearchBar/serializedtrie.json","w")
+        f = open("./serializedtrie.json","w")
         f.write(str(self))
         f.close()
 
@@ -120,8 +124,7 @@ class Trie:
         #Rendundant?
         for key in trie.keys():
             curr.children[key] = self.convertdict(trie[key][1], curr)
-        #print(trie)
-        #print(self)
+   
         f.close()
 
 
