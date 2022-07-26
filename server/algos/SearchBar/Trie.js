@@ -1,18 +1,21 @@
-
 'use strict'; 
 const fs = require('fs');
 const { readFileSync } = require('fs');
 
+//TRIENODE
 class TrieNode {
+
     constructor(children) {
         this.children = {};
         this.confirmation = false; 
         this.parent = null; 
     }
 
+    // Cast the Trie to an Object for serializing 
     toObject() {
         var result = [this.confirmation, {}]
         let keys = Object.keys(this.children)
+        // Recursively cast children to Objects
         for(let i in keys) 
             result[1][keys[i]] = this.children[keys[i]].toObject()
         return result
@@ -20,16 +23,19 @@ class TrieNode {
 
 }
 
-
+//TRIE
 class Trie {
     constructor() {
         this.root = new TrieNode(); 
     }
 
+    // Adds new word into Trie structure
     Build(word) {
         var curr = this.root;
+        // Iterate through each letter in word while updating the current and parent nodes
         for(let i = 0; i < word.length; i++) {
             var old = curr;
+            // If there is a new letter not already in Trie, create a new TrieNode
             if(!Object.keys(curr.children).find(elem => elem == word[i])) {
                 curr.children[word[i]] = new TrieNode();
                 curr.children[word[i]].parent = curr;
@@ -41,6 +47,7 @@ class Trie {
         curr.confirmation = true;
     }
 
+    // Traverse the Trie structure and return resulting words matching the prefix
     autosuggestion(prefix) {
         var curr = this.root;
         var words = [];
@@ -74,6 +81,7 @@ class Trie {
         return words; 
     }
 
+    // Write updated Trie structure to serializedtrie.json
     serialize() {
         var data = this.root.toObject(); 
         data = JSON.stringify(data[1], null, 1);
@@ -86,11 +94,13 @@ class Trie {
         })
     }
 
+    // Update children and confirmation for each key in Trie
     convertdict(trie, par) {
         var curr = new TrieNode();
         if(Object.keys(trie).length == 0) 
             return curr;
         curr.parent = par;
+        // Recursively create the children and update confirmation 
         for(var key in trie) {
             curr.children[key] = this.convertdict(trie[key][1], curr); 
             curr.children[key].confirmation = trie[key][0];
@@ -98,6 +108,7 @@ class Trie {
         return curr; 
     }
 
+    // Read serializedtrie.json to create Trie
     deserialize() {
         let curr = this.root;
         const data = readFileSync('./serializedtrie.json');
@@ -108,6 +119,7 @@ class Trie {
     }
 }
 
+//MAIN
 if(require.main === module) {
     main();
 }

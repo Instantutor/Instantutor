@@ -51,7 +51,6 @@ class Trie:
 
     def Build(self, word: str) -> None:
         curr = self.root
-        #for k,i in enumerate(word): curr, curr.parent = curr.children[i], curr
         for i in word:
             old = curr
             if (not (i in curr.children)):
@@ -107,10 +106,8 @@ class Trie:
             return curr
         curr.parent = par
         for key in trie.keys():
-            #assert(curr)
             curr.children[key] = self.convertdict(trie[key][1], curr)
             curr.children[key].confirmation = trie[key][0]
-            #assert(curr)
         return curr
         
         
@@ -132,22 +129,9 @@ class Trie:
 def main():
     obj = Trie()
     obj.deserialize()
-    #print(obj)
-    """
-    f = open("test.json", "w")
-    f.write(str(obj))
-    f.close()
-    """
-    """
-    print(obj)
-    with open("sample.json", "w") as outfile:
-        outfile.write(str(obj))
-        outfile.close()
-    """
     if len(sys.argv) == 2: print(",".join(obj.autosuggestion(sys.argv[1])))
     elif len(sys.argv) > 2:
         obj.Build(sys.argv[1])
         obj.serialize()
-    #obj.serialize()
 if __name__=="__main__":
     main()
