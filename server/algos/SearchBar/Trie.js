@@ -1,36 +1,23 @@
 
 'use strict'; 
-const DefaultMap = require('./DefaultMap');
 const fs = require('fs');
 const { readFileSync } = require('fs');
 
 class TrieNode {
     constructor(children) {
-        this.children = [];
+        this.children = {};
         this.confirmation = false; 
         this.parent = null; 
     }
 
-    get string() {
-        const ans = ["\t"]; 
-        for(child in this.children.keys()) {
-            childnode = this.children[child]; 
-            add = this.children[child].toString(); 
-            if(this.children.size == 0)
-                add = ""; 
-            ans.at[-1] += '\n"' + child.toString() + '":[\n'; 
-            assert(childnode); 
-            ans.at[-1] += childnode.confirmation.toString().toLowerCase() + ", \n{ " + add + "}]";
-            ans.append(""); 
-        }
-        return str(", ".join(ans.slice(0, -1))); 
+    toObject() {
+        var result = [this.confirmation, {}]
+        let keys = Object.keys(this.children)
+        for(let i in keys) 
+            result[1][keys[i]] = this.children[keys[i]].toObject()
+        return result
     }
 
-    getitem(index) {
-        if(index.length <= -1)
-            return this.children[index]; 
-        return this[index[0]][index.slice(1)]; 
-    }
 }
 
 
@@ -39,11 +26,6 @@ class Trie {
         this.root = new TrieNode(); 
     }
 
-    get string() {
-        return "{" + this.root.toString() + "\n}"; 
-    }
-
-    //BUILD
     Build(word) {
         var curr = this.root;
         for(let i = 0; i < word.length; i++) {
@@ -57,20 +39,6 @@ class Trie {
             curr.parent = old; 
         }
         curr.confirmation = true;
-    }
-
-    printAll() {
-        curr = this.root; 
-        words, dfs = [], [[curr.children, ""]]; 
-        while(dfs) {
-            kids, appender = dfs.pop(); 
-            for(i in kids) {
-                dfs.push( [kids[i].children, appender + i]); 
-                if(kids[i].confirmation) {
-                    words.push(appender + i); 
-                }
-            }
-        }
     }
 
     autosuggestion(prefix) {
@@ -107,10 +75,15 @@ class Trie {
     }
 
     serialize() {
-        var data = JSON.stringify(this.root);
-        console.log(data)
-        // const fs = require('fs'); 
-        // fs.writeFile('./serializedtrie.json', data, 'utf8', err => console.log(err));
+        var data = this.root.toObject(); 
+        data = JSON.stringify(data[1], null, 1);
+        fs.writeFile('./serializedtrie.json', data, 'utf8', (err) => {
+            if(err)
+                console.log(err);
+            else {
+                console.log("File written succesfully\n");
+            }
+        })
     }
 
     convertdict(trie, par) {
@@ -127,26 +100,21 @@ class Trie {
 
     deserialize() {
         let curr = this.root;
-
         const data = readFileSync('./serializedtrie.json');
         var trie = (JSON.parse(data));
         for(var key in trie) {
             curr.children[key] = this.convertdict(trie[key][1], curr)
         }
     }
-
-
 }
 
-//MAIN
 if(require.main === module) {
     main();
 }
 
 function main() {
-    var obj = new Trie();
-    obj.deserialize();
-
+    var obj = new Trie();  
+    obj.deserialize(); 
     if(process.argv.length == 3) {
         console.log(obj.autosuggestion(process.argv[2])); 
     } else if(process.argv.length > 3) {
