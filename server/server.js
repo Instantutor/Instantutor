@@ -12,11 +12,11 @@ app.get('/', (req, res) => res.send('API Running'));
 //Define Route
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/posts', require('./routes/api/posts'));
-app.use('/api/profile', require('./routes/api/profile'));
-app.use('/api/request', require('./routes/api/request'));
-app.use('/api/calendar', require('./routes/api/calendar'));
-app.use('/api/searchbar', require('./routes/api/searchbar'));
+//app.use('/api/posts', require('./routes/api/posts'));
+//app.use('/api/profile', require('./routes/api/profile'));
+//app.use('/api/request', require('./routes/api/request'));
+//app.use('/api/calendar', require('./routes/api/calendar'));
+//app.use('/api/searchbar', require('./routes/api/searchbar'));
 // app.use('/api/request_times', require('.routes/api/request_times'));
 
 // Check if the slack channel is workingfsdsdfsdkhfajksdfhjklashfajklsd
