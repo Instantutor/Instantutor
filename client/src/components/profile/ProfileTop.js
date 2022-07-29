@@ -17,7 +17,12 @@ const ProfileTop = ({
   return (
     <div className="profile-top bg-primary p-2">
       <img className="round-img my-1" src={avatar} alt="" />
-      <h1 className="large">{name}</h1>
+      <span id="profile-name">
+        {name}
+        <Link to="/edit_profile" className="btn btn-dark" id="edit-profile-btn">
+          <img src={require('../../assets/Instantutor Icons/edit-solid.png')} id='edit-profile-btn-img'/>
+        </Link>
+      </span>
       {/* {auth.isAuthenticated &&
       auth.loading === false &&
       auth.user._id === peer_profile.user._id && (
@@ -26,10 +31,9 @@ const ProfileTop = ({
               Edit Profile
           </Link>
       )} */}
-      <Link to="/edit_profile" className="btn btn-dark">
+      {/* <Link to="/edit_profile" className="btn btn-dark" id="edit-profile-btn">
         <img src={require('../../assets/Instantutor Icons/edit-solid.png')} id='edit-profile-btn-img'/>
-        Edit Profile
-      </Link>
+      </Link> */}
 
       <p>{degree}</p>
       
