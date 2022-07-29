@@ -1055,3 +1055,15 @@ div.inprogress.btns button {
 .dashboard-dropdown h3 i{
   padding-left: 10px;
 }
+
+/* Alert popups at the top of the page */
+.alert {
+  position: fixed;
+  z-index: 100;
+  width: 72.8%; /* visually done, not based on math */
+}
+
+#edit-profile-btn-img {
+  width: 1.5em;
+  color: white;
+}

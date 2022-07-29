@@ -32,14 +32,14 @@ const Profile = ({ getProfileById, getCurrentProfile, profile: { profile, peer_p
             ) : (
                 <Fragment> 
 
-                    {auth.isAuthenticated &&
+                    {/* {auth.isAuthenticated &&
                     auth.loading === false &&
                     auth.user._id === peer_profile.user._id && (
 
                         <Link to="/edit_profile" className="btn btn-dark">
                             Edit Profile
                         </Link>
-                    )}
+                    )} */}
                     
                     <div className="profile-grid my-1">
                         <ProfileTop
