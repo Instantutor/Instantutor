@@ -4,9 +4,10 @@ const chai = require('chai');
 const expect = chai.expect;
 const should = chai.should();
 const chaiHttp = require('chai-http');
-//const server = require('../server');
+const server = require('../server');
+const User = require('../models/User');
 
-//chai.use(chaiHttp);
+chai.use(chaiHttp);
 
 let database = [
     { name: "test", role: "student", email: "test@gmail.com", password: "$2a$10$oR2x1fm1/KhiCDZHn0OzFObRahFdOE95RVsAEM0f8lS865S.u2d2m" },
@@ -29,12 +30,12 @@ describe('POST /api/users/', () => {
         database[database.length-1].should.have.property('role').equal(user.role);
         database[database.length-1].should.have.property('email').equal(user.email);
         database[database.length-1].should.have.property('password');
-        console.log(database);
+        //console.log(database);
     });
 });
 
 //Get the list of users // see if it matches users you created
-describe('GET list of users', () => {
+describe('GET list of users in database', () => {
     it('Get users', () => {
         console.log(database);
         for (var i = 0; i < database.length; i++){
@@ -44,3 +45,41 @@ describe('GET list of users', () => {
         }
     })
 })
+
+//POST api/users test
+describe('POST api/users', function() {
+    it('Should post fake user into database', () => {
+        User.collection.drop();
+        beforeEach(function(done){
+            var newUser = new User({
+                name: "testing",
+                role: "Both",
+                email: "testing@gmail.com",
+                password: "testing"
+            });
+            newUser.save(function(err) {
+                done();
+            })
+        });
+        afterEach(function(done){
+            User.collection.drop();
+            done();
+        })
+    })
+})
+
+
+//POST api/users edge case 1
+/*describe('POST api/users', function() {
+    it('Should not post properly', () => {
+        chai.request(server)
+        .post('/api/users')
+    })
+})*/
+
+//GET api/auth
+/*describe('GET /api/auth', () => {
+    it('Should return user by id', () => {
+
+    })
+})*/
