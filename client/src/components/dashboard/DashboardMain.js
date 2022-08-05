@@ -32,7 +32,7 @@ const DashboardMain = ({ user, req_history = [], loading = true, match }) => {
           <div>
             <h1 className='large text-primary'>Oops!</h1>
             <h1 className='text-primary'>
-              Looks like u did not post any requests yet...
+              Looks like you did not post any requests yet...
             </h1>
           </div>
         ) : (

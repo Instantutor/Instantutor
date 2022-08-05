@@ -31,6 +31,7 @@ import FinalizeRequestPage from '../finalize-requests/FinalizeRequestPage'
 
 // Browse
 import Browse from '../browse/Browse'
+import SelectRequest from '../browse/SelectRequest'
 
 // Search page
 import Search from '../search/Search'
@@ -82,6 +83,8 @@ const Routes = () => {
                 <SidebarRoute selected="profile" privateR exact path="/edit_expertise/:id" component={ExpertiseForm} /> */}
 
                 <SidebarRoute selected="browse" privateR exact path="/browse" component={Browse} />
+                
+                <SidebarRoute exact path="/select_request/:id" component={SelectRequest} />
 
                 <Route component={NotFound} />
             </Switch>
