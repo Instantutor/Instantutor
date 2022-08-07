@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const expect = chai.expect;
 const should = chai.should();
+const assert = chai.assert;
 const chaiHttp = require('chai-http');
 const app = require('../server');
 const User = require('../models/User');
@@ -74,24 +75,23 @@ describe('POST api/users', () => {
         let user = new User ({
             name: "api/user",
             email: "api@gmail.com",
-            password: "xxxx"
+            password: "xxxxxx"
         });
         chai.request(app)
         .post('/api/users/')
         .send(user)
         .end((err,res) => {
-            res.should.have.status(400);
-            res.body[res.body.length-1].should.have.property('name').equal("api/user")
-            res.body[res.body.length-1].should.have.property('email').equal("api@gmail.com")
-            res.body[res.body.length-1].should.have.property('password').equal("xxxx")
+            console.log(res.body);
+            res.should.have.status(200);
+            res.body.should.have.property('token');
         done();
         })
     })
 })
 
 //Post request error (name empty)
-describe('POST api/users', () => {
-    it('Should return error', (done) => {
+describe('POST error api/users', () => {
+    it('Should return status 400 error', (done) => {
         let user = new User ({
             email: "something@gmail.com",
             password: "xxxx"
@@ -102,49 +102,85 @@ describe('POST api/users', () => {
         .end((err,res) => {
             console.log(res.body);
             res.should.have.status(400);
-            res.body[0].should.have.property("errors");
-            res.body[0]["errors"].should.have.property("location")
-            res.body[0]["errors"].should.have.property("msg").equal("Invalid value")
-            res.body[0]["errors"].should.have.property("param").equal("name")
+            res.body.should.have.property("error");
+            res.body.error[0].should.have.property("msg").equal('Name is required');
+            res.body.error[0].should.have.property("param").equal('name');
+            res.body.error[0].should.have.property("location").equal('body');
+            //expect(res.body.error.msg).to.equal('Name is required')
+            /*res.body["error"].should.have.property("location")
+            res.body["error"].should.have.property("msg").equal("Invalid value")
+            res.body["error"].should.have.property("param").equal("name")*/
         done();
         })
     })
 })
-/*
-describe('POST api/users', function() {
-    it('Should return status 400', () => {
+
+describe('No email', function() {
+    it('Should return status 400 and error message', () => {
+        let user = new User ({
+            name: "api/user",
+            password: "xxxxxx"
+        });
+        chai.request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err,res) => {
+            //console.log(res.body);
+            res.body.error[0].should.have.property('msg').equal('Please include a valid email')
+            res.body.error[0].should.have.property('param').equal('email')
+            res.body.error[0].should.have.property('location').equal('body');
+        })
+    })
+})
+
+//POST api/users/ password too short
+describe('Password too short', function() {
+    it('Should return status 400 and error message', () => {
+        let user = new User ({
+            name: "api/user",
+            email: "api@gmail.com",
+            password: "xxxx"
+        });
+        chai.request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err,res) => {
+            //console.log(res.body);
+            res.should.have.status(400);
+            res.body.error[0].should.have.property('value');
+            res.body.error[0].should.have.property('msg').equal('Please enter a password with 6 or more characters')
+            res.body.error[0].should.have.property('param').equal('password')
+        })
+    })
+})
+
+
+describe('Duplicate user', function() {
+    it('Should return status 400 because duplicate', (done) => {
+        beforeEach(async function() {
+            var newUser = new User({
+                name: "testing",
+                email: "testing@gmail.com",
+                password: "testing"
+            })
+            chai.request(app)
+            .post('/api/users')
+            .send(newUser)
+        })
         var newDuplicateUser = new User ({
             name: "testing",
-            email: "testing@email.com",
+            email: "testing@gmail.com",
             password: "testing"
         })
-        chai.request(server)
+        chai.request(app)
         .post('/api/users')
         .send(newDuplicateUser)
         .end((err,res) => {
-            res.should.have.status(200);
-        })
-
-        .post('/api/users')
-        .send(newDuplicateUser)
-        .end((err,res) => {
-            res.should.have.status(400);
-        })
+            //console.log(res.body);
+            res.body.should.have.property("error");
+            res.body.error[0].should.have.property("msg").equal('User already exists');
+        done();
+         })
     })
-})*/
+})
 
-
-//POST api/users edge case 1
-/*describe('POST api/users', function() {
-    it('Should not post properly', () => {
-        chai.request(server)
-        .post('/api/users')
-    })
-})*/
-
-//GET api/auth
-/*describe('GET /api/auth', () => {
-    it('Should return user by id', () => {
-
-    })
-})*/
