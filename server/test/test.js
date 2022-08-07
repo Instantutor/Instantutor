@@ -4,7 +4,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const should = chai.should();
 const chaiHttp = require('chai-http');
-const server = require('../server');
+const app = require('../server');
 const User = require('../models/User');
 
 chai.use(chaiHttp);
@@ -53,7 +53,6 @@ describe('POST api/users', function() {
         beforeEach(function(done){
             var newUser = new User({
                 name: "testing",
-                role: "Both",
                 email: "testing@gmail.com",
                 password: "testing"
             });
@@ -67,6 +66,72 @@ describe('POST api/users', function() {
         })
     })
 })
+
+//Proper post request case
+//POST api/users
+describe('POST api/users', () => {
+    it('Should post to the database', (done) => {
+        let user = new User ({
+            name: "api/user",
+            email: "api@gmail.com",
+            password: "xxxx"
+        });
+        chai.request(app)
+        .post('/api/users/')
+        .send(user)
+        .end((err,res) => {
+            res.should.have.status(400);
+            res.body[res.body.length-1].should.have.property('name').equal("api/user")
+            res.body[res.body.length-1].should.have.property('email').equal("api@gmail.com")
+            res.body[res.body.length-1].should.have.property('password').equal("xxxx")
+        done();
+        })
+    })
+})
+
+//Post request error (name empty)
+describe('POST api/users', () => {
+    it('Should return error', (done) => {
+        let user = new User ({
+            email: "something@gmail.com",
+            password: "xxxx"
+        })
+        chai.request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err,res) => {
+            console.log(res.body);
+            res.should.have.status(400);
+            res.body[0].should.have.property("errors");
+            res.body[0]["errors"].should.have.property("location")
+            res.body[0]["errors"].should.have.property("msg").equal("Invalid value")
+            res.body[0]["errors"].should.have.property("param").equal("name")
+        done();
+        })
+    })
+})
+/*
+describe('POST api/users', function() {
+    it('Should return status 400', () => {
+        var newDuplicateUser = new User ({
+            name: "testing",
+            email: "testing@email.com",
+            password: "testing"
+        })
+        chai.request(server)
+        .post('/api/users')
+        .send(newDuplicateUser)
+        .end((err,res) => {
+            res.should.have.status(200);
+        })
+
+        .post('/api/users')
+        .send(newDuplicateUser)
+        .end((err,res) => {
+            res.should.have.status(400);
+        })
+    })
+})*/
 
 
 //POST api/users edge case 1
